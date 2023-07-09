@@ -5,9 +5,12 @@ require_relative "strip"
 require_relative "bus"
 require_relative "button"
 require_relative "vban"
+require_relative "configs"
 
 module Voicemeeter
   module Remote
+    include Configs
+
     private
 
     class Remote < Base
@@ -20,10 +23,13 @@ module Voicemeeter
         @bus = []
         kind.num_strip.times { |i| @bus << Bus::Bus.make(self, i) }
         @button = []
-        kind.num_buttons.times do |i|
-          @button << Button::MacroButton.new(self, i)
-        end
+        kind.num_buttons.times { |i| @button << Button::Button.new(self, i) }
         @vban = Vban::Vban.new(self)
+      end
+
+      def configs
+        Configs.load
+        Configs.get(@kind.name)
       end
     end
 
