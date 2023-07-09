@@ -9,7 +9,7 @@ module Voicemeeter
       TRIGGER = 3
     end
 
-    class MacroButton < IRemote
+    class Button < IRemote
       def initialize(remote, i)
         super
       end
