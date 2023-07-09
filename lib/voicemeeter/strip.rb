@@ -1,12 +1,12 @@
 require_relative "iremote"
 require_relative "kinds"
-require_relative "meta"
 require_relative "mixins"
 
 module Voicemeeter
   module Strip
     class Strip < IRemote
-      include Meta_Functions
+      include Mixins::StripMixins::Outputs
+      include Mixins::StripMixins::Fades
 
       def self.make(remote, i)
         "
@@ -37,6 +37,8 @@ module Voicemeeter
       include Mixins::StripMixins::Xy::Fx
       include Mixins::StripMixins::Fx
 
+      attr_reader :comp, :gate, :denoiser, :eq, :device
+
       def initialize(remote, i)
         super
         make_accessor_float :audibility
@@ -50,8 +52,6 @@ module Voicemeeter
     end
 
     class StripComp < IRemote
-      include Meta_Functions
-
       def initialize(remote, i)
         super
         make_accessor_float :gainin,
@@ -69,17 +69,15 @@ module Voicemeeter
       end
 
       def knob
-        getter("").to_i == 1
+        getter("")
       end
 
       def knob=(val)
-        setter("", val && 1 || 0)
+        setter("", val)
       end
     end
 
     class StripGate < IRemote
-      include Meta_Functions
-
       def initialize(remote, i)
         super
         make_accessor_float :threshold, :damping, :attack, :hold, :release
@@ -91,17 +89,15 @@ module Voicemeeter
       end
 
       def knob
-        getter("").to_i == 1
+        getter("")
       end
 
       def knob=(val)
-        setter("", val && 1 || 0)
+        setter("", val)
       end
     end
 
     class StripDenoiser < IRemote
-      include Meta_Functions
-
       def initialize(remote, i)
         super
       end
@@ -111,30 +107,26 @@ module Voicemeeter
       end
 
       def knob
-        getter("").to_i == 1
+        getter("")
       end
 
       def knob=(val)
-        setter("", val && 1 || 0)
+        setter("", val)
       end
     end
 
     class StripEq < IRemote
-      include Meta_Functions
-
       def initialize(remote, i)
         super
         make_accessor_bool :on, :ab
       end
 
       def identifier
-        "strip[#{@index}].device"
+        "strip[#{@index}].eq"
       end
     end
 
     class StripDevice < IRemote
-      include Meta_Functions
-
       def initialize(remote, i)
         super
         make_reader_int :sr

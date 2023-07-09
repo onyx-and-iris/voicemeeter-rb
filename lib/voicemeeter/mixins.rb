@@ -1,6 +1,18 @@
 module Voicemeeter
   module Mixins
     module StripMixins
+      module Fades
+        def fadeto(target, time)
+          self.setter("FadeTo", "(#{target}, #{time})")
+          sleep(@remote.delay)
+        end
+
+        def fadeby(change, time)
+          self.setter("FadeBy", "(#{change}, #{time})")
+          sleep(@remote.delay)
+        end
+      end
+
       module Apps
         def appgain(name, gain)
           self.setter("AppGain", "(\"#{name}\", #{gain})")
@@ -8,6 +20,19 @@ module Voicemeeter
 
         def appmute(name, mute)
           self.setter("AppMute", "(\"#{name}\", #{mute ? 1 : 0})")
+        end
+      end
+
+      module Outputs
+        def initialize(*args)
+          super
+          remote, *rem = args
+          num_A, num_B = remote.kind.outs
+          channels =
+            (1..(num_A + num_B)).map do |i|
+              i <= num_A ? "A#{i}" : "B#{i - num_A}"
+            end
+          make_accessor_bool *channels
         end
       end
 
