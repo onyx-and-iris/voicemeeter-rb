@@ -5,8 +5,8 @@ require_relative "mixins"
 module Voicemeeter
   module Strip
     class Strip < IRemote
-      include Mixins::StripMixins::Outputs
-      include Mixins::StripMixins::Fades
+      include Mixins::Outputs
+      include Mixins::Fades
 
       def self.make(remote, i)
         "
@@ -32,10 +32,10 @@ module Voicemeeter
     end
 
     class PhysicalStrip < Strip
-      include Mixins::StripMixins::Xy::Pan
-      include Mixins::StripMixins::Xy::Color
-      include Mixins::StripMixins::Xy::Fx
-      include Mixins::StripMixins::Fx
+      include Mixins::Xy::Pan
+      include Mixins::Xy::Color
+      include Mixins::Xy::Fx
+      include Mixins::Fx
 
       attr_reader :comp, :gate, :denoiser, :eq, :device
 
@@ -140,8 +140,8 @@ module Voicemeeter
     end
 
     class VirtualStrip < Strip
-      include Mixins::StripMixins::Xy::Pan
-      include Mixins::StripMixins::Apps
+      include Mixins::Xy::Pan
+      include Mixins::Apps
 
       def initialize(remote, i)
         super
