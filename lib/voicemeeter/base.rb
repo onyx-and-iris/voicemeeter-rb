@@ -2,9 +2,12 @@ require_relative "install"
 require_relative "cbindings"
 require_relative "kinds"
 require_relative "midi"
+require "easy_logging"
 
 module Voicemeeter
   class Base
+    include EasyLogging
+
     attr_reader :kind, :midi
 
     def initialize(kind, **kwargs)
@@ -13,15 +16,21 @@ module Voicemeeter
       @midi = Midi.new
     end
 
+    def to_s
+      "Voicemeeter #{@kind}"
+    end
+
     def login
       self.runvm if CBindings.call(:bind_login, ok: [0, 1]) == 1
       clear_dirty
+      logger.info "Successfully logged into #{self} version #{version}"
     end
 
     def logout
       clear_dirty
       sleep(0.1)
       CBindings.call(:bind_logout)
+      logger.info "Sucessfully logged out of #{self}"
     end
 
     def pdirty?
@@ -43,9 +52,8 @@ module Voicemeeter
       kinds = {
         basic: Kinds::KindEnum::BASIC,
         banana: Kinds::KindEnum::BANANA,
-        potato: Kinds::KindEnum::POTATO
+        potato: Install::OS_BITS == 64 ? 6 : Kinds::KindEnum::POTATO
       }
-      kinds[:potato] = 6 if Install::OS_BITS == 64
       CBindings.call(:bind_runvm, kinds[@kind.name])
       sleep(1)
     end
@@ -156,6 +164,25 @@ module Voicemeeter
         end
       end
       got_midi
+    end
+
+    def apply(data)
+      data.each do |key, val|
+        kls, index, *rem = key.to_s.split("-")
+        if rem.empty?
+          target = self.send(kls)
+        else
+          dir = "#{index.chomp("stream")}stream"
+          index = rem[0]
+          target = self.vban.send(dir)
+        end
+        target[index.to_i].apply(val)
+      end
+    end
+
+    def apply_config(name)
+      apply(self.configs[name])
+      logger.info("profile #{name} applied!")
     end
   end
 end
