@@ -34,11 +34,11 @@ module Voicemeeter
     end
 
     def pdirty?
-      CBindings.call(:bind_pdirty, ok: [0, 1]) == 1
+      CBindings.call(:bind_is_parameters_dirty, ok: [0, 1]) == 1
     end
 
     def mdirty?
-      CBindings.call(:bind_mdirty, ok: [0, 1]) == 1
+      CBindings.call(:bind_macro_button_is_dirty, ok: [0, 1]) == 1
     end
 
     private
@@ -54,7 +54,7 @@ module Voicemeeter
         banana: Kinds::KindEnum::BANANA,
         potato: Install::OS_BITS == 64 ? 6 : Kinds::KindEnum::POTATO
       }
-      CBindings.call(:bind_runvm, kinds[@kind.name])
+      CBindings.call(:bind_run_voicemeeter, kinds[@kind.name])
       sleep(1)
     end
 
@@ -62,7 +62,7 @@ module Voicemeeter
 
     def type
       ckind = FFI::MemoryPointer.new(:long, 1)
-      CBindings.call(:bind_type, ckind)
+      CBindings.call(:bind_get_voicemeeter_type, ckind)
       kinds = {
         Kinds::KindEnum::BASIC => :basic,
         Kinds::KindEnum::BANANA => :banana,
@@ -73,7 +73,7 @@ module Voicemeeter
 
     def version
       cver = FFI::MemoryPointer.new(:long, 1)
-      CBindings.call(:bind_version, cver)
+      CBindings.call(:bind_get_voicemeeter_version, cver)
       [
         (cver.read_long & 0xFF000000) >> 24,
         (cver.read_long & 0x00FF0000) >> 16,
@@ -86,7 +86,7 @@ module Voicemeeter
       clear_dirty if @sync
       if is_string
         c_get = FFI::MemoryPointer.new(:string, 512, true)
-        CBindings.call(:bind_get_parameter_string, name, c_get)
+        CBindings.call(:bind_get_parameter_string_a, name, c_get)
         c_get.read_string
       else
         c_get = FFI::MemoryPointer.new(:float, 1)
@@ -97,7 +97,7 @@ module Voicemeeter
 
     def set(name, value)
       if value.is_a? String
-        CBindings.call(:bind_set_parameter_string, name, value)
+        CBindings.call(:bind_set_parameter_string_a, name, value)
       else
         CBindings.call(:bind_set_parameter_float, name, value.to_f)
       end
@@ -106,12 +106,12 @@ module Voicemeeter
     def get_buttonstatus(id, mode)
       clear_dirty if @sync
       c_get = FFI::MemoryPointer.new(:float, 1)
-      CBindings.call(:bind_get_buttonstatus, id, c_get, mode)
+      CBindings.call(:bind_macro_button_get_status, id, c_get, mode)
       c_get.read_float.to_i
     end
 
     def set_buttonstatus(id, state, mode)
-      CBindings.call(:bind_set_buttonstatus, id, state, mode)
+      CBindings.call(:bind_macro_button_set_status, id, state, mode)
     end
 
     def get_level(type_, index)
@@ -125,9 +125,9 @@ module Voicemeeter
         raise VMError.new("dir got: #{dir}, expected in or out")
       end
       if dir == :in
-        CBindings.call(:bind_get_num_indevices, exp: ->(x) { x >= 0 })
+        CBindings.call(:bind_input_get_device_number, exp: ->(x) { x >= 0 })
       else
-        CBindings.call(:bind_get_num_outdevices, exp: ->(x) { x >= 0 })
+        CBindings.call(:bind_output_get_device_number, exp: ->(x) { x >= 0 })
       end
     end
 
@@ -139,9 +139,21 @@ module Voicemeeter
       cname = FFI::MemoryPointer.new(:string, 256, true)
       chwid = FFI::MemoryPointer.new(:string, 256, true)
       if dir == :in
-        CBindings.call(:bind_get_desc_indevices, index, ctype, cname, chwid)
+        CBindings.call(
+          :bind_input_get_device_desc_a,
+          index,
+          ctype,
+          cname,
+          chwid
+        )
       else
-        CBindings.call(:bind_get_desc_outdevices, index, ctype, cname, chwid)
+        CBindings.call(
+          :bind_output_get_device_desc_a,
+          index,
+          ctype,
+          cname,
+          chwid
+        )
       end
       [cname.read_string, ctype.read_long, chwid.read_string]
     end
@@ -182,7 +194,7 @@ module Voicemeeter
 
     def apply_config(name)
       apply(self.configs[name])
-      logger.info("profile #{name} applied!")
+      logger.info "profile #{name} applied!"
     end
   end
 end
