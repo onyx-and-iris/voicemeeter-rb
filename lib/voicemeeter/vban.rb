@@ -8,8 +8,6 @@ module Voicemeeter
       "
       A class representing a VBAN stream
       "
-      include Meta_Functions
-
       def initialize(remote, i)
         super
         make_accessor_bool :on
@@ -55,7 +53,7 @@ module Voicemeeter
     end
 
     class Vban
-      attr_accessor :instream, :outstream
+      attr_reader :instream, :outstream
 
       def initialize(remote)
         "
@@ -75,12 +73,12 @@ module Voicemeeter
       #stree-ignore
       def enable
         @remote.set("vban.enable", 1)
-        end
+      end
 
       #stree-ignore
       def disable
         @remote.set("vban.enable", 0)
-        end
+      end
     end
   end
 end
