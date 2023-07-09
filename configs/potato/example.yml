@@ -1,0 +1,7 @@
+strip-0:
+  comp:
+    knob: 3.6
+button-0:
+  stateonly: true
+vban-in-0:
+  "on": true
