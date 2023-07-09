@@ -10,6 +10,7 @@ module Voicemeeter
         def virt_out = outs[1]
         def num_strip = ins.sum
         def num_bus = outs.sum
+        def to_s = "#{name}".capitalize
       end
 
     basic = KindMap.new(:basic, [2, 1], [1, 1], [4, 4], [0, 0], 0, 80)
