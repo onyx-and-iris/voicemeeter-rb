@@ -9,8 +9,6 @@ require_relative "configs"
 
 module Voicemeeter
   module Remote
-    include Configs
-
     private
 
     class Remote < Base
@@ -28,7 +26,6 @@ module Voicemeeter
       end
 
       def configs
-        Configs.load
         Configs.get(@kind.name)
       end
     end
