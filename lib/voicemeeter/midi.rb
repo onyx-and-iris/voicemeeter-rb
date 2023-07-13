@@ -7,11 +7,11 @@ module Voicemeeter
     end
 
     def get(key)
-      @cache[key]
+      cache[key]
     end
 
     def set(key, velocity)
-      @cache[key] = velocity
+      cache[key] = velocity
     end
   end
 end
