@@ -8,13 +8,15 @@ module Voicemeeter
       include Mixins::Outputs
       include Mixins::Fades
 
+      attr_reader :gainlayer, :levels
+
       def self.make(remote, i)
         "
         Factory function for Strip classes.
 
         Returns a PhysicalStrip or VirtualStrip class
         "
-        p_in, v_in = remote.kind.ins
+        p_in = remote.kind.phys_in
         i < p_in ? PhysicalStrip.new(remote, i) : VirtualStrip.new(remote, i)
       end
 
@@ -24,6 +26,9 @@ module Voicemeeter
         make_accessor_float :gain
         make_accessor_int :limit
         make_accessor_string :label
+
+        @gainlayer = (0...8).map { |j| GainLayer.new(remote, i, j) }
+        @levels = StripLevels.new(remote, i)
       end
 
       def identifier
@@ -147,8 +152,102 @@ module Voicemeeter
         super
         make_accessor_bool :mc
         make_accessor_int :k
-        make_accessor_float :bass, :mid, :treble
       end
+
+      def bass
+        round(getter("EQGain1"), 1)
+      end
+
+      def bass=(val)
+        setter("EQGain1", val)
+      end
+
+      def mid
+        round(getter("EQGain2"), 1)
+      end
+
+      def mid=(val)
+        setter("EQGain2", val)
+      end
+
+      def treble
+        round(getter("EQGain3"), 1)
+      end
+
+      def treble=(val)
+        setter("EQGain3", val)
+      end
+    end
+
+    class GainLayer < IRemote
+      def initialize(remote, i, j)
+        super(remote, i)
+        @j = j
+      end
+
+      def identifier
+        "strip[#{@index}]"
+      end
+
+      def gain
+        self.getter("gainlayer[#{@j}]")
+      end
+
+      def gain=(value)
+        self.setter("gainlayer[#{@j}]", value)
+      end
+    end
+
+    module StripLevelEnum
+      PREFADER = 0
+      POSTFADER = 1
+      POSTMUTE = 2
+      BUS = 3
+    end
+
+    class StripLevels < IRemote
+      attr_reader :prefader, :postfader, :postmute
+
+      def initialize(remote, i)
+        super
+        p_in = remote.kind.phys_in
+        if i < p_in
+          @init = i * 2
+          @offset = 2
+        else
+          @init = (p_in * 2) + ((i - p_in) * 8)
+          @offset = 8
+        end
+      end
+
+      def identifier
+        "strip[#{@index}]"
+      end
+
+      def get_level(mode)
+        @remote.strip_mode = mode
+        if @remote.running && @remote.event.ldirty
+          vals = @remote.cache[:strip_level][@init, @offset]
+        else
+          vals =
+            (@init...@init + @offset).map { |i| @remote.get_level(mode, i) }
+        end
+        vals.map { |x| x > 0 ? (20 * Math.log(x, 10)).round(1) : -200.0 }
+      end
+
+      def prefader
+        get_level(StripLevelEnum::PREFADER)
+      end
+
+      def postfader
+        get_level(StripLevelEnum::POSTFADER)
+      end
+
+      def postmute
+        get_level(StripLevelEnum::POSTMUTE)
+      end
+
+      def isdirty? = @remote._strip_comp[@init, @offset].any?
     end
   end
 end
