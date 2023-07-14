@@ -14,12 +14,12 @@ module Voicemeeter
         super
       end
 
-      def getter(mode)
-        @remote.get_buttonstatus(@index, mode)
+      def getter(type_)
+        remote.get_buttonstatus(@index, type_)
       end
 
-      def setter(set, mode)
-        @remote.set_buttonstatus(@index, set, mode)
+      def setter(type_, val)
+        remote.set_buttonstatus(@index, type_, val)
       end
 
       def state
