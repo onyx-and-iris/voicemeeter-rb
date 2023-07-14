@@ -49,6 +49,14 @@ module Voicemeeter
     end
 
     # writer methods
+    def make_writer_bool(*params)
+      params.each do |param|
+        define_singleton_method("#{param}=") do |value|
+          setter(param, value && 1 || 0)
+        end
+      end
+    end
+
     def make_writer_string(*params)
       params.each do |param|
         define_singleton_method("#{param}=") { |value| setter(param, value) }
