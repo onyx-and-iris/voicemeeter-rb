@@ -2,32 +2,51 @@ require_relative "install"
 require_relative "cbindings"
 require_relative "kinds"
 require_relative "midi"
+require_relative "event"
+require_relative "worker"
 require "easy_logging"
 
 module Voicemeeter
   class Base
-    include EasyLogging
+    include Worker
+    include Events::Callbacks
 
-    attr_reader :kind, :midi
+    attr_reader :kind, :midi, :event, :running
+    attr_accessor :cache
+
+    RATELIMIT = 0.033
 
     def initialize(kind, **kwargs)
       @kind = kind
       @sync = kwargs[:sync] || false
+      @ratelimit = kwargs[:ratelimit] || RATELIMIT
       @midi = Midi.new
+      @event =
+        Events::Tracker.new(
+          **(kwargs.select { |k, _| %i[pdirty mdirty ldirty midi].include? k })
+        )
+      @callbacks = Array.new
+      @running = false
+      @que = Queue.new
+      @cache = { strip_mode: 0 }
     end
 
     def to_s
-      "Voicemeeter #{@kind}"
+      "Voicemeeter #{kind}"
     end
 
     def login
       self.runvm if CBindings.call(:bind_login, ok: [0, 1]) == 1
       clear_dirty
       logger.info "Successfully logged into #{self} version #{version}"
+      if event.any?
+        init_worker(@que)
+        init_producer(@que)
+      end
     end
 
     def logout
-      clear_dirty
+      @running = false
       sleep(0.1)
       CBindings.call(:bind_logout)
       logger.info "Sucessfully logged out of #{self}"
@@ -39,6 +58,14 @@ module Voicemeeter
 
     def mdirty?
       CBindings.call(:bind_macro_button_is_dirty, ok: [0, 1]) == 1
+    end
+
+    def ldirty?
+      cache[:strip_buf], cache[:bus_buf] = _get_levels
+      !(
+        cache[:strip_level] == cache[:strip_buf] &&
+          @cache[:bus_level] == cache[:bus_buf]
+      )
     end
 
     private
@@ -54,7 +81,7 @@ module Voicemeeter
         banana: Kinds::KindEnum::BANANA,
         potato: Install::OS_BITS == 64 ? 6 : Kinds::KindEnum::POTATO
       }
-      CBindings.call(:bind_run_voicemeeter, kinds[@kind.name])
+      CBindings.call(:bind_run_voicemeeter, kinds[kind.name])
       sleep(1)
     end
 
@@ -114,10 +141,19 @@ module Voicemeeter
       CBindings.call(:bind_macro_button_set_status, id, state, mode)
     end
 
-    def get_level(type_, index)
+    def get_level(mode, index)
       cget = FFI::MemoryPointer.new(:float, 1)
-      CBindings.call(:bind_get_level, type_, index, cget)
+      CBindings.call(:bind_get_level, mode, index, cget)
       cget.read_float
+    end
+
+    def _get_levels
+      [
+        (0...kind.num_strip_levels).map do |i|
+          get_level(cache[:strip_mode], i)
+        end,
+        (0...kind.num_bus_levels).map { |i| get_level(3, i) }
+      ]
     end
 
     def get_num_devices(dir)
@@ -165,14 +201,15 @@ module Voicemeeter
           :bind_get_midi_message,
           cmsg,
           1024,
+          ok: [-5, -6],
           exp: ->(x) { x >= 0 }
         )
       if (got_midi = res > 0)
         vals = cmsg.read_string_bytes
         vals.each_slice(3) do |ch, key, velocity|
-          @midi.channel = ch if @midi.channel.nil? || @midi.channel != ch
-          @midi.current = key.to_i
-          @midi.set(key.to_i, velocity.to_i)
+          midi.channel = ch if midi.channel.nil? || midi.channel != ch
+          midi.current = key.to_i
+          midi.set(key.to_i, velocity.to_i)
         end
       end
       got_midi
@@ -182,18 +219,18 @@ module Voicemeeter
       data.each do |key, val|
         kls, index, *rem = key.to_s.split("-")
         if rem.empty?
-          target = self.send(kls)
+          target = send(kls)
         else
           dir = "#{index.chomp("stream")}stream"
           index = rem[0]
-          target = self.vban.send(dir)
+          target = vban.send(dir)
         end
         target[index.to_i].apply(val)
       end
     end
 
     def apply_config(name)
-      apply(self.configs[name])
+      apply(configs[name])
       logger.info "profile #{name} applied!"
     end
   end
