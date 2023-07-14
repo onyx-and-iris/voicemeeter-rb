@@ -8,16 +8,20 @@ module Voicemeeter
 
     extend FFI::Library
 
-    VM_PATH = Install.get_vmpath()
+    VM_PATH = Install.get_vmpath
 
     ffi_lib VM_PATH.join(
-              "VoicemeeterRemote#{Install::OS_BITS == 64 ? "64" : "32"}.dll"
-            )
+      "VoicemeeterRemote#{(Install::OS_BITS == 64) ? "64" : "32"}.dll"
+    )
     ffi_convention :stdcall
 
-    def self.attach_function(c_name, args, returns)
-      ruby_name = "bind_#{c_name.to_s.delete_prefix("VBVMR_").snakecase}".to_sym
-      super(ruby_name, c_name, args, returns)
+    class << self
+      private
+
+      def self.attach_function(c_name, args, returns)
+        ruby_name = "bind_#{c_name.to_s.delete_prefix("VBVMR_").snakecase}".to_sym
+        super(ruby_name, c_name, args, returns)
+      end
     end
 
     attach_function :VBVMR_Login, [], :long
@@ -42,13 +46,13 @@ module Voicemeeter
 
     attach_function :VBVMR_Input_GetDeviceNumber, [], :long
     attach_function :VBVMR_Input_GetDeviceDescA,
-                    %i[long pointer pointer pointer],
-                    :long
+      %i[long pointer pointer pointer],
+      :long
 
     attach_function :VBVMR_Output_GetDeviceNumber, [], :long
     attach_function :VBVMR_Output_GetDeviceDescA,
-                    %i[long pointer pointer pointer],
-                    :long
+      %i[long pointer pointer pointer],
+      :long
 
     attach_function :VBVMR_GetMidiMessage, %i[pointer long], :long
 

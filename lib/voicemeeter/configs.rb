@@ -15,7 +15,7 @@ module Voicemeeter
 
       def initialize(kind)
         @kind = kind
-        @configs = Hash.new
+        @configs = {}
       end
 
       def to_s
@@ -24,7 +24,7 @@ module Voicemeeter
 
       protected
 
-      #stree-ignore
+      # stree-ignore
       def build_reset_profile
         aouts = (0...@kind.phys_out).to_h { |i| ["A#{i + 1}", false] }
         bouts = (0...@kind.virt_out).to_h { |i| ["B#{i + 1}", false] }
@@ -32,10 +32,10 @@ module Voicemeeter
         gain = [:gain].to_h { |param| [param, 0.0] }
 
         phys_float =
-          %w[comp gate denoiser].to_h { |param| [param, { knob: 0.0 }] }
-        eq = [:eq].to_h { |param| [param, { on: false }] }
+          %w[comp gate denoiser].to_h { |param| [param, {knob: 0.0}] }
+        eq = [:eq].to_h { |param| [param, {on: false}] }
 
-        overrides = { B1: true }
+        overrides = {B1: true}
 
         # physical strip params
         phys_strip =
@@ -46,26 +46,26 @@ module Voicemeeter
             ]
           end
 
-        overrides = { A1: true }
+        overrides = {A1: true}
         # virtual strip params
         virt_strip =
           (@kind.phys_in...@kind.phys_in + @kind.virt_in).to_h do |i|
             [
               "strip-#{i}",
-              { **aouts, **bouts, **strip_bools, **gain, **overrides }
+              {**aouts, **bouts, **strip_bools, **gain, **overrides}
             ]
           end
 
         bus_bools = %i[mute mono].to_h { |param| [param, false] }
         bus =
           (0...@kind.num_bus).to_h do |i|
-            ["bus-#{i}", { **bus_bools, **gain, **eq }]
+            ["bus-#{i}", {**bus_bools, **gain, **eq}]
           end
-        { **phys_strip, **virt_strip, **bus }
+        {**phys_strip, **virt_strip, **bus}
       end
 
       def read_from_yml
-        #stree-ignore
+        # stree-ignore
         configpaths = [
           Pathname.getwd.join("configs", @kind.name.to_s),
           Pathname.new(Dir.home).join(".config", "voicemeeter-rb", @kind.name.to_s),

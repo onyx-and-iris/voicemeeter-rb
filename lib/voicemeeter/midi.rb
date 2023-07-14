@@ -3,7 +3,7 @@ module Voicemeeter
     attr_accessor :cache, :current, :channel
 
     def initialize
-      @cache = Hash.new
+      @cache = {}
     end
 
     def get(key)

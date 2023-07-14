@@ -2,12 +2,12 @@ module Voicemeeter
   module Mixins
     module Fades
       def fadeto(target, time)
-        self.setter("FadeTo", "(#{target}, #{time})")
+        setter("FadeTo", "(#{target}, #{time})")
         sleep(@remote.delay)
       end
 
       def fadeby(change, time)
-        self.setter("FadeBy", "(#{change}, #{time})")
+        setter("FadeBy", "(#{change}, #{time})")
         sleep(@remote.delay)
       end
     end
@@ -21,11 +21,11 @@ module Voicemeeter
 
     module Apps
       def appgain(name, gain)
-        self.setter("AppGain", "(\"#{name}\", #{gain})")
+        setter("AppGain", "(\"#{name}\", #{gain})")
       end
 
       def appmute(name, mute)
-        self.setter("AppMute", "(\"#{name}\", #{mute ? 1 : 0})")
+        setter("AppMute", "(\"#{name}\", #{mute ? 1 : 0})")
       end
     end
 
@@ -33,12 +33,12 @@ module Voicemeeter
       def initialize(*args)
         super
         remote, *rem = args
-        num_A, num_B = remote.kind.outs
+        num_a, num_b = remote.kind.outs
         channels =
-          (1..(num_A + num_B)).map do |i|
-            i <= num_A ? "A#{i}" : "B#{i - num_A}"
+          (1..(num_a + num_b)).map do |i|
+            (i <= num_a) ? "A#{i}" : "B#{i - num_a}"
           end
-        make_accessor_bool *channels
+        make_accessor_bool(*channels)
       end
     end
 

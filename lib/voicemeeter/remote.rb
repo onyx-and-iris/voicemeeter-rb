@@ -38,13 +38,6 @@ module Voicemeeter
     public
 
     def self.new(kind_id, **kwargs)
-      "
-      Factory method for remotes
-
-      Wraps factory expression and handles errors
-
-      Returns a Remote class of a Kind
-      "
       remotes =
         Kinds::ALL.to_h { |kind| [kind.name, Remote.new(kind, **kwargs)] }
       unless remotes.key? kind_id

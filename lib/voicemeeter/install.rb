@@ -5,19 +5,19 @@ require "ffi"
 module Voicemeeter
   private
 
-  #stree-ignore
+  # stree-ignore
   module Install
-    OS_BITS = FFI::Platform::CPU.downcase == "x64" ? 64 : 32
+    OS_BITS = (FFI::Platform::CPU.downcase == "x64") ? 64 : 32
 
-    def get_vmpath()
+    def get_vmpath
       reg_key = [
         :Software,
-        (OS_BITS == 64 ? :WOW6432Node : nil),
+        ((OS_BITS == 64) ? :WOW6432Node : nil),
         :Microsoft,
         :Windows,
         :CurrentVersion,
         :Uninstall,
-        :'VB:Voicemeeter {17359A74-1236-5467}'
+        :"VB:Voicemeeter {17359A74-1236-5467}"
       ]
 
       Win32::Registry::HKEY_LOCAL_MACHINE.open(

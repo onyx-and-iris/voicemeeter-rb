@@ -5,9 +5,6 @@ require_relative "errors"
 module Voicemeeter
   module Vban
     class VbanStream < IRemote
-      "
-      A class representing a VBAN stream
-      "
       def initialize(remote, i)
         super
         make_accessor_bool :on
@@ -25,9 +22,6 @@ module Voicemeeter
     end
 
     class VbanInstream < VbanStream
-      "
-      A subclass representing a VBAN Instream
-      "
       def initialize(remote, i)
         super
         make_reader_int :sr, :channel, :bit
@@ -39,9 +33,6 @@ module Voicemeeter
     end
 
     class VbanOutstream < VbanStream
-      "
-      A subclass representing a VBAN Outstream
-      "
       def initialize(remote, i)
         super
         make_accessor_int :sr, :channel, :bit
@@ -56,11 +47,6 @@ module Voicemeeter
       attr_reader :instream, :outstream
 
       def initialize(remote)
-        "
-        Initializes a Vban class
-
-        Creates an array for each in/out stream and sets as class attributes
-        "
         vban_in, vban_out = remote.kind.vban
         @instream = []
         vban_in.times { |i| @instream << VbanInstream.new(remote, i) }
@@ -70,12 +56,12 @@ module Voicemeeter
         @remote = remote
       end
 
-      #stree-ignore
+      # stree-ignore
       def enable
         @remote.set("vban.enable", 1)
       end
 
-      #stree-ignore
+      # stree-ignore
       def disable
         @remote.set("vban.enable", 0)
       end

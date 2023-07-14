@@ -4,11 +4,8 @@ require "easy_logging"
 
 module Voicemeeter
   class IRemote
-    "
-    Common interface between base class and higher classes.
-    "
     include EasyLogging
-    include Meta_Functions
+    include MetaFunctions
 
     def initialize(remote, i = nil)
       @remote = remote
@@ -40,20 +37,14 @@ module Voicemeeter
     def apply(params)
       params.each do |key, val|
         if val.is_a? Hash
-          target = self.send(key)
+          target = send(key)
           target.apply(val)
+        elsif key == :mode
+          mode.send("#{val}=", true)
         else
-          if key == :mode
-            self.mode.send("#{val}=", true)
-          else
-            self.send("#{key}=", val)
-          end
+          send("#{key}=", val)
         end
       end
-    end
-
-    def method_missing(method, *args)
-      logger.debug "Unknown method #{method} for #{self}."
     end
   end
 end

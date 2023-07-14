@@ -1,5 +1,5 @@
 module Voicemeeter
-  module Meta_Functions
+  module MetaFunctions
     # Accessor methods
     def make_accessor_bool(*params)
       params.each do |param|

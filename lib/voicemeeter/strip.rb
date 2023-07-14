@@ -11,13 +11,8 @@ module Voicemeeter
       attr_reader :gainlayer, :levels
 
       def self.make(remote, i)
-        "
-        Factory function for Strip classes.
-
-        Returns a PhysicalStrip or VirtualStrip class
-        "
         p_in = remote.kind.phys_in
-        i < p_in ? PhysicalStrip.new(remote, i) : VirtualStrip.new(remote, i)
+        (i < p_in) ? PhysicalStrip.new(remote, i) : VirtualStrip.new(remote, i)
       end
 
       def initialize(remote, i)
@@ -60,12 +55,12 @@ module Voicemeeter
       def initialize(remote, i)
         super
         make_accessor_float :gainin,
-                            :ratio,
-                            :threshold,
-                            :attack,
-                            :release,
-                            :knee,
-                            :gainout
+          :ratio,
+          :threshold,
+          :attack,
+          :release,
+          :knee,
+          :gainout
         make_accessor_bool :makeup
       end
 
@@ -190,17 +185,15 @@ module Voicemeeter
       end
 
       def gain
-        self.getter("gainlayer[#{@j}]")
+        getter("gainlayer[#{@j}]")
       end
 
       def gain=(value)
-        self.setter("gainlayer[#{@j}]", value)
+        setter("gainlayer[#{@j}]", value)
       end
     end
 
     class StripLevels < IRemote
-      attr_reader :prefader, :postfader, :postmute
-
       def initialize(remote, i)
         super
         p_in = remote.kind.phys_in
@@ -219,13 +212,12 @@ module Voicemeeter
 
       def get_level(mode)
         @remote.cache[:strip_mode] = mode
-        if @remote.running && @remote.event.ldirty
-          vals = @remote.cache[:strip_level][@init, @offset]
+        vals = if @remote.running && @remote.event.ldirty
+          @remote.cache[:strip_level][@init, @offset]
         else
-          vals =
-            (@init...@init + @offset).map { |i| @remote.get_level(mode, i) }
+          (@init...@init + @offset).map { |i| @remote.get_level(mode, i) }
         end
-        vals.map { |x| x > 0 ? (20 * Math.log(x, 10)).round(1) : -200.0 }
+        vals.map { |x| (x > 0) ? (20 * Math.log(x, 10)).round(1) : -200.0 }
       end
 
       def prefader

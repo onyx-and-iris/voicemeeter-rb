@@ -5,14 +5,22 @@ module Voicemeeter
     KindMap =
       Data.define(:name, :ins, :outs, :vban, :asio, :insert, :num_buttons) do
         def phys_in = ins[0]
+
         def virt_in = ins[1]
+
         def phys_out = outs[0]
+
         def virt_out = outs[1]
+
         def num_strip = ins.sum
+
         def num_bus = outs.sum
+
         def num_strip_levels = 2 * phys_in + 8 * virt_in
+
         def num_bus_levels = 8 * (phys_out + virt_out)
-        def to_s = "#{name}".capitalize
+
+        def to_s = name.to_s.capitalize
       end
 
     basic = KindMap.new(:basic, [2, 1], [1, 1], [4, 4], [0, 0], 0, 80)
