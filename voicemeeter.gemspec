@@ -1,6 +1,6 @@
 # frozen_string_literal: true
+
 require File.expand_path("lib/voicemeeter/version", __dir__)
-lib = File.expand_path("./lib")
 
 Gem::Specification.new do |spec|
   spec.name = "voicemeeter"
@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "ffi", "~> 1.9", ">= 1.9.10"
   spec.add_runtime_dependency "easy_logging", "~> 0.4.0"
   spec.add_development_dependency "rspec", "~> 3.4"
+  spec.add_development_dependency "standard", "~> 1.30"
   spec.required_ruby_version = ">= 3.0"
   spec.metadata = {
     "source_code_uri" => "https://github.com/onyx-and-iris/voicemeeter-rb.git"

@@ -13,6 +13,7 @@ module Voicemeeter
           que << :ldirty if event.ldirty
           sleep(@ratelimit)
         end
+        logger.debug("closing producer thread")
         que << :stop
       end
     end
@@ -25,8 +26,8 @@ module Voicemeeter
         loop do
           e_from_que = @que.pop
           if e_from_que == :stop
+            logger.debug("closing worker thread")
             break
-            logger.debug("closing #{self} thread")
           end
           on_event :on_pdirty if e_from_que == :pdirty && pdirty?
           on_event :on_mdirty if e_from_que == :mdirty && mdirty?

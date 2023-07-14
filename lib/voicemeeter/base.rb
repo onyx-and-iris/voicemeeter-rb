@@ -8,6 +8,7 @@ require "easy_logging"
 
 module Voicemeeter
   class Base
+    include EasyLogging
     include Worker
     include Events::Callbacks
 
@@ -25,10 +26,9 @@ module Voicemeeter
         Events::Tracker.new(
           **(kwargs.select { |k, _| %i[pdirty mdirty ldirty midi].include? k })
         )
-      @callbacks = Array.new
-      @running = false
+      @callbacks = []
       @que = Queue.new
-      @cache = { strip_mode: 0 }
+      @cache = {strip_mode: 0}
     end
 
     def to_s
@@ -36,7 +36,7 @@ module Voicemeeter
     end
 
     def login
-      self.runvm if CBindings.call(:bind_login, ok: [0, 1]) == 1
+      runvm if CBindings.call(:bind_login, ok: [0, 1]) == 1
       clear_dirty
       logger.info "Successfully logged into #{self} version #{version}"
       if event.any?
@@ -79,7 +79,7 @@ module Voicemeeter
       kinds = {
         basic: Kinds::KindEnum::BASIC,
         banana: Kinds::KindEnum::BANANA,
-        potato: Install::OS_BITS == 64 ? 6 : Kinds::KindEnum::POTATO
+        potato: (Install::OS_BITS == 64) ? 6 : Kinds::KindEnum::POTATO
       }
       CBindings.call(:bind_run_voicemeeter, kinds[kind.name])
       sleep(1)

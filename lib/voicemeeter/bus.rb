@@ -11,13 +11,8 @@ module Voicemeeter
       attr_reader :eq, :mode, :levels
 
       def self.make(remote, i)
-        "
-        Factory function for Bus classes.
-
-        Returns a PhysicalBus or VirtualBus class
-        "
         p_out = remote.kind.phys_out
-        i < p_out ? PhysicalBus.new(remote, i) : VirtualBus.new(remote, i)
+        (i < p_out) ? PhysicalBus.new(remote, i) : VirtualBus.new(remote, i)
       end
 
       def initialize(remote, i)
@@ -57,17 +52,17 @@ module Voicemeeter
       def initialize(remote, i)
         super
         make_accessor_bool :normal,
-                           :amix,
-                           :bmix,
-                           :repeat,
-                           :composite,
-                           :tvmix,
-                           :upmix21,
-                           :upmix41,
-                           :upmix61,
-                           :centeronly,
-                           :lfeonly,
-                           :rearonly
+          :amix,
+          :bmix,
+          :repeat,
+          :composite,
+          :tvmix,
+          :upmix21,
+          :upmix41,
+          :upmix61,
+          :centeronly,
+          :lfeonly,
+          :rearonly
       end
 
       def identifier
@@ -88,12 +83,12 @@ module Voicemeeter
     end
 
     def getter(mode)
-      if @remote.running && @remote.event.ldirty
-        vals = @remote.cache[:bus_level][@init, @offset]
+      vals = if @remote.running && @remote.event.ldirty
+        @remote.cache[:bus_level][@init, @offset]
       else
-        vals = (@init...@init + @offset).map { |i| @remote.get_level(mode, i) }
+        (@init...@init + @offset).map { |i| @remote.get_level(mode, i) }
       end
-      vals.map { |x| x > 0 ? (20 * Math.log(x, 10)).round(1) : -200.0 }
+      vals.map { |x| (x > 0) ? (20 * Math.log(x, 10)).round(1) : -200.0 }
     end
 
     def all

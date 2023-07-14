@@ -1,3 +1,5 @@
+require "easy_logging"
+
 module Voicemeeter
   module Events
     module Callbacks
@@ -16,13 +18,15 @@ module Voicemeeter
           if callback.respond_to? :on_update
             callback.on_update { event.to_s[3..] }
           else
-            callback.call if callback.name == event
+            callback.call # if callback == event
           end
         end
       end
     end
 
     class Tracker
+      include EasyLogging
+
       attr_reader :pdirty, :mdirty, :midi, :ldirty
 
       def initialize(pdirty: false, mdirty: false, midi: false, ldirty: false)
@@ -33,15 +37,15 @@ module Voicemeeter
       end
 
       def to_s
-        "#{self.class.name.split("::").last}"
+        self.class.name.split("::").last.to_s
       end
 
       def info(msg = nil)
         info_msg = msg ? ["#{msg} events."] : []
-        if any?
-          info_msg += ["Now listening for #{get.join(", ")} events"]
+        info_msg += if any?
+          ["Now listening for #{get.join(", ")} events"]
         else
-          info_msg += ["Not listening for any events"]
+          ["Not listening for any events"]
         end
         logger.info(info_msg.join(" "))
       end
@@ -67,7 +71,7 @@ module Voicemeeter
       end
 
       def get
-        %w[pdirty mdirty midi ldirty].reject { |ev| !send("#{ev}") }
+        %w[pdirty mdirty midi ldirty].reject { |ev| !send(ev.to_s) }
       end
 
       def any?
