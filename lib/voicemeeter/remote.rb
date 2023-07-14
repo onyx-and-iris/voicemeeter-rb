@@ -7,6 +7,7 @@ require_relative "button"
 require_relative "vban"
 require_relative "command"
 require_relative "recorder"
+require_relative "device"
 require_relative "configs"
 
 module Voicemeeter
@@ -14,7 +15,7 @@ module Voicemeeter
     private
 
     class Remote < Base
-      attr_reader :strip, :bus, :button, :vban, :command, :recorder
+      attr_reader :strip, :bus, :button, :vban, :command, :recorder, :device
 
       def initialize(kind, **kwargs)
         super
@@ -24,6 +25,7 @@ module Voicemeeter
         @vban = Vban::Vban.new(self)
         @command = Command.new(self)
         @recorder = Recorder::Recorder.new(self)
+        @device = Device.new(self)
       end
 
       def configs
