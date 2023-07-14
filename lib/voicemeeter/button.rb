@@ -11,11 +11,11 @@ module Voicemeeter
 
     class Button < IRemote
       def getter(type_)
-        remote.get_buttonstatus(@index, type_)
+        @remote.get_buttonstatus(@index, type_)
       end
 
       def setter(type_, val)
-        remote.set_buttonstatus(@index, type_, val)
+        @remote.set_buttonstatus(@index, type_, val)
       end
 
       def state
