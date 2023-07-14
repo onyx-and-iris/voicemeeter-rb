@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "easy_logging", "~> 0.4.0"
   spec.add_development_dependency "rspec", "~> 3.4"
   spec.add_development_dependency "standard", "~> 1.30"
-  spec.required_ruby_version = ">= 3.0"
+  spec.required_ruby_version = ">= 3.2"
   spec.metadata = {
     "source_code_uri" => "https://github.com/onyx-and-iris/voicemeeter-rb.git"
   }
