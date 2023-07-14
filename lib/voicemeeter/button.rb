@@ -10,10 +10,6 @@ module Voicemeeter
     end
 
     class Button < IRemote
-      def initialize(remote, i)
-        super
-      end
-
       def getter(type_)
         remote.get_buttonstatus(@index, type_)
       end
