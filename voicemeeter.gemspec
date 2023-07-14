@@ -14,7 +14,6 @@ Gem::Specification.new do |spec|
   spec.homepage = "https://rubygems.org/gems/voicemeeter"
   spec.license = "MIT"
   spec.add_runtime_dependency "ffi", "~> 1.9", ">= 1.9.10"
-  spec.add_runtime_dependency "observer", "~> 0.1.1"
   spec.add_runtime_dependency "easy_logging", "~> 0.4.0"
   spec.add_development_dependency "rspec", "~> 3.4"
   spec.required_ruby_version = ">= 3.0"
