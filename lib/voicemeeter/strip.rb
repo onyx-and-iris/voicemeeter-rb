@@ -198,13 +198,6 @@ module Voicemeeter
       end
     end
 
-    module StripLevelEnum
-      PREFADER = 0
-      POSTFADER = 1
-      POSTMUTE = 2
-      BUS = 3
-    end
-
     class StripLevels < IRemote
       attr_reader :prefader, :postfader, :postmute
 
@@ -225,7 +218,7 @@ module Voicemeeter
       end
 
       def get_level(mode)
-        @remote.strip_mode = mode
+        @remote.cache[:strip_mode] = mode
         if @remote.running && @remote.event.ldirty
           vals = @remote.cache[:strip_level][@init, @offset]
         else
@@ -236,18 +229,18 @@ module Voicemeeter
       end
 
       def prefader
-        get_level(StripLevelEnum::PREFADER)
+        get_level(Mixins::LevelEnum::PREFADER)
       end
 
       def postfader
-        get_level(StripLevelEnum::POSTFADER)
+        get_level(Mixins::LevelEnum::POSTFADER)
       end
 
       def postmute
-        get_level(StripLevelEnum::POSTMUTE)
+        get_level(Mixins::LevelEnum::POSTMUTE)
       end
 
-      def isdirty? = @remote._strip_comp[@init, @offset].any?
+      def isdirty? = @remote.cache[:strip_comp][@init, @offset].any?
     end
   end
 end

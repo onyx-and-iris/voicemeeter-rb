@@ -8,7 +8,7 @@ module Voicemeeter
       include Mixins::Fades
       include Mixins::Return
 
-      attr_reader :eq, :mode
+      attr_reader :eq, :mode, :levels
 
       def self.make(remote, i)
         "
@@ -16,7 +16,7 @@ module Voicemeeter
 
         Returns a PhysicalBus or VirtualBus class
         "
-        p_out, v_out = remote.kind.outs
+        p_out = remote.kind.phys_out
         i < p_out ? PhysicalBus.new(remote, i) : VirtualBus.new(remote, i)
       end
 
@@ -28,6 +28,7 @@ module Voicemeeter
 
         @eq = BusEq.new(remote, i)
         @mode = BusModes.new(remote, i)
+        @levels = BusLevels.new(remote, i)
       end
 
       def identifier
@@ -72,6 +73,45 @@ module Voicemeeter
       def identifier
         "bus[#{@index}].mode"
       end
+    end
+  end
+
+  class BusLevels < IRemote
+    def initialize(remote, i)
+      super
+      @init = i * 8
+      @offset = 8
+    end
+
+    def identifier
+      "bus[#{@index}]"
+    end
+
+    def getter(mode)
+      if @remote.running && @remote.event.ldirty
+        vals = @remote.cache[:bus_level][@init, @offset]
+      else
+        vals = (@init...@init + @offset).map { |i| @remote.get_level(mode, i) }
+      end
+      vals.map { |x| x > 0 ? (20 * Math.log(x, 10)).round(1) : -200.0 }
+    end
+
+    def all
+      getter(Mixins::LevelEnum::BUS)
+    end
+
+    def isdirty? = @remote.cache[:bus_comp][@init, @offset].any?
+  end
+
+  class BusDevice < IRemote
+    def initialize(remote, i)
+      super
+      make_reader_only :name, :sr
+      make_writer_only :wdm, :ks, :mme, :asio
+    end
+
+    def identifier
+      "bus[#{@index}].device"
     end
   end
 end

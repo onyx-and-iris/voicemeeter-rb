@@ -13,8 +13,6 @@ module Voicemeeter
     end
 
     module Return
-      include Meta_Functions
-
       def initialize(remote, i)
         super
         make_accessor_float :returnreverb, :returndelay, :returnfx1, :returnfx2
@@ -45,8 +43,6 @@ module Voicemeeter
     end
 
     module Xy
-      include Meta_Functions
-
       module Pan
         def initialize(remote, i)
           super
@@ -70,13 +66,18 @@ module Voicemeeter
     end
 
     module Fx
-      include Meta_Functions
-
       def initialize(remote, i)
         super
         make_accessor_float :reverb, :delay, :fx1, :fx2
         make_accessor_bool :postreverb, :postdelay, :postfx1, :postfx2
       end
+    end
+
+    module LevelEnum
+      PREFADER = 0
+      POSTFADER = 1
+      POSTMUTE = 2
+      BUS = 3
     end
   end
 end
