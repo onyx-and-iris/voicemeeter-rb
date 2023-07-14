@@ -30,7 +30,7 @@ module Voicemeeter
     end
 
     def _cmd(param)
-      param.empty? ? self.identifier : "#{self.identifier}.#{param}"
+      param.empty? ? identifier : "#{identifier}.#{param}"
     end
 
     def identifier
@@ -43,7 +43,11 @@ module Voicemeeter
           target = self.send(key)
           target.apply(val)
         else
-          self.send("#{key}=", val)
+          if key == :mode
+            self.mode.send("#{val}=", true)
+          else
+            self.send("#{key}=", val)
+          end
         end
       end
     end
