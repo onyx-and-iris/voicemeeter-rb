@@ -98,10 +98,6 @@ module Voicemeeter
     end
 
     class StripDenoiser < IRemote
-      def initialize(remote, i)
-        super
-      end
-
       def identifier
         "strip[#{@index}].denoiser"
       end
