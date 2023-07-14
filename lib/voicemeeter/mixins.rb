@@ -32,7 +32,7 @@ module Voicemeeter
     module Outputs
       def initialize(*args)
         super
-        remote, *rem = args
+        remote, *_ = args
         num_a, num_b = remote.kind.outs
         channels =
           (1..(num_a + num_b)).map do |i|

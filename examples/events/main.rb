@@ -1,6 +1,5 @@
 require_relative "../../lib/voicemeeter"
 require "easy_logging"
-require "pp"
 
 EasyLogging.level = Logger::DEBUG
 
