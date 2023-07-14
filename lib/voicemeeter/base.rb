@@ -168,7 +168,7 @@ module Voicemeeter
     end
 
     def get_device_description(index, dir)
-      unless %i[in out].include > dir
+      unless %i[in out].include? dir
         raise VMError.new("dir got: #{dir}, expected in or out")
       end
       ctype = FFI::MemoryPointer.new(:long, 1)
