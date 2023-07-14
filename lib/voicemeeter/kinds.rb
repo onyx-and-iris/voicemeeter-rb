@@ -10,6 +10,8 @@ module Voicemeeter
         def virt_out = outs[1]
         def num_strip = ins.sum
         def num_bus = outs.sum
+        def num_strip_levels = 2 * phys_in + 8 * virt_in
+        def num_bus_levels = 8 * (phys_out + virt_out)
         def to_s = "#{name}".capitalize
       end
 
