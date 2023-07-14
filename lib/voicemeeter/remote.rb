@@ -5,6 +5,7 @@ require_relative "strip"
 require_relative "bus"
 require_relative "button"
 require_relative "vban"
+require_relative "recorder"
 require_relative "configs"
 
 module Voicemeeter
@@ -12,7 +13,7 @@ module Voicemeeter
     private
 
     class Remote < Base
-      attr_reader :strip, :bus, :button, :vban
+      attr_reader :strip, :bus, :button, :vban, :recorder
 
       def initialize(kind, **kwargs)
         super
@@ -20,6 +21,7 @@ module Voicemeeter
         @bus = (0...kind.num_bus).map { |i| Bus::Bus.make(self, i) }
         @button = (0...kind.num_buttons).map { |i| Button::Button.new(self, i) }
         @vban = Vban::Vban.new(self)
+        @recorder = Recorder::Recorder.new(self)
       end
 
       def configs

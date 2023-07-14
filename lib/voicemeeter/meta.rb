@@ -54,5 +54,12 @@ module Voicemeeter
         define_singleton_method("#{param}=") { |value| setter(param, value) }
       end
     end
+
+    # methods for performing certain actions as opposed to setting values
+    def make_action_method(*params)
+      params.each do |param|
+        define_singleton_method(param) { setter(param, 1) }
+      end
+    end
   end
 end
