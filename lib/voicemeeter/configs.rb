@@ -16,6 +16,7 @@ module Voicemeeter
       def initialize(kind)
         @kind = kind
         @configs = {}
+        @reader = FileReader.new(self, kind)
       end
 
       def to_s
@@ -24,15 +25,14 @@ module Voicemeeter
 
       protected
 
-      # stree-ignore
       def build_reset_profile
-        aouts = (0...@kind.phys_out).to_h { |i| ["A#{i + 1}", false] }
-        bouts = (0...@kind.virt_out).to_h { |i| ["B#{i + 1}", false] }
-        strip_bools = %w[mute mono solo].to_h { |param| [param, false] }
+        aouts = (0...@kind.phys_out).to_h { |i| ["A#{i + 1}".to_sym, false] }
+        bouts = (0...@kind.virt_out).to_h { |i| ["B#{i + 1}".to_sym, false] }
+        strip_bools = %i[mute mono solo].to_h { |param| [param, false] }
         gain = [:gain].to_h { |param| [param, 0.0] }
 
         phys_float =
-          %w[comp gate denoiser].to_h { |param| [param, {knob: 0.0}] }
+          %i[comp gate denoiser].to_h { |param| [param, {knob: 0.0}] }
         eq = [:eq].to_h { |param| [param, {on: false}] }
 
         overrides = {B1: true}
@@ -61,43 +61,58 @@ module Voicemeeter
           (0...@kind.num_bus).to_h do |i|
             ["bus-#{i}", {**bus_bools, **gain, **eq}]
           end
+
         {**phys_strip, **virt_strip, **bus}
       end
 
-      def read_from_yml
-        # stree-ignore
-        configpaths = [
-          Pathname.getwd.join("configs", @kind.name.to_s),
-          Pathname.new(Dir.home).join(".config", "voicemeeter-rb", @kind.name.to_s),
-          Pathname.new(Dir.home).join("Documents", "Voicemeeter", "configs", @kind.name.to_s)
+      def read_from_yml = @reader.read
+
+      public
+
+      def run
+        logger.debug "Running #{self}"
+        configs[:reset] = build_reset_profile
+        read_from_yml
+      end
+    end
+
+    class FileReader
+      include EasyLogging
+
+      def initialize(loader, kind)
+        @loader = loader
+        @kind = kind
+        @configpaths = [
+          Pathname.getwd.join("configs", kind.name.to_s),
+          Pathname.new(Dir.home).join(".config", "voicemeeter-rb", kind.name.to_s),
+          Pathname.new(Dir.home).join("Documents", "Voicemeeter", "configs", kind.name.to_s)
         ]
-        configpaths.each do |configpath|
+      end
+
+      def read
+        @configpaths.each do |configpath|
           if configpath.exist?
             logger.debug "checking #{configpath} for configs"
             filepaths = configpath.glob("*.yml")
             filepaths.each do |filepath|
-              filename = (filepath.basename.sub_ext "").to_s.to_sym
-              if configs.key? filename
-                logger.debug "config with name '#{filename}' already in memory, skipping..."
-                next
-              end
-
-              configs[filename] = YAML.load_file(
-                filepath,
-                symbolize_names: true
-              )
-              logger.info "#{@kind.name}/#{filename} loaded into memory"
+              register(filepath)
             end
           end
         end
       end
 
-      public
+      def register(filepath)
+        filename = (filepath.basename.sub_ext "").to_s.to_sym
+        if @loader.configs.key? filename
+          logger.debug "config with name '#{filename}' already in memory, skipping..."
+          return
+        end
 
-      def build
-        logger.debug "Running #{self}"
-        configs[:reset] = build_reset_profile
-        read_from_yml
+        @loader.configs[filename] = YAML.load_file(
+          filepath,
+          symbolize_names: true
+        )
+        logger.info "#{@kind.name}/#{filename} loaded into memory"
       end
     end
 
@@ -106,7 +121,7 @@ module Voicemeeter
     def get(kind_id)
       if @loaders.nil?
         @loaders = Kinds::ALL.to_h { |kind| [kind.name, Loader.new(kind)] }
-        @loaders.each { |name, loader| loader.build }
+        @loaders.each { |name, loader| loader.run }
       end
       @loaders[kind_id].configs
     end

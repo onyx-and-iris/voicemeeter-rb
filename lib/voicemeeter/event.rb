@@ -25,7 +25,7 @@ module Voicemeeter
     end
 
     class Tracker
-      include EasyLogging
+      # include EasyLogging
 
       attr_reader :pdirty, :mdirty, :midi, :ldirty
 

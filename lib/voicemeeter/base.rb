@@ -8,7 +8,7 @@ require "easy_logging"
 
 module Voicemeeter
   class Base
-    include EasyLogging
+    # include EasyLogging
     include Worker
     include Events::Callbacks
 
