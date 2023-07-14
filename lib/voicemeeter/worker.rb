@@ -21,6 +21,8 @@ module Voicemeeter
     def init_worker(que)
       logger.info "Listening for #{event.get.join(", ")} events"
       @cache[:strip_level], @cache[:bus_level] = _get_levels
+      @cache[:strip_comp] = Array.new(kind.num_strip_levels, false)
+      @cache[:bus_comp] = Array.new(kind.num_bus_levels, false)
       @running = true
       Thread.new do
         loop do
@@ -33,12 +35,8 @@ module Voicemeeter
           on_event :on_mdirty if e_from_que == :mdirty && mdirty?
           on_event :on_midi if e_from_que == :midi && get_midi_message
           if e_from_que == :ldirty && ldirty?
-            cache[:strip_comp] = cache[:strip_level].map.with_index do |x, i|
-              !(x == cache[:strip_buf][i])
-            end
-            cache[:bus_comp] = cache[:bus_level].map.with_index do |x, i|
-              !(x == cache[:bus_buf][i])
-            end
+            cache[:strip_comp] = cache[:strip_level].zip(cache[:strip_buf]).map { |a, b| a != b }
+            cache[:bus_comp] = cache[:bus_level].zip(cache[:bus_buf]).map { |a, b| a != b }
             cache[:strip_level] = cache[:strip_buf]
             cache[:bus_level] = cache[:bus_buf]
             on_event :on_ldirty

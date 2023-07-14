@@ -28,7 +28,7 @@ class Main
 
   def on_ldirty
     @vm.bus.each do |bus|
-      puts "#{bus} #{bus.levels.all}" if bus.levels.isdirty?
+      puts "#{bus} #{bus.levels.all.join(" ")}" if bus.levels.isdirty?
     end
   end
 end

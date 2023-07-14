@@ -64,7 +64,7 @@ module Voicemeeter
       cache[:strip_buf], cache[:bus_buf] = _get_levels
       !(
         cache[:strip_level] == cache[:strip_buf] &&
-          @cache[:bus_level] == cache[:bus_buf]
+          cache[:bus_level] == cache[:bus_buf]
       )
     end
 

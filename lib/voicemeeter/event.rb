@@ -17,8 +17,8 @@ module Voicemeeter
         @callbacks.each do |callback|
           if callback.respond_to? :on_update
             callback.on_update { event.to_s[3..] }
-          else
-            callback.call # if callback == event
+          elsif callback.name == event
+            callback.call
           end
         end
       end
