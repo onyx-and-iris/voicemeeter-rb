@@ -6,17 +6,14 @@ module Voicemeeter
 
     def init_producer(que)
       Thread.new do
-        loop do
+        while @running
           que << :pdirty if event.pdirty
           que << :mdirty if event.mdirty
           que << :midi if event.midi
           que << :ldirty if event.ldirty
-          if !@running
-            que << :stop
-            break
-          end
           sleep(@ratelimit)
         end
+        que << :stop
       end
     end
 
@@ -27,7 +24,7 @@ module Voicemeeter
       Thread.new do
         loop do
           e_from_que = @que.pop
-          if event == :stop
+          if e_from_que == :stop
             break
             logger.debug("closing #{self} thread")
           end
@@ -35,14 +32,14 @@ module Voicemeeter
           on_event :on_mdirty if e_from_que == :mdirty && mdirty?
           on_event :on_midi if e_from_que == :midi && get_midi_message
           if e_from_que == :ldirty && ldirty?
-            @_strip_comp =
-              cache[:strip_level].map.with_index do |x, i|
-                !(x == @strip_buf[i])
-              end
-            @_bus_comp =
-              cache[:bus_level].map.with_index { |x, i| !(x == @bus_buf[i]) }
-            cache[:strip_level] = @strip_buf
-            cache[:bus_level] = @bus_buf
+            cache[:strip_comp] = cache[:strip_level].map.with_index do |x, i|
+              !(x == cache[:strip_buf][i])
+            end
+            cache[:bus_comp] = cache[:bus_level].map.with_index do |x, i|
+              !(x == cache[:bus_buf][i])
+            end
+            cache[:strip_level] = cache[:strip_buf]
+            cache[:bus_level] = cache[:bus_buf]
             on_event :on_ldirty
           end
         end
