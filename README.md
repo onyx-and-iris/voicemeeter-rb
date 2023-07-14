@@ -1,4 +1,4 @@
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/onyx-and-iris/voicemeeter-rb/blob/dev/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)][license]
 [![Ruby Code Style](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/standardrb/standard)
 
 # Ruby Wrapper for Voicemeeter API
@@ -42,25 +42,24 @@ Login and logout are handled for you in this scenario.
 ```ruby
 require "voicemeeter"
 
-vm = Voicemeeter.remote(:banana)
+Voicemeeter::Remote
+  .new(:banana)
+  .run do |vm|
+    # mute the leftmost strip
+    vm.strip[0].mute = true
+    puts vm.strip[0].mute
 
-# vm.run accepts a block
-vm.run do
-  # mute the leftmost strip
-  vm.strip[0].mute = true
-  puts vm.strip[0].mute
-
-  # disable eq for second from left bus
-  vm.bus[1].eq = false
-  puts vm.bus[1].eq
-end
+    # disable eq for second from left bus
+    vm.bus[1].eq.on = false
+    puts vm.bus[1].eq.on
+  end
 ```
 
 Otherwise you must remember to call `vm.login` `vm.logout` at the start/end of your code.
 
-## `kind_id`
+## `KIND_ID`
 
-Pass the kind of Voicemeeter as an argument. kind_id may be:
+Pass the kind of Voicemeeter as an argument. KIND_ID may be:
 
 - `:basic`
 - `:banana`
@@ -557,3 +556,5 @@ Bundle exec rspec --tag 'higher'
 ### Official Documentation
 
 - [Voicemeeter Remote C API](https://github.com/onyx-and-iris/Voicemeeter-SDK/blob/main/VoicemeeterRemoteAPI.pdf)
+
+[license]: https://github.com/onyx-and-iris/voicemeeter-rb/blob/dev/LICENSE
