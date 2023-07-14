@@ -16,23 +16,28 @@ module Voicemeeter
 
       def initialize(kind, **kwargs)
         super
-        @strip = []
-        kind.num_strip.times { |i| @strip << Strip::Strip.make(self, i) }
-        @bus = []
-        kind.num_strip.times { |i| @bus << Bus::Bus.make(self, i) }
-        @button = []
-        kind.num_buttons.times { |i| @button << Button::Button.new(self, i) }
+        @strip = (0...kind.num_strip).map { |i| Strip::Strip.make(self, i) }
+        @bus = (0...kind.num_bus).map { |i| Bus::Bus.make(self, i) }
+        @button = (0...kind.num_buttons).map { |i| Button::Button.new(self, i) }
         @vban = Vban::Vban.new(self)
       end
 
       def configs
-        Configs.get(@kind.name)
+        Configs.get(kind.name)
+      end
+
+      def run
+        login
+
+        yield if block_given?
+
+        logout
       end
     end
 
     public
 
-    def self.make(kind_id, **kwargs)
+    def self.new(kind_id, **kwargs)
       "
       Factory method for remotes
 
