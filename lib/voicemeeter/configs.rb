@@ -17,16 +17,16 @@ module Voicemeeter
       def initialize(kind)
         @kind = kind
         @configs = Hash.new do |hash, key|
-          raise Errors::VMError.new("unknown config #{key}. known configs: #{hash.keys}")
+          raise Errors::VMError.new "unknown config #{key}. known configs: #{hash.keys}"
         end
-        @reader = FileReader.new(self, kind)
+        @yml_reader = FileReader.new(self, kind)
       end
 
       def to_s
         "Loader #{@kind}"
       end
 
-      protected
+      private
 
       def build_reset_profile
         aouts = (0...@kind.phys_out).to_h { |i| ["A#{i + 1}".to_sym, false] }
@@ -44,7 +44,7 @@ module Voicemeeter
         phys_strip =
           (0...@kind.phys_in).to_h do |i|
             [
-              "strip-#{i}",
+              "strip-#{i}".to_sym,
               {**aouts, **bouts, **strip_bools, **gain, **phys_float, **eq, **overrides}
             ]
           end
@@ -54,7 +54,7 @@ module Voicemeeter
         virt_strip =
           (@kind.phys_in...@kind.phys_in + @kind.virt_in).to_h do |i|
             [
-              "strip-#{i}",
+              "strip-#{i}".to_sym,
               {**aouts, **bouts, **strip_bools, **gain, **overrides}
             ]
           end
@@ -62,13 +62,13 @@ module Voicemeeter
         bus_bools = %i[mute mono].to_h { |param| [param, false] }
         bus =
           (0...@kind.num_bus).to_h do |i|
-            ["bus-#{i}", {**bus_bools, **gain, **eq}]
+            ["bus-#{i}".to_sym, {**bus_bools, **gain, **eq}]
           end
 
         {**phys_strip, **virt_strip, **bus}
       end
 
-      def read_from_yml = @reader.read
+      def read_from_yml = @yml_reader.read
 
       public
 
@@ -103,6 +103,8 @@ module Voicemeeter
           end
         end
       end
+
+      private
 
       def register(filepath)
         filename = (filepath.basename.sub_ext "").to_s.to_sym

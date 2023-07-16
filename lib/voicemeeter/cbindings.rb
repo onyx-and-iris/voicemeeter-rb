@@ -56,11 +56,11 @@ module Voicemeeter
       res = send(fn, *args)
       if exp.nil?
         unless ok.include?(res)
-          raise Errors::VMCAPIError.new(fn, res)
+          raise Errors::VMCAPIError.new fn, res
         end
       else
         unless exp.call(res) || ok.include?(res)
-          raise Errors::VMCAPIError.new(fn, res)
+          raise Errors::VMCAPIError.new fn, res
         end
       end
       res

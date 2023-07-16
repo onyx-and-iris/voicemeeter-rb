@@ -155,7 +155,7 @@ module Voicemeeter
 
     def get_num_devices(dir)
       unless %i[in out].include? dir
-        raise Errors::VMError.new("dir got: #{dir}, expected :in or :out")
+        raise Errors::VMError.new "dir got: #{dir}, expected :in or :out"
       end
       if dir == :in
         CBindings.call(:bind_input_get_device_number, exp: ->(x) { x >= 0 })
@@ -166,7 +166,7 @@ module Voicemeeter
 
     def get_device_description(index, dir)
       unless %i[in out].include? dir
-        raise Errors::VMError.new("dir got: #{dir}, expected :in or :out")
+        raise Errors::VMError.new "dir got: #{dir}, expected :in or :out"
       end
       ctype = FFI::MemoryPointer.new(:long, 1)
       cname = FFI::MemoryPointer.new(:string, 256, true)
