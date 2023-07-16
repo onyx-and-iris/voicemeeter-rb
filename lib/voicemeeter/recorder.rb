@@ -25,7 +25,7 @@ module Voicemeeter
         make_accessor_int :bitresolution, :channel, :kbps
         make_accessor_float :gain
 
-        @mode = RecorderMode.new(self)
+        @mode = RecorderMode.new(remote)
         @armstrip = (0...remote.kind.num_strip).map { |j| RecorderArmStrip.new(remote, j) }
         @armbus = (0...remote.kind.num_bus).map { |j| RecorderArmBus.new(remote, j) }
       end
@@ -64,28 +64,28 @@ module Voicemeeter
         "recorder.mode"
       end
     end
-  end
 
-  class RecorderArmChannel < IRemote
-    def initialize(remote, j)
-      super(remote)
-      @j = j
+    class RecorderArmChannel < IRemote
+      def initialize(remote, j)
+        super(remote)
+        @j = j
+      end
+
+      def set
+        setter("", val && 1 || 0)
+      end
     end
 
-    def set
-      setter("", val && 1 || 0)
+    class RecorderArmStrip < RecorderArmChannel
+      def identifier
+        "recorder.armstrip[#{@j}]"
+      end
     end
-  end
 
-  class RecorderArmStrip < RecorderArmChannel
-    def identifier
-      "recorder.armstrip[#{@j}]"
-    end
-  end
-
-  class RecorderArmBus < RecorderArmChannel
-    def identifier
-      "recorder.armbus[#{@j}]"
+    class RecorderArmBus < RecorderArmChannel
+      def identifier
+        "recorder.armbus[#{@j}]"
+      end
     end
   end
 end
