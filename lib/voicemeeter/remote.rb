@@ -8,6 +8,7 @@ require_relative "vban"
 require_relative "command"
 require_relative "recorder"
 require_relative "device"
+require_relative "fx"
 require_relative "configs"
 
 module Voicemeeter
@@ -24,6 +25,7 @@ module Voicemeeter
         @command = Command.new(self)
         @recorder = Recorder::Recorder.new(self)
         @device = Device.new(self)
+        @fx = Fx.new(self)
       end
 
       def configs
@@ -48,7 +50,7 @@ module Voicemeeter
     end
 
     class RemotePotato < Remote
-      attr_reader :strip, :bus, :button, :vban, :command, :device, :recorder
+      attr_reader :strip, :bus, :button, :vban, :command, :device, :recorder, :fx
     end
 
     public
