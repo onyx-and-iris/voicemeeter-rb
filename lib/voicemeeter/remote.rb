@@ -15,8 +15,6 @@ module Voicemeeter
     private
 
     class Remote < Base
-      attr_reader :strip, :bus, :button, :vban, :command, :recorder, :device
-
       def initialize(kind, **kwargs)
         super
         @strip = (0...kind.num_strip).map { |i| Strip::Strip.make(self, i) }
@@ -41,15 +39,32 @@ module Voicemeeter
       end
     end
 
+    class RemoteBasic < Remote
+      attr_reader :strip, :bus, :button, :vban, :command, :device
+    end
+
+    class RemoteBanana < Remote
+      attr_reader :strip, :bus, :button, :vban, :command, :device, :recorder
+    end
+
+    class RemotePotato < Remote
+      attr_reader :strip, :bus, :button, :vban, :command, :device, :recorder
+    end
+
     public
 
     def self.new(kind_id, **kwargs)
-      remotes =
-        Kinds::ALL.to_h { |kind| [kind.name, Remote.new(kind, **kwargs)] }
-      unless remotes.key? kind_id
-        raise Errors::VMError.new("unknown Voicemeeter kind #{kind_id}")
+      kind = Kinds.get(kind_id)
+    rescue KeyError
+      raise Errors::VMError.new "unknown Voicemeeter kind #{kind_id}"
+    else
+      if kind_id == :basic
+        RemoteBasic.new(kind, **kwargs)
+      elsif kind_id == :banana
+        RemoteBanana.new(kind, **kwargs)
+      elsif kind_id == :potato
+        RemotePotato.new(kind, **kwargs)
       end
-      remotes[kind_id]
     end
   end
 end

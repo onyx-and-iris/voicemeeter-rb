@@ -40,7 +40,7 @@ module Voicemeeter
     public
 
     def get(kind_id)
-      KIND_MAPS[kind_id]
+      KIND_MAPS.fetch(kind_id)
     end
 
     ALL = KIND_MAPS.values
