@@ -1,4 +1,4 @@
-require "easy_logging"
+require_relative "logger"
 
 module Voicemeeter
   module Events
@@ -25,7 +25,7 @@ module Voicemeeter
     end
 
     class Tracker
-      # include EasyLogging
+      include Logging
 
       attr_reader :pdirty, :mdirty, :midi, :ldirty
 

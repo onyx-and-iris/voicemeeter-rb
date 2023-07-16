@@ -1,8 +1,8 @@
-require "easy_logging"
+require_relative "logger"
 
 module Voicemeeter
   module Worker
-    include EasyLogging
+    include Logging
 
     def init_producer(que)
       Thread.new do

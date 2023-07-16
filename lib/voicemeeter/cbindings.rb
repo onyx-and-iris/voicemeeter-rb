@@ -15,7 +15,7 @@ module Voicemeeter
     )
     ffi_convention :stdcall
 
-    def self.attach_function(c_name, args, returns)
+    private_class_method def self.attach_function(c_name, args, returns)
       ruby_name = "bind_#{c_name.to_s.delete_prefix("VBVMR_").snakecase}".to_sym
       super(ruby_name, c_name, args, returns)
     end

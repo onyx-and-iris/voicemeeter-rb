@@ -1,10 +1,10 @@
 require_relative "errors"
 require_relative "meta"
-require "easy_logging"
+require_relative "logger"
 
 module Voicemeeter
   class IRemote
-    include EasyLogging
+    include Logging
     include MetaFunctions
 
     def initialize(remote, i = nil)
@@ -15,6 +15,8 @@ module Voicemeeter
     def to_s
       "#{self.class.name.split("::").last}#{@index}#{@remote.kind}"
     end
+
+    private
 
     def getter(param, is_string = false)
       logger.debug "getter: #{_cmd(param)}"
@@ -33,6 +35,8 @@ module Voicemeeter
     def identifier
       raise "Called abstract method: identifier"
     end
+
+    public
 
     def apply(params)
       params.each do |key, val|

@@ -1,7 +1,4 @@
 require_relative "../../lib/voicemeeter"
-require "easy_logging"
-
-EasyLogging.level = Logger::DEBUG
 
 class Main
   def initialize

@@ -31,13 +31,13 @@ module Voicemeeter
 
     KIND_MAPS = [basic, banana, potato].to_h { |kind| [kind.name, kind] }
 
-    public
-
     module KindEnum
       BASIC = 1
       BANANA = 2
       POTATO = 3
     end
+
+    public
 
     def get(kind_id)
       KIND_MAPS[kind_id]

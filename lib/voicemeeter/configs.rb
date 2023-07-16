@@ -1,21 +1,24 @@
 require "yaml"
-require "easy_logging"
 require "pathname"
 
 require_relative "kinds"
+require_relative "logger"
+require_relative "errors"
 
 module Voicemeeter
   module Configs
     private
 
     class Loader
-      include EasyLogging
+      include Logging
 
       attr_reader :configs
 
       def initialize(kind)
         @kind = kind
-        @configs = {}
+        @configs = Hash.new do |hash, key|
+          raise Errors::VMError.new("unknown config #{key}. known configs: #{hash.keys}")
+        end
         @reader = FileReader.new(self, kind)
       end
 
@@ -77,7 +80,7 @@ module Voicemeeter
     end
 
     class FileReader
-      include EasyLogging
+      include Logging
 
       def initialize(loader, kind)
         @loader = loader

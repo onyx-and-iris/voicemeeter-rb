@@ -4,11 +4,12 @@ require_relative "kinds"
 require_relative "midi"
 require_relative "event"
 require_relative "worker"
-require "easy_logging"
+require_relative "errors"
+require_relative "logger"
 
 module Voicemeeter
   class Base
-    # include EasyLogging
+    include Logging
     include Worker
     include Events::Callbacks
 
@@ -36,7 +37,7 @@ module Voicemeeter
     end
 
     def login
-      runvm if CBindings.call(:bind_login, ok: [0, 1]) == 1
+      run_voicemeeter(kind.name) if CBindings.call(:bind_login, ok: [0, 1]) == 1
       clear_dirty
       logger.info "Successfully logged into #{self} version #{version}"
       if event.any?
@@ -68,24 +69,20 @@ module Voicemeeter
       )
     end
 
-    private
-
     def clear_dirty
       while pdirty? || mdirty?
       end
     end
 
-    def runvm
+    def run_voicemeeter(kind_id)
       kinds = {
         basic: Kinds::KindEnum::BASIC,
         banana: Kinds::KindEnum::BANANA,
         potato: (Install::OS_BITS == 64) ? 6 : Kinds::KindEnum::POTATO
       }
-      CBindings.call(:bind_run_voicemeeter, kinds[kind.name])
+      CBindings.call(:bind_run_voicemeeter, kinds[kind_id])
       sleep(1)
     end
-
-    public
 
     def type
       ckind = FFI::MemoryPointer.new(:long, 1)
@@ -147,7 +144,7 @@ module Voicemeeter
       cget.read_float
     end
 
-    def _get_levels
+    private def _get_levels
       [
         (0...kind.num_strip_levels).map do |i|
           get_level(cache[:strip_mode], i)
@@ -158,7 +155,7 @@ module Voicemeeter
 
     def get_num_devices(dir)
       unless %i[in out].include? dir
-        raise VMError.new("dir got: #{dir}, expected in or out")
+        raise Errors::VMError.new("dir got: #{dir}, expected :in or :out")
       end
       if dir == :in
         CBindings.call(:bind_input_get_device_number, exp: ->(x) { x >= 0 })
@@ -169,7 +166,7 @@ module Voicemeeter
 
     def get_device_description(index, dir)
       unless %i[in out].include? dir
-        raise VMError.new("dir got: #{dir}, expected in or out")
+        raise Errors::VMError.new("dir got: #{dir}, expected :in or :out")
       end
       ctype = FFI::MemoryPointer.new(:long, 1)
       cname = FFI::MemoryPointer.new(:string, 256, true)

@@ -4,7 +4,6 @@ require_relative "mixins"
 require_relative "errors"
 
 require "date"
-require "easy_logging"
 
 module Voicemeeter
   module Recorder
@@ -16,7 +15,6 @@ module Voicemeeter
     end
 
     class Recorder < IRemote
-      include EasyLogging
       include Mixins::Outputs
 
       attr_reader :mode, :armstrip, :armbus
