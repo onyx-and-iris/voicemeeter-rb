@@ -14,15 +14,17 @@ module Voicemeeter
     include Worker
     include Util::Cache
 
-    attr_reader :kind, :midi, :event, :running, :callback
+    attr_reader :kind, :midi, :event, :running, :callback, :delay
     attr_accessor :cache
 
     RATELIMIT = 0.033
+    DELAY = 0.001
 
     def initialize(kind, **kwargs)
       @kind = kind
       @sync = kwargs[:sync] || false
       @ratelimit = kwargs[:ratelimit] || RATELIMIT
+      @delay = kwargs[:delay] || DELAY
       @midi = Midi.new
       @event =
         Events::Tracker.new(
