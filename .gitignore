@@ -58,5 +58,6 @@ Gemfile.lock
 
 # test
 quick.rb
+config.yaml
 
 .vscode/

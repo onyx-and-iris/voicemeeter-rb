@@ -10,19 +10,19 @@ class StripTest < Minitest::Test
 end
 
 class BusTest < Minitest::Test
-  [false, true].each do |val|
-    define_method("test_it_sets_and_gets_bus_#{Test.data.phys_out}_mute_#{val}") do
-      Test.vm.bus[Test.data.phys_out].mute = val
-      assert_equal(val, Test.vm.bus[Test.data.phys_out].mute)
+  [-8.2, 3.2].each do |val|
+    define_method("test_it_sets_and_gets_bus_#{Test.data.phys_out}_gain_#{val}") do
+      Test.vm.bus[Test.data.phys_out].gain = val
+      assert_equal(val, Test.vm.bus[Test.data.phys_out].gain)
     end
   end
 end
 
 class VbanTest < Minitest::Test
-  [false, true].each do |val|
-    define_method("test_it_sets_and_gets_vban_#{Test.data.phys_in}_on_#{val}") do
-      Test.vm.vban.instream[0].on = val
-      assert_equal(val, Test.vm.vban.instream[0].on)
+  ["test0", "test1"].each do |val|
+    define_method("test_it_sets_and_gets_vban_#{Test.data.vban_in}_name_#{val}") do
+      Test.vm.vban.instream[Test.data.vban_in].name = val
+      assert_equal(val, Test.vm.vban.instream[Test.data.vban_in].name)
     end
   end
 end

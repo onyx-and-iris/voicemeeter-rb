@@ -387,19 +387,19 @@ get may return nil if no value for requested key in midi cache
 ```ruby
 vm.apply(
   {
-    strip_0: {
+    "strip-0" => {
       mute: true,
       gain: 3.2,
       A1: true
     },
-    bus_3: {
+    "bus-3" => {
       gain: -3.2,
       eq: true
     },
-    button_39: {
+    "button-39" => {
       stateonly: true
     },
-    vban_outstream_3: {
+    "vban-outstream-3" => {
       on: true,
       bit: 24
     }
