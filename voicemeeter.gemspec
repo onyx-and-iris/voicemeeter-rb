@@ -14,8 +14,9 @@ Gem::Specification.new do |spec|
   spec.homepage = "https://rubygems.org/gems/voicemeeter"
   spec.license = "MIT"
   spec.add_runtime_dependency "ffi", "~> 1.9", ">= 1.9.10"
-  spec.add_development_dependency "rspec", "~> 3.4"
   spec.add_development_dependency "standard", "~> 1.30"
+  spec.add_development_dependency "rake", "~> 13.0"
+  spec.add_development_dependency "minitest", "~> 5.18"
   spec.required_ruby_version = ">= 3.2"
   spec.metadata = {
     "source_code_uri" => "https://github.com/onyx-and-iris/voicemeeter-rb.git"
