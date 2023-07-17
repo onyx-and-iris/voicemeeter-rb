@@ -2,8 +2,10 @@ require_relative "logger"
 
 module Voicemeeter
   module Events
-    module Callbacks
-      attr_reader :callbacks
+    class Callback
+      def initialize
+        @callbacks = []
+      end
 
       def register(*args)
         args.each { |callback| @callbacks.append callback }
@@ -13,7 +15,7 @@ module Voicemeeter
         @callbacks.reject! { |c| args.include? c }
       end
 
-      def on_event(event)
+      def trigger(event)
         @callbacks.each do |callback|
           if callback.respond_to? :on_update
             callback.on_update { event.to_s[3..] }

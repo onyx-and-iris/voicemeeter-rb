@@ -11,9 +11,8 @@ module Voicemeeter
   class Base
     include Logging
     include Worker
-    include Events::Callbacks
 
-    attr_reader :kind, :midi, :event, :running
+    attr_reader :kind, :midi, :event, :running, :callback
     attr_accessor :cache
 
     RATELIMIT = 0.033
@@ -27,7 +26,7 @@ module Voicemeeter
         Events::Tracker.new(
           **(kwargs.select { |k, _| %i[pdirty mdirty ldirty midi].include? k })
         )
-      @callbacks = []
+      @callback = Events::Callback.new
       @que = Queue.new
       @cache = {strip_mode: 0}
     end

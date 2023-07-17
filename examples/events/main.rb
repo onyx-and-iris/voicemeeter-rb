@@ -1,13 +1,13 @@
 require_relative "../../lib/voicemeeter"
 
 class Main
-  def initialize
-    @vm = Voicemeeter::Remote.new(:potato, pdirty: true, ldirty: true)
-    @vm.register(method(:on_pdirty), method(:on_ldirty))
+  def initialize(vm)
+    @vm = vm
+    @vm.callback.register(method(:on_pdirty), method(:on_mdirty), method(:on_midi), method(:on_ldirty))
   end
 
   def run
-    @vm.run { exit if gets.chomp.empty? }
+    exit if gets.chomp.empty?
   end
 
   def on_pdirty
@@ -30,4 +30,8 @@ class Main
   end
 end
 
-Main.new.run if $0 == __FILE__
+if $0 == __FILE__
+  Voicemeeter::Remote.new(:potato, pdirty: true, mdirty: true, midi: true, ldirty: true).run do |vm|
+    Main.new(vm).run
+  end
+end
