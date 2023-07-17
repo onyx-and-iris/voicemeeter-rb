@@ -1,4 +1,4 @@
-require_relative "core_extensions/string/camelcase"
+require_relative "util"
 
 module Voicemeeter
   module Errors
@@ -19,7 +19,7 @@ module Voicemeeter
       end
 
       def fn_name
-        "VBVMR_#{@ruby_name.to_s.delete_prefix("bind_").camelcase.sub("macro_button", "macrobutton")}"
+        "VBVMR_#{Util.camelcase(@ruby_name.to_s.delete_prefix("bind_")).sub("macro_button", "macrobutton")}"
       end
     end
   end

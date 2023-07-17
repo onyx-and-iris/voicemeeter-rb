@@ -1,6 +1,6 @@
 require_relative "install"
 require_relative "errors"
-require_relative "core_extensions/string/snakecase"
+require_relative "util"
 
 module Voicemeeter
   module CBindings
@@ -16,7 +16,7 @@ module Voicemeeter
     ffi_convention :stdcall
 
     private_class_method def self.attach_function(c_name, args, returns)
-      ruby_name = "bind_#{c_name.to_s.delete_prefix("VBVMR_").snakecase}".to_sym
+      ruby_name = "bind_#{Util.snakecase(c_name.to_s.delete_prefix("VBVMR_"))}".to_sym
       super(ruby_name, c_name, args, returns)
     end
 
