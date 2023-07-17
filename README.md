@@ -27,10 +27,6 @@ bundle add 'voicemeeter'
 bundle install
 ```
 
-### Gem
-
-`gem install 'voicemeeter'`
-
 ## `Use`
 
 Simplest use case, request a Remote class of a kind, then pass a block to run.
@@ -428,7 +424,7 @@ current settings before loading a config. To set one you may do:
 
 ```ruby
 require "voicemeeter"
-vm = Voicemeeter.remote(:banana)
+vm = Voicemeeter::Remote.new(:banana)
 vm.run { vm.apply_config(:example) }
 ```
 
@@ -446,7 +442,7 @@ example:
 require 'voicemeeter'
 # Set updates to occur every 50ms
 # Listen for level updates
-vm = Voicemeeter.remote('banana', ratelimit: 0.05, ldirty: true)
+vm = Voicemeeter::Remote.new(:banana, ratelimit: 0.05, ldirty: true)
 vm.run { ... }
 ```
 
@@ -461,7 +457,7 @@ example:
 class App():
     def initialize(vm)
         @vm = vm
-        @vm.register(method(:on_pdirty))
+        @vm.callback.register(method(:on_pdirty))
         ...
 
     def on_pdirty
@@ -539,22 +535,33 @@ vm.set("Strip[4].Label", "stripname")
 vm.set("Strip[0].Gain", -3.6)
 ```
 
+### Errors
+
+- `Errors::VMError`: Error raised when general errors occur.
+- `Errors::VMCAPIError`: Error raised when the C-API returns error values.
+  - Error codes are stored in {Error Class}.code. For a full list of error codes [check the VoicemeeterRemote header file][voicemeeter remote header].
+
+### Logging
+
+To enable logs set an environmental variable `LOG_LEVEL` to the appropriate level.
+
+example in powershell:
+
+```powershell
+$env:LOG_LEVEL="DEBUG"
+```
+
 ### Run tests
 
 To run all tests:
 
 ```
-Bundle exec rspec
-```
-
-You can use tags to run only certain tests, for example:
-
-```
-Bundle exec rspec --tag 'higher'
+Bundle exec rake
 ```
 
 ### Official Documentation
 
-- [Voicemeeter Remote C API](https://github.com/onyx-and-iris/Voicemeeter-SDK/blob/main/VoicemeeterRemoteAPI.pdf)
+- [Voicemeeter Remote C API](https://github.com/onyx-and-iris/Voicemeeter-SDK/blob/update-docs/VoicemeeterRemoteAPI.pdf)
 
 [license]: https://github.com/onyx-and-iris/voicemeeter-rb/blob/dev/LICENSE
+[voicemeeter remote header]: https://github.com/onyx-and-iris/Voicemeeter-SDK/blob/update-docs/VoicemeeterRemote.h
