@@ -142,7 +142,7 @@ module Voicemeeter
       def initialize(remote, i)
         super
         make_accessor_bool :mc
-        make_accessor_int :k
+        make_accessor_int :karaoke
       end
 
       def bass
@@ -168,6 +168,15 @@ module Voicemeeter
       def treble=(val)
         setter("EQGain3", val)
       end
+
+      alias_method :mono, :mc
+      alias_method :mono=, :mc=
+      alias_method :k, :karaoke
+      alias_method :k=, :karaoke=
+      alias_method :med, :mid
+      alias_method :med=, :mid=
+      alias_method :high, :treble
+      alias_method :high=, :treble=
     end
 
     class GainLayer < IRemote
