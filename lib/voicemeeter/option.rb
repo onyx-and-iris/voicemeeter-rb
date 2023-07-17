@@ -10,7 +10,7 @@ module Voicemeeter
         make_accessor_int :sr
         make_accessor_bool :asiosr, :monitoronsel, :slidermode
 
-        @delay = (0...remote.kind.phys_out).map { |i| OptionDelay(remote, i) }
+        @delay = (0...remote.kind.phys_out).map { |i| OptionDelay.new(remote, i) }
         @buffer = OptionBuffer.new(remote)
         @mode = OptionMode.new(remote)
       end
