@@ -77,7 +77,7 @@ module Voicemeeter
       kinds = {
         basic: Kinds::KindEnum::BASIC,
         banana: Kinds::KindEnum::BANANA,
-        potato: (Install::OS_BITS == 64) ? 6 : Kinds::KindEnum::POTATO
+        potato: (Install::OS_BITS == 64) ? Kinds::KindEnum::POTATOX64 : Kinds::KindEnum::POTATO
       }
       CBindings.call(:bind_run_voicemeeter, kinds[kind_id])
       sleep(1)
