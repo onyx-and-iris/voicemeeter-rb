@@ -5,12 +5,14 @@ require_relative "midi"
 require_relative "event"
 require_relative "worker"
 require_relative "errors"
+require_relative "util"
 require_relative "logger"
 
 module Voicemeeter
   class Base
     include Logging
     include Worker
+    include Util::Cache
 
     attr_reader :kind, :midi, :event, :running, :callback
     attr_accessor :cache
@@ -106,15 +108,16 @@ module Voicemeeter
     end
 
     def get(name, is_string = false)
-      clear_dirty if @sync
-      if is_string
-        c_get = FFI::MemoryPointer.new(:string, 512, true)
-        CBindings.call(:bind_get_parameter_string_a, name, c_get)
-        c_get.read_string
-      else
-        c_get = FFI::MemoryPointer.new(:float, 1)
-        CBindings.call(:bind_get_parameter_float, name, c_get)
-        c_get.read_float.round(1)
+      polling(:get, name: name) do
+        if is_string
+          cget = FFI::MemoryPointer.new(:string, 512, true)
+          CBindings.call(:bind_get_parameter_string_a, name, cget)
+          cget.read_string
+        else
+          cget = FFI::MemoryPointer.new(:float, 1)
+          CBindings.call(:bind_get_parameter_float, name, cget)
+          cget.read_float.round(1)
+        end
       end
     end
 
@@ -124,17 +127,20 @@ module Voicemeeter
       else
         CBindings.call(:bind_set_parameter_float, name, value.to_f)
       end
+      cache.store(name, value)
     end
 
     def get_buttonstatus(id, mode)
-      clear_dirty if @sync
-      c_get = FFI::MemoryPointer.new(:float, 1)
-      CBindings.call(:bind_macro_button_get_status, id, c_get, mode)
-      c_get.read_float.to_i
+      polling(:get_buttonstatus, id: id, mode: mode) do
+        cget = FFI::MemoryPointer.new(:float, 1)
+        CBindings.call(:bind_macro_button_get_status, id, cget, mode)
+        cget.read_float.to_i
+      end
     end
 
-    def set_buttonstatus(id, state, mode)
+    def set_buttonstatus(id, mode, state)
       CBindings.call(:bind_macro_button_set_status, id, state, mode)
+      cache.store("mb_#{id}_#{mode}", state)
     end
 
     def get_level(mode, index)

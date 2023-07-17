@@ -19,7 +19,7 @@ module Voicemeeter
       end
 
       def fn_name
-        "VBVMR_#{Util.camelcase(@ruby_name.to_s.delete_prefix("bind_")).sub("macro_button", "macrobutton")}"
+        "VBVMR_#{Util::String.camelcase(@ruby_name.to_s.delete_prefix("bind_")).sub("macro_button", "macrobutton")}"
       end
     end
   end
