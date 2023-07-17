@@ -9,6 +9,7 @@ require_relative "command"
 require_relative "recorder"
 require_relative "device"
 require_relative "fx"
+require_relative "option"
 require_relative "configs"
 
 module Voicemeeter
@@ -26,6 +27,7 @@ module Voicemeeter
         @recorder = Recorder::Recorder.new(self)
         @device = Device.new(self)
         @fx = Fx.new(self)
+        @option = Option::Option.new(self)
       end
 
       def configs
@@ -42,15 +44,15 @@ module Voicemeeter
     end
 
     class RemoteBasic < Remote
-      attr_reader :strip, :bus, :button, :vban, :command, :device
+      attr_reader :strip, :bus, :button, :vban, :command, :device, :option
     end
 
     class RemoteBanana < Remote
-      attr_reader :strip, :bus, :button, :vban, :command, :device, :recorder
+      attr_reader :strip, :bus, :button, :vban, :command, :device, :option, :recorder
     end
 
     class RemotePotato < Remote
-      attr_reader :strip, :bus, :button, :vban, :command, :device, :recorder, :fx
+      attr_reader :strip, :bus, :button, :vban, :command, :device, :option, :recorder, :fx
     end
 
     public
