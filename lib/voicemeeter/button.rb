@@ -10,16 +10,16 @@ module Voicemeeter
     end
 
     class Button < IRemote
-      def getter(type_)
-        @remote.get_buttonstatus(@index, type_)
+      def getter(mode)
+        @remote.get_buttonstatus(@index, mode)
       end
 
-      def setter(type_, val)
-        @remote.set_buttonstatus(@index, type_, val)
+      def setter(mode, val)
+        @remote.set_buttonstatus(@index, mode, val)
       end
 
       def state
-        getter(ButtonEnum::STATE)
+        getter(ButtonEnum::STATE) == 1
       end
 
       def state=(value)
@@ -27,7 +27,7 @@ module Voicemeeter
       end
 
       def stateonly
-        getter(ButtonEnum::STATEONLY)
+        getter(ButtonEnum::STATEONLY) == 1
       end
 
       def stateonly=(value)
@@ -35,7 +35,7 @@ module Voicemeeter
       end
 
       def trigger
-        getter(ButtonEnum::TRIGGER)
+        getter(ButtonEnum::TRIGGER) == 1
       end
 
       def trigger=(value)
