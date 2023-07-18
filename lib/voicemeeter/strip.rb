@@ -169,10 +169,6 @@ module Voicemeeter
         setter("EQGain3", val)
       end
 
-      alias_method :mono, :mc
-      alias_method :mono=, :mc=
-      alias_method :k, :karaoke
-      alias_method :k=, :karaoke=
       alias_method :med, :mid
       alias_method :med=, :mid=
       alias_method :high, :treble
