@@ -4,7 +4,7 @@ require File.expand_path("lib/voicemeeter/version", __dir__)
 
 Gem::Specification.new do |spec|
   spec.name = "voicemeeter"
-  spec.version = Voicemeeter::Version
+  spec.version = Voicemeeter::VERSION
   spec.summary = "Voicemeeter API wrapper for Ruby"
   spec.description = "A Ruby wrapper around Voicemeeter Remote API"
   spec.authors = ["onyx_online"]

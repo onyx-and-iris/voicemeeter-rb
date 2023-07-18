@@ -22,4 +22,6 @@ module Voicemeeter
       to_a.join(".")
     end
   end
+
+  VERSION = Version.to_s
 end
