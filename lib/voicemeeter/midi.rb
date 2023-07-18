@@ -1,6 +1,7 @@
 module Voicemeeter
   class Midi
-    attr_accessor :cache, :current, :channel
+    attr_accessor :current, :channel
+    attr_reader :cache
 
     def initialize
       @cache = {}
@@ -8,10 +9,6 @@ module Voicemeeter
 
     def get(key)
       cache[key]
-    end
-
-    def set(key, velocity)
-      cache[key] = velocity
     end
   end
 end
