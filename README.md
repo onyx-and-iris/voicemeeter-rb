@@ -65,7 +65,7 @@ Pass the kind of Voicemeeter as an argument. KIND_ID may be:
 
 ### Strip
 
-The following properties are available.
+The following attributes are available.
 
 - `mono`: boolean
 - `solo`: boolean
@@ -121,7 +121,7 @@ vm.strip[5].appmute("Spotify", true)
 
 #### Comp
 
-The following properties are available.
+The following attributes are available.
 
 - `knob`: float, from 0.0 to 10.0
 - `gainin`: float, from -24.0 to 24.0
@@ -145,7 +145,7 @@ Strip Comp parameters are defined for PhysicalStrips.
 
 #### Gate
 
-The following properties are available.
+The following attributes are available.
 
 - `knob`: float, from 0.0 to 10.0
 - `threshold`: float, from -60.0 to -10.0
@@ -167,7 +167,7 @@ Strip Gate parameters are defined for PhysicalStrips.
 
 #### Denoiser
 
-The following properties are available.
+The following attributes are available.
 
 - `knob`: float, from 0.0 to 10.0
 
@@ -181,7 +181,7 @@ Strip Denoiser parameters are defined for PhysicalStrips, potato version only.
 
 #### EQ
 
-The following properties are available.
+The following attributes are available.
 
 - `on`: boolean
 - `ab`: boolean
@@ -208,7 +208,7 @@ Gainlayers are defined for potato version only.
 
 ##### Levels
 
-The following properties are available.
+The following attributes are available.
 
 - `prefader`
 - `postfader`
@@ -224,11 +224,10 @@ Level properties will return -200.0 if no audio detected.
 
 ### Bus
 
-The following properties are available.
+The following attributes are available.
 
 - `mono`: boolean
 - `mute`: boolean
-- `eq`: boolean
 - `sel`: boolean
 - `gain`: float, from -60.0 to 12.0
 - `label`: string
@@ -249,9 +248,9 @@ vm.bus[4].mono = true
 
 ##### EQ
 
-The following properties are available.
+The following attributes are available.
 
-- `eq`: boolean
+- `on`: boolean
 - `ab`: boolean
 
 example:
@@ -261,6 +260,8 @@ vm.bus[4].eq.on = true
 ```
 
 ##### Modes
+
+The following attributes are available.
 
 - `normal`: boolean
 - `amix`: boolean
@@ -274,15 +275,20 @@ vm.bus[4].eq.on = true
 - `lfeonly`: boolean
 - `rearonly`: boolean
 
+The following methods are available.
+
+- `get`
+
 example:
 
 ```ruby
 vm.bus[4].mode.amix = true
+puts vm.bus[3].mode.get
 ```
 
 ##### Levels
 
-The following properties are available.
+The following attributes are available.
 
 - `all`
 
@@ -312,7 +318,7 @@ vm.bus[3].fadeby(-5.6, 500)
 
 #### Strip.Device | Bus.Device
 
-The following properties are available
+The following attributes are available
 
 - `name`: str
 - `sr`: int
@@ -349,7 +355,7 @@ vm.button[55].trigger = false
 
 ### Recorder
 
-The following properties accept boolean values.
+The following attributes accept boolean values.
 
 - `loop`: boolean
 - `A1 - A5`: boolean
@@ -383,11 +389,11 @@ vm.recorder.load('C:\music\mytune.mp3')
 
 ### VBAN
 
-- `vm.vban.enable` `vm.vban.disable` Turn VBAN on or off
+- `vm.vban.enable` | `vm.vban.disable` Turn VBAN on or off
 
 ##### Instream | Outstream
 
-The following properties are available.
+The following attributes are available.
 
 - `on`: boolean
 - `name`: string
@@ -419,10 +425,11 @@ vm.vban.outstream[3].bit = 24
 Certain 'special' commands are defined by the API as performing actions rather than setting values. The following methods are available:
 
 - `show` : Bring Voiceemeter GUI to the front
+- `hide` : Hide Voicemeeter GUI
 - `shutdown` : Shuts down the GUI
 - `restart` : Restart the audio engine
 
-The following properties are write only and accept boolean values.
+The following attributes are write only and accept boolean values.
 
 - `showvbanchat`: boolean
 - `lock`: boolean
@@ -447,7 +454,7 @@ vm.run { (0...vm.device.ins).each { |i| puts vm.device.input(i) } }
 
 ### Midi
 
-The following properties are available:
+The following attributes are available:
 
 - `channel`: int, returns the midi channel
 - `current`: int, returns the current (or most recently pressed) key
@@ -511,8 +518,7 @@ current settings before loading a config. To set one you may do:
 
 ```ruby
 require "voicemeeter"
-vm = Voicemeeter::Remote.new(:banana)
-vm.run { vm.apply_config(:example) }
+Voicemeeter::Remote.new(:banana).run { |vm| vm.apply_config(:example) }
 ```
 
 will load a config file at mydir/configs/banana/example.toml for Voicemeeter Banana.
@@ -529,8 +535,8 @@ example:
 require 'voicemeeter'
 # Set updates to occur every 50ms
 # Listen for level updates
-vm = Voicemeeter::Remote.new(:banana, ratelimit: 0.05, ldirty: true)
-vm.run { ... }
+Voicemeeter::Remote.new(:banana, ratelimit: 0.05, ldirty: true).run do
+  ...
 ```
 
 #### `vm.register`|`vm.deregister`
@@ -555,7 +561,7 @@ class App():
 
 Use the event class to toggle updates as necessary.
 
-The following properties are available:
+The following attributes are available:
 
 - `pdirty`: boolean
 - `mdirty`: boolean

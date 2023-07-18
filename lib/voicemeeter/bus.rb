@@ -68,6 +68,16 @@ module Voicemeeter
       def identifier
         "bus[#{@index}].mode"
       end
+
+      def get
+        sleep(@remote.delay)
+        %i[amix bmix repeat composite tvmix upmix21 upmix41 upmix61 centeronly lfeonly rearonly].each do |mode|
+          if send(mode)
+            return mode
+          end
+        end
+        :normal
+      end
     end
   end
 

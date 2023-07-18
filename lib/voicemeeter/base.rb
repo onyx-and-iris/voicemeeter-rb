@@ -110,7 +110,7 @@ module Voicemeeter
     end
 
     def get(name, is_string = false)
-      polling(:get, name: name) do
+      polling(:get, name:) do
         if is_string
           cget = FFI::MemoryPointer.new(:string, 512, true)
           CBindings.call(:bind_get_parameter_string_a, name, cget)
@@ -133,7 +133,7 @@ module Voicemeeter
     end
 
     def get_buttonstatus(id, mode)
-      polling(:get_buttonstatus, id: id, mode: mode) do
+      polling(:get_buttonstatus, id:, mode:) do
         cget = FFI::MemoryPointer.new(:float, 1)
         CBindings.call(:bind_macro_button_get_status, id, cget, mode)
         cget.read_float.to_i
