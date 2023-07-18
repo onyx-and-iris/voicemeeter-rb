@@ -3,7 +3,7 @@ require "obsws"
 require "yaml"
 require "pathname"
 
-class Observer
+class Main
   attr_reader :running
 
   def initialize(vm, **kwargs)
@@ -61,6 +61,6 @@ end
 
 if $0 == __FILE__
   Voicemeeter::Remote.new(:potato).run do |vm|
-    Observer.new(vm, **conn_from_yml).run
+    Main.new(vm, **conn_from_yml).run
   end
 end

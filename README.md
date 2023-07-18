@@ -71,14 +71,12 @@ The following properties are available.
 - `solo`: boolean
 - `mute`: boolean
 - `gain`: float, from -60.0 to 12.0
-- `comp`: float, from 0.0 to 10.0
-- `gate`: float, from 0.0 to 10.0
 - `audibility`: float, from 0.0 to 10.0
 - `limit`: int, from -40 to 12
 - `A1 - A5`, `B1 - B3`: boolean
 - `label`: string
 - `mc`: boolean
-- `k`: int, from 0 to 4
+- `karaoke`: int, from 0 to 4
 - `bass`: float, from -12.0 to 12.0
 - `mid`: float, from -12.0 to 12.0
 - `treble`: float, from -12.0 to 12.0
@@ -121,6 +119,81 @@ vm.strip[5].appgain("Spotify", 0.5)
 vm.strip[5].appmute("Spotify", true)
 ```
 
+#### Comp
+
+The following properties are available.
+
+- `knob`: float, from 0.0 to 10.0
+- `gainin`: float, from -24.0 to 24.0
+- `ratio`: float, from 1.0 to 8.0
+- `threshold`: float, from -40.0 to -3.0
+- `attack`: float, from 0.0 to 200.0
+- `release`: float, from 0.0 to 5000.0
+- `knee`: float, from 0.0 to 1.0
+- `gainout`: float, from -24.0 to 24.0
+- `makeup`: boolean
+
+example:
+
+```ruby
+puts vm.strip[4].comp.knob
+```
+
+Strip Comp parameters are defined for PhysicalStrips.
+
+`knob` defined for all versions, all other parameters potato only.
+
+#### Gate
+
+The following properties are available.
+
+- `knob`: float, from 0.0 to 10.0
+- `threshold`: float, from -60.0 to -10.0
+- `damping`: float, from -60.0 to -10.0
+- `bpsidechain`: int, from 100 to 4000
+- `attack`: float, from 0.0 to 1000.0
+- `hold`: float, from 0.0 to 5000.0
+- `release`: float, from 0.0 to 5000.0
+
+example:
+
+```ruby
+vm.strip[2].gate.attack = 300.8
+```
+
+Strip Gate parameters are defined for PhysicalStrips.
+
+`knob` defined for all versions, all other parameters potato only.
+
+#### Denoiser
+
+The following properties are available.
+
+- `knob`: float, from 0.0 to 10.0
+
+example:
+
+```ruby
+vm.strip[0].denoiser.knob = 0.5
+```
+
+Strip Denoiser parameters are defined for PhysicalStrips, potato version only.
+
+#### EQ
+
+The following properties are available.
+
+- `on`: boolean
+- `ab`: boolean
+
+example:
+
+```ruby
+vm.strip[0].eq.ab = True
+```
+
+Strip EQ parameters are defined for PhysicalStrips, potato version only.
+
 ##### Gainlayers
 
 - `gain`: float, from -60.0 to 12.0
@@ -156,7 +229,6 @@ The following properties are available.
 - `mono`: boolean
 - `mute`: boolean
 - `eq`: boolean
-- `eq_ab`: boolean
 - `sel`: boolean
 - `gain`: float, from -60.0 to 12.0
 - `label`: string
@@ -173,6 +245,19 @@ vm.bus[3].gain = 3.7
 puts vm.bus[0].label
 
 vm.bus[4].mono = true
+```
+
+##### EQ
+
+The following properties are available.
+
+- `eq`: boolean
+- `ab`: boolean
+
+example:
+
+```ruby
+vm.bus[4].eq.on = true
 ```
 
 ##### Modes
@@ -394,7 +479,9 @@ vm.apply(
     },
     "bus-3" => {
       gain: -3.2,
-      eq: true
+      eq: {
+        on: true
+      }
     },
     "button-39" => {
       stateonly: true
@@ -453,7 +540,7 @@ Use the register/deregister methods to register/deregister callbacks and event o
 example:
 
 ```ruby
-# register an app to receive updates
+# register a callback to receive updates
 class App():
     def initialize(vm)
         @vm = vm
@@ -548,10 +635,10 @@ To enable logs set an environmental variable `LOG_LEVEL` to the appropriate leve
 example in powershell:
 
 ```powershell
-$env:LOG_LEVEL="DEBUG"
+$env:VM_LOG_LEVEL="DEBUG"
 ```
 
-### Run tests
+### Tests
 
 To run all tests:
 
