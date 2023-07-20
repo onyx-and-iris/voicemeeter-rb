@@ -16,6 +16,7 @@ module Voicemeeter
 
     attr_reader :kind, :midi, :event, :running, :callback, :delay
     attr_accessor :cache
+    alias_method :observer, :callback
 
     RATELIMIT = 0.033
     DELAY = 0.001
