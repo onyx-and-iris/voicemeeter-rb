@@ -14,22 +14,42 @@ require_relative "option"
 require_relative "configs"
 
 module Voicemeeter
-  module Remote
+  module Builder
     private
 
+    def steps
+      {
+        strip: -> { (0...kind.num_strip).map { |i| Strip::Strip.make(self, i) } },
+        bus: -> { (0...kind.num_bus).map { |i| Bus::Bus.make(self, i) } },
+        button: -> { (0...kind.num_buttons).map { |i| Button::Button.new(self, i) } },
+        vban: -> { Vban::Vban.new(self) },
+        command: -> { Command.new(self) },
+        recorder: -> { Recorder::Recorder.new(self) },
+        device: -> { Device.new(self) },
+        fx: -> { Fx.new(self) },
+        patch: -> { Patch::Patch.new(self) },
+        option: -> { Option::Option.new(self) }
+      }
+    end
+
+    def build
+      steps.select { |k, v| director.include? k }.each do |k, v|
+        send("#{k}=", v.call)
+      end
+    end
+
+    def director
+      [:strip, :bus, :button, :vban, :command, :device, :option]
+    end
+  end
+
+  module Remote
     class Remote < Base
+      include Builder
+
       def initialize(kind, **kwargs)
         super
-        @strip = (0...kind.num_strip).map { |i| Strip::Strip.make(self, i) }
-        @bus = (0...kind.num_bus).map { |i| Bus::Bus.make(self, i) }
-        @button = (0...kind.num_buttons).map { |i| Button::Button.new(self, i) }
-        @vban = Vban::Vban.new(self)
-        @command = Command.new(self)
-        @recorder = Recorder::Recorder.new(self)
-        @device = Device.new(self)
-        @fx = Fx.new(self)
-        @patch = Patch::Patch.new(self)
-        @option = Option::Option.new(self)
+        build
       end
 
       def configs
@@ -46,15 +66,26 @@ module Voicemeeter
     end
 
     class RemoteBasic < Remote
-      attr_reader :strip, :bus, :button, :vban, :command, :device, :option
+      public attr_reader :strip, :bus, :button, :vban, :command, :device, :option
+      private attr_writer :strip, :bus, :button, :vban, :command, :device, :option
     end
 
     class RemoteBanana < Remote
-      attr_reader :strip, :bus, :button, :vban, :command, :device, :option, :recorder, :patch
+      public attr_reader :strip, :bus, :button, :vban, :command, :device, :option, :recorder, :patch
+      private attr_writer :strip, :bus, :button, :vban, :command, :device, :option, :recorder, :patch
+
+      private def director
+        super.append(:recorder, :patch)
+      end
     end
 
     class RemotePotato < Remote
-      attr_reader :strip, :bus, :button, :vban, :command, :device, :option, :recorder, :patch, :fx
+      public attr_reader :strip, :bus, :button, :vban, :command, :device, :option, :recorder, :patch, :fx
+      private attr_writer :strip, :bus, :button, :vban, :command, :device, :option, :recorder, :patch, :fx
+
+      private def director
+        super.append(:recorder, :patch, :fx)
+      end
     end
 
     public
