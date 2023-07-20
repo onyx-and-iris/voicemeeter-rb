@@ -73,7 +73,7 @@ module Voicemeeter
       end
 
       def get
-        %w[pdirty mdirty midi ldirty].reject { |ev| !send(ev.to_s) }
+        %i[pdirty mdirty midi ldirty].reject { |ev| !send(ev) }
       end
 
       def any?
