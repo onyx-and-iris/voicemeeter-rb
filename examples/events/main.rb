@@ -7,7 +7,8 @@ class Main
   end
 
   def run
-    exit if gets.chomp.empty?
+    puts "press <Enter> to quit"
+    loop { break if gets.chomp.empty? }
   end
 
   def on_pdirty
@@ -20,7 +21,7 @@ class Main
 
   def on_midi
     current = @vm.midi.current
-    puts "Value of midi button #{current}: #{@vm.midi.get(current)}"
+    puts "Value of midi input #{current}: #{@vm.midi.get(current)}"
   end
 
   def on_ldirty
@@ -30,7 +31,7 @@ class Main
   end
 end
 
-if $0 == __FILE__
+if $PROGRAM_NAME == __FILE__
   Voicemeeter::Remote.new(:potato, pdirty: true, mdirty: true, midi: true, ldirty: true).run do |vm|
     Main.new(vm).run
   end

@@ -1,6 +1,22 @@
 require "rake/testtask"
 
+HERE = __dir__
+
 Rake::TestTask.new do |t|
   t.pattern = "test/**/*_test.rb"
 end
+
 task default: :test
+task :events do
+  filepath = File.join(HERE, "examples", "events", "main.rb")
+  ruby filepath
+end
+task :midi do
+  filepath = File.join(HERE, "examples", "midi", "main.rb")
+  ruby filepath
+end
+task :obs do
+  targetdir = File.join(HERE, "examples", "obs")
+  Dir.chdir(targetdir)
+  bundle exec ruby File.join(targetdir, "main.rb")
+end

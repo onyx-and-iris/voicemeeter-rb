@@ -1,4 +1,4 @@
-require "voicemeeter"
+require_relative "../../lib/voicemeeter"
 require "obsws"
 require "yaml"
 require "pathname"
@@ -59,7 +59,7 @@ def conn_from_yml
 end
 
 
-if $0 == __FILE__
+if $PROGRAM_NAME == __FILE__
   Voicemeeter::Remote.new(:potato).run do |vm|
     Main.new(vm, **conn_from_yml).run
   end

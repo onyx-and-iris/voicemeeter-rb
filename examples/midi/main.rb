@@ -10,7 +10,7 @@ class Main
 
   def run
     puts "press <Enter> to quit"
-    loop { exit if gets.chomp.empty? }
+    loop { break if gets.chomp.empty? }
   end
 
   def on_update(event)
@@ -28,7 +28,7 @@ class Main
 end
 
 
-if $0 == __FILE__
+if $PROGRAM_NAME == __FILE__
   Voicemeeter::Remote.new(:potato, midi: true).run do |vm|
     Main.new(vm).run
   end
