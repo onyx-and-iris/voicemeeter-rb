@@ -39,7 +39,6 @@ module Voicemeeter
         eq = [:eq].to_h { |param| [param, {on: false}] }
 
         overrides = {B1: true}
-
         # physical strip params
         phys_strip =
           (0...@kind.phys_in).to_h do |i|

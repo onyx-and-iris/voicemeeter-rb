@@ -14,8 +14,7 @@ module Voicemeeter
     include Worker
     include Util::Cache
 
-    attr_reader :kind, :midi, :event, :running, :callback, :delay
-    attr_accessor :cache
+    attr_reader :kind, :midi, :event, :callback, :running, :delay, :cache
     alias_method :observer, :callback
 
     RATELIMIT = 0.033
@@ -44,14 +43,9 @@ module Voicemeeter
       run_voicemeeter(kind.name) if CBindings.call(:bind_login, ok: [0, 1]) == 1
       clear_dirty
       logger.info "Successfully logged into #{self} version #{version}"
-      if event.any?
-        init_worker(@que)
-        init_producer(@que)
-      end
     end
 
     def logout
-      @running = false
       sleep(0.1)
       CBindings.call(:bind_logout)
       logger.info "Sucessfully logged out of #{self}"

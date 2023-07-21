@@ -45,10 +45,15 @@ module Voicemeeter
       end
     end
 
-    def end_worker
+    def init_event_threads
+      init_worker(@que)
+      init_producer(@que)
+    end
+
+    def end_event_threads
       @running = false
     end
 
-    module_function :init_worker, :end_worker
+    module_function :init_event_threads, :end_event_threads
   end
 end

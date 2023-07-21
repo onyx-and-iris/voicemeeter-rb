@@ -18,5 +18,5 @@ end
 task :obs do
   targetdir = File.join(HERE, "examples", "obs")
   Dir.chdir(targetdir)
-  bundle exec ruby File.join(targetdir, "main.rb")
+  ruby File.join(targetdir, "main.rb")
 end

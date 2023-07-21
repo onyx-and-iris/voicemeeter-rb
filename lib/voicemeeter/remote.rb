@@ -58,9 +58,13 @@ module Voicemeeter
 
       def run
         login
+        if event.any?
+          init_event_threads
+        end
 
         yield(self) if block_given?
-
+      ensure
+        end_event_threads
         logout
       end
     end
