@@ -147,11 +147,10 @@ module Voicemeeter
     end
 
     private def _get_levels
+      strip_mode = cache[:strip_mode]
       [
-        (0...kind.num_strip_levels).map do |i|
-          get_level(cache[:strip_mode], i)
-        end,
-        (0...kind.num_bus_levels).map { |i| get_level(3, i) }
+        (0...kind.num_strip_levels).map { get_level(strip_mode, _1) },
+        (0...kind.num_bus_levels).map { get_level(3, _1) }
       ]
     end
 
