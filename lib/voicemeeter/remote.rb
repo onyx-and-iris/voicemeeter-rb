@@ -32,12 +32,6 @@ module Voicemeeter
       }
     end
 
-    def build
-      steps.select { |k, v| director.include? k }.each do |k, v|
-        send("#{k}=", v.call)
-      end
-    end
-
     def director
       [:strip, :bus, :button, :vban, :command, :device, :option]
     end
@@ -47,9 +41,14 @@ module Voicemeeter
     class Remote < Base
       include Builder
 
+      public attr_reader :strip, :bus, :button, :vban, :command, :device, :option
+      private attr_writer :strip, :bus, :button, :vban, :command, :device, :option
+
       def initialize(kind, **kwargs)
         super
-        build
+        steps.select { |k, v| director.include? k }.each do |k, v|
+          send("#{k}=", v.call)
+        end
       end
 
       def configs
@@ -70,13 +69,11 @@ module Voicemeeter
     end
 
     class RemoteBasic < Remote
-      public attr_reader :strip, :bus, :button, :vban, :command, :device, :option
-      private attr_writer :strip, :bus, :button, :vban, :command, :device, :option
     end
 
     class RemoteBanana < Remote
-      public attr_reader :strip, :bus, :button, :vban, :command, :device, :option, :recorder, :patch
-      private attr_writer :strip, :bus, :button, :vban, :command, :device, :option, :recorder, :patch
+      public attr_reader :recorder, :patch
+      private attr_writer :recorder, :patch
 
       private def director
         super.append(:recorder, :patch)
@@ -84,11 +81,24 @@ module Voicemeeter
     end
 
     class RemotePotato < Remote
-      public attr_reader :strip, :bus, :button, :vban, :command, :device, :option, :recorder, :patch, :fx
-      private attr_writer :strip, :bus, :button, :vban, :command, :device, :option, :recorder, :patch, :fx
+      public attr_reader :recorder, :patch, :fx
+      private attr_writer :recorder, :patch, :fx
 
       private def director
         super.append(:recorder, :patch, :fx)
+      end
+    end
+
+    class RequestRemote
+      def self.for(kind, **kwargs)
+        case kind.name
+        when :basic
+          RemoteBasic.new(kind, **kwargs)
+        when :banana
+          RemoteBanana.new(kind, **kwargs)
+        when :potato
+          RemotePotato.new(kind, **kwargs)
+        end
       end
     end
 
@@ -99,13 +109,7 @@ module Voicemeeter
     rescue KeyError
       raise Errors::VMError.new "unknown Voicemeeter kind #{kind_id}"
     else
-      if kind_id == :basic
-        RemoteBasic.new(kind, **kwargs)
-      elsif kind_id == :banana
-        RemoteBanana.new(kind, **kwargs)
-      elsif kind_id == :potato
-        RemotePotato.new(kind, **kwargs)
-      end
+      RequestRemote.for(kind, **kwargs)
     end
   end
 end
