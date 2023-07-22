@@ -19,9 +19,9 @@ module Voicemeeter
 
     def steps
       {
-        strip: -> { (0...kind.num_strip).map { |i| Strip::Strip.make(self, i) } },
-        bus: -> { (0...kind.num_bus).map { |i| Bus::Bus.make(self, i) } },
-        button: -> { (0...kind.num_buttons).map { |i| Button::Button.new(self, i) } },
+        strip: -> { (0...kind.num_strip).map { Strip::Strip.make(self, _1) } },
+        bus: -> { (0...kind.num_bus).map { Bus::Bus.make(self, _1) } },
+        button: -> { (0...kind.num_buttons).map { Button::Button.new(self, _1) } },
         vban: -> { Vban::Vban.new(self) },
         command: -> { Command.new(self) },
         recorder: -> { Recorder::Recorder.new(self) },

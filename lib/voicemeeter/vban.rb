@@ -48,8 +48,8 @@ module Voicemeeter
 
       def initialize(remote)
         vban_in, vban_out = remote.kind.vban
-        @instream = (0...vban_in).map { |i| VbanInstream.new(remote, i) }
-        @outstream = (0...vban_out).map { |i| VbanOutstream.new(remote, i) }
+        @instream = (0...vban_in).map { VbanInstream.new(remote, _1) }
+        @outstream = (0...vban_out).map { VbanOutstream.new(remote, _1) }
 
         @remote = remote
       end

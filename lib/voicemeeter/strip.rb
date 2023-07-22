@@ -22,7 +22,7 @@ module Voicemeeter
         make_accessor_int :limit
         make_accessor_string :label
 
-        @gainlayer = (0...8).map { |j| GainLayer.new(remote, i, j) }
+        @gainlayer = (0...8).map { GainLayer.new(remote, i, _1) }
         @levels = StripLevels.new(remote, i)
       end
 

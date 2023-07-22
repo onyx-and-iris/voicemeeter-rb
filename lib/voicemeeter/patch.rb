@@ -10,13 +10,13 @@ module Voicemeeter
         make_accessor_bool :postfadercomposite, :postfxinsert
 
         asio_in, asio_out = remote.kind.asio
-        @asio = (0...asio_in).map { |i| PatchAsioIn.new(remote, i) }
-        @outa2 = (0...asio_out).map { |i| PatchAsioOut.new(remote, i) }
-        @outa3 = (0...asio_out).map { |i| PatchAsioOut.new(remote, i) }
-        @outa4 = (0...asio_out).map { |i| PatchAsioOut.new(remote, i) }
-        @outa5 = (0...asio_out).map { |i| PatchAsioOut.new(remote, i) }
-        @composite = (0...8).map { |i| PatchComposite.new(remote, i) }
-        @insert = (0...remote.kind.insert).map { |i| PatchInsert.new(remote, i) }
+        @asio = (0...asio_in).map { PatchAsioIn.new(remote, _1) }
+        @outa2 = (0...asio_out).map { PatchAsioOut.new(remote, _1) }
+        @outa3 = (0...asio_out).map { PatchAsioOut.new(remote, _1) }
+        @outa4 = (0...asio_out).map { PatchAsioOut.new(remote, _1) }
+        @outa5 = (0...asio_out).map { PatchAsioOut.new(remote, _1) }
+        @composite = (0...8).map { PatchComposite.new(remote, _1) }
+        @insert = (0...remote.kind.insert).map { PatchInsert.new(remote, _1) }
       end
     end
 
