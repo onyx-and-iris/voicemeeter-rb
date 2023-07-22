@@ -33,7 +33,7 @@ strip-5:
 strip-6:
   label: VirtStrip1
   limit: -12
-  k: 3
+  karaoke: 3
 strip-7:
   label: VirtStrip2
   bass: -3.2
