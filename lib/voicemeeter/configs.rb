@@ -123,7 +123,7 @@ module Voicemeeter
     public
 
     def get(kind_id)
-      if @loaders.nil?
+      unless defined? @loaders
         @loaders = Kinds::ALL.to_h { |kind| [kind.name, Loader.new(kind)] }
         @loaders.each { |name, loader| loader.run }
       end

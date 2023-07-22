@@ -81,12 +81,12 @@ module Voicemeeter
       end
 
       def add(events)
-        events = [events] if !events.respond_to? :each
+        events = [events] unless events.respond_to? :each
         events.each { |e| send("#{e}=", true) }
       end
 
       def remove(events)
-        events = [events] if !events.respond_to? :each
+        events = [events] unless events.respond_to? :each
         events.each { |e| send("#{e}=", false) }
       end
     end
