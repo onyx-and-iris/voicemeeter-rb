@@ -44,7 +44,7 @@ module Voicemeeter
       public attr_reader :strip, :bus, :button, :vban, :command, :device, :option
       private attr_writer :strip, :bus, :button, :vban, :command, :device, :option
 
-      def initialize(kind, **kwargs)
+      def initialize(kind, **)
         super
         steps.select { |k, v| director.include? k }.each do |k, v|
           send("#{k}=", v.call)
@@ -90,26 +90,26 @@ module Voicemeeter
     end
 
     class RequestRemote
-      def self.for(kind, **kwargs)
+      def self.for(kind, **)
         case kind.name
         when :basic
-          RemoteBasic.new(kind, **kwargs)
+          RemoteBasic.new(kind, **)
         when :banana
-          RemoteBanana.new(kind, **kwargs)
+          RemoteBanana.new(kind, **)
         when :potato
-          RemotePotato.new(kind, **kwargs)
+          RemotePotato.new(kind, **)
         end
       end
     end
 
     public
 
-    def self.new(kind_id, **kwargs)
+    def self.new(kind_id, **)
       kind = Kinds.get(kind_id)
     rescue KeyError
       raise Errors::VMError.new "unknown Voicemeeter kind #{kind_id}"
     else
-      RequestRemote.for(kind, **kwargs)
+      RequestRemote.for(kind, **)
     end
   end
 end
