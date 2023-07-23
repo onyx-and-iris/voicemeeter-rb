@@ -9,7 +9,23 @@ module Voicemeeter
       TRIGGER = 3
     end
 
+    module ButtonColorMixin
+      def identifier
+        "command.button[#{@index}]"
+      end
+
+      def color
+        method(:getter).super_method.call("color").to_i
+      end
+
+      def color=(val)
+        method(:setter).super_method.call("color", val)
+      end
+    end
+
     class Button < IRemote
+      include ButtonColorMixin
+
       def getter(mode)
         @remote.get_buttonstatus(@index, mode)
       end
