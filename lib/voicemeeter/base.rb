@@ -48,7 +48,7 @@ module Voicemeeter
     def logout
       sleep(0.1)
       CBindings.call(:bind_logout)
-      logger.info "Sucessfully logged out of #{self}"
+      logger.info "Successfully logged out of #{self}"
     end
 
     def pdirty?
