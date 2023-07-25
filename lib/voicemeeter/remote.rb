@@ -17,23 +17,23 @@ module Voicemeeter
   module Builder
     private
 
-    def steps
-      {
-        strip: -> { (0...kind.num_strip).map { Strip::Strip.make(self, _1) } },
-        bus: -> { (0...kind.num_bus).map { Bus::Bus.make(self, _1) } },
-        button: -> { (0...kind.num_buttons).map { Button::Button.new(self, _1) } },
-        vban: -> { Vban::Vban.new(self) },
-        command: -> { Command.new(self) },
-        recorder: -> { Recorder::Recorder.new(self) },
-        device: -> { Device.new(self) },
-        fx: -> { Fx.new(self) },
-        patch: -> { Patch::Patch.new(self) },
-        option: -> { Option::Option.new(self) }
-      }
+    def steps(step)
+      case step
+      in :strip then -> { (0...kind.num_strip).map { Strip::Strip.make(self, _1) } }
+      in :bus then -> { (0...kind.num_bus).map { Bus::Bus.make(self, _1) } }
+      in :button then -> { (0...kind.num_buttons).map { Button::Button.new(self, _1) } }
+      in :vban then -> { Vban::Vban.new(self) }
+      in :command then -> { Command.new(self) }
+      in :recorder then -> { Recorder::Recorder.new(self) }
+      in :device then -> { Device.new(self) }
+      in :fx then -> { Fx.new(self) }
+      in :patch then -> { Patch::Patch.new(self) }
+      in :option then -> { Option::Option.new(self) }
+      end
     end
 
     def director
-      [:strip, :bus, :button, :vban, :command, :device, :option]
+      %i[strip bus button vban command device option]
     end
   end
 
@@ -46,9 +46,7 @@ module Voicemeeter
 
       def initialize(kind, **)
         super
-        steps.select { |k, v| director.include? k }.each do |k, v|
-          send("#{k}=", v.call)
-        end
+        director.each { |step| send("#{step}=", steps(step).call) }
       end
 
       def configs
