@@ -42,11 +42,10 @@ module Voicemeeter
       include Builder
 
       public attr_reader :strip, :bus, :button, :vban, :command, :device, :option
-      private attr_writer :strip, :bus, :button, :vban, :command, :device, :option
 
       def initialize(...)
         super
-        director.each { |step| send("#{step}=", steps(step).call) }
+        director.each { |step| instance_variable_set("@#{step}", steps(step).call) }
       end
 
       def configs
@@ -71,7 +70,6 @@ module Voicemeeter
 
     class RemoteBanana < Remote
       public attr_reader :recorder, :patch
-      private attr_writer :recorder, :patch
 
       private def director
         super.append(:recorder, :patch)
@@ -80,7 +78,6 @@ module Voicemeeter
 
     class RemotePotato < Remote
       public attr_reader :recorder, :patch, :fx
-      private attr_writer :recorder, :patch, :fx
 
       private def director
         super.append(:recorder, :patch, :fx)
