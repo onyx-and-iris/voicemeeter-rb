@@ -19,16 +19,16 @@ module Voicemeeter
 
     def steps(step)
       case step
-      in :strip then -> { (0...kind.num_strip).map { Strip::Strip.make(self, _1) } }
-      in :bus then -> { (0...kind.num_bus).map { Bus::Bus.make(self, _1) } }
-      in :button then -> { (0...kind.num_buttons).map { Button::Button.new(self, _1) } }
-      in :vban then -> { Vban::Vban.new(self) }
-      in :command then -> { Command.new(self) }
-      in :recorder then -> { Recorder::Recorder.new(self) }
-      in :device then -> { Device.new(self) }
-      in :fx then -> { Fx.new(self) }
-      in :patch then -> { Patch::Patch.new(self) }
-      in :option then -> { Option::Option.new(self) }
+      when :strip then -> { (0...kind.num_strip).map { Strip::Strip.make(self, _1) } }
+      when :bus then -> { (0...kind.num_bus).map { Bus::Bus.make(self, _1) } }
+      when :button then -> { (0...kind.num_buttons).map { Button::Button.new(self, _1) } }
+      when :vban then -> { Vban::Vban.new(self) }
+      when :command then -> { Command.new(self) }
+      when :recorder then -> { Recorder::Recorder.new(self) }
+      when :device then -> { Device.new(self) }
+      when :fx then -> { Fx.new(self) }
+      when :patch then -> { Patch::Patch.new(self) }
+      when :option then -> { Option::Option.new(self) }
       end
     end
 
