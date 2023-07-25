@@ -1,11 +1,13 @@
 require_relative "install"
 require_relative "errors"
 require_relative "util"
+require_relative "logger"
 
 module Voicemeeter
   module CBindings
     private
 
+    extend Logging
     extend FFI::Library
 
     VM_PATH = Install.get_vmpath
@@ -53,14 +55,21 @@ module Voicemeeter
     attach_function :VBVMR_GetMidiMessage, %i[pointer long], :long
 
     def call(fn, *args, ok: [0], exp: nil)
+      to_cname = -> {
+        "VBVMR_#{Util::String.camelcase(fn.to_s.delete_prefix("bind_"))
+        .gsub(/(Button|Input|Output)/, '\1_')}"
+      }
+
       res = send(fn, *args)
       if exp.nil?
         unless ok.include?(res)
-          raise Errors::VMCAPIError.new fn, res
+          logger.error "#{to_cname.call} returned #{res}"
+          raise Errors::VMCAPIError.new to_cname.call, res
         end
       else
         unless exp.call(res) || ok.include?(res)
-          raise Errors::VMCAPIError.new fn, res
+          logger.error "#{to_cname.call} returned #{res}"
+          raise Errors::VMCAPIError.new to_cname.call, res
         end
       end
       res

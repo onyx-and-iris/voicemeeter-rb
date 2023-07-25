@@ -6,20 +6,16 @@ module Voicemeeter
     end
 
     class VMCAPIError < VMError
-      attr_reader :code
+      attr_reader :fn_name, :code
 
-      def initialize(ruby_name, code)
-        @ruby_name = ruby_name
+      def initialize(fn_name, code)
+        @fn_name = fn_name
         @code = code
         super(message)
       end
 
       def message
         "#{fn_name} returned #{code}"
-      end
-
-      def fn_name
-        "VBVMR_#{Util::String.camelcase(@ruby_name.to_s.delete_prefix("bind_")).sub("macro_button", "macrobutton")}"
       end
     end
   end
