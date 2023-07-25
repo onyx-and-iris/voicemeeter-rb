@@ -93,12 +93,14 @@ module Voicemeeter
     end
 
     def getter(mode)
+      convert = ->(x) { (x > 0) ? (20 * Math.log(x, 10)).round(1) : -200.0 }
+
       vals = if @remote.running && @remote.event.ldirty
         @remote.cache[:bus_level][@init, @offset]
       else
         (@init...@init + @offset).map { |i| @remote.get_level(mode, i) }
       end
-      vals.map { |x| (x > 0) ? (20 * Math.log(x, 10)).round(1) : -200.0 }
+      vals.map(&convert)
     end
 
     def all
