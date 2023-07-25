@@ -32,11 +32,12 @@ module Voicemeeter
       attr_reader :pdirty, :mdirty, :midi, :ldirty
 
       def initialize(pdirty: false, mdirty: false, midi: false, ldirty: false)
-        @pdirty = pdirty
-        @mdirty = mdirty
-        @midi = midi
-        @ldirty = ldirty
         make_writer_methods :pdirty, :mdirty, :midi, :ldirty
+
+        self.pdirty = pdirty
+        self.mdirty = mdirty
+        self.midi = midi
+        self.ldirty = ldirty
       end
 
       def to_s
@@ -53,7 +54,7 @@ module Voicemeeter
         logger.info(info_msg.join(" "))
       end
 
-      def make_writer_methods(*params)
+      private def make_writer_methods(*params)
         params.each do |param|
           define_singleton_method("#{param}=") do |value|
             instance_variable_set("@#{param}", value)
