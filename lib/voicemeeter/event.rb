@@ -36,6 +36,7 @@ module Voicemeeter
         @mdirty = mdirty
         @midi = midi
         @ldirty = ldirty
+        make_writer_methods :pdirty, :mdirty, :midi, :ldirty
       end
 
       def to_s
@@ -52,24 +53,13 @@ module Voicemeeter
         logger.info(info_msg.join(" "))
       end
 
-      def pdirty=(val)
-        @pdirty = val
-        info("pdirty #{val ? "added to" : "removed from"}")
-      end
-
-      def mdirty=(val)
-        @mdirty = val
-        info("mdirty #{val ? "added to" : "removed from"}")
-      end
-
-      def ldirty=(val)
-        @ldirty = val
-        info("ldirty #{val ? "added to" : "removed from"}")
-      end
-
-      def midi=(val)
-        @midi = val
-        info("midi #{val ? "added to" : "removed from"}")
+      def make_writer_methods(*params)
+        params.each do |param|
+          define_singleton_method("#{param}=") do |value|
+            instance_variable_set("@#{param}", value)
+            info("#{param} #{send(param) ? "added to" : "removed from"}")
+          end
+        end
       end
 
       def get
