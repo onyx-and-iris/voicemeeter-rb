@@ -3,7 +3,7 @@ require_relative "iremote"
 module Voicemeeter
   module Patch
     class Patch < IRemote
-      attr_reader :asio, :asioa2, :asioa3, :asioa4, :asioa5, :composite, :insert
+      attr_reader :asio, :A2, :A3, :A4, :A5, :composite, :insert
 
       def initialize(remote)
         super
@@ -11,10 +11,9 @@ module Voicemeeter
 
         asio_in, asio_out = remote.kind.asio
         @asio = (0...asio_in).map { PatchAsioIn.new(remote, _1) }
-        @outa2 = (0...asio_out).map { PatchAsioOut.new(remote, _1) }
-        @outa3 = (0...asio_out).map { PatchAsioOut.new(remote, _1) }
-        @outa4 = (0...asio_out).map { PatchAsioOut.new(remote, _1) }
-        @outa5 = (0...asio_out).map { PatchAsioOut.new(remote, _1) }
+        %i[A2 A3 A4 A5].each do |param|
+          instance_variable_set("@#{param}", (0...asio_out).map { PatchAsioOut.new(remote, _1, param) })
+        end
         @composite = (0...8).map { PatchComposite.new(remote, _1) }
         @insert = (0...remote.kind.insert).map { PatchInsert.new(remote, _1) }
       end
@@ -37,12 +36,17 @@ module Voicemeeter
     end
 
     class PatchAsioOut < PatchAsio
+      def initialize(remote, i, param)
+        super(remote, i)
+        @param = param
+      end
+
       def get
-        getter("asio[#{@index}]").to_i
+        getter("out#{@param}[#{@index}]").to_i
       end
 
       def set(val)
-        setter("asio[#{@index}]", val)
+        setter("out#{@param}[#{@index}]", val)
       end
     end
 
