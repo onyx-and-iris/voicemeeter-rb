@@ -44,7 +44,7 @@ module Voicemeeter
       public attr_reader :strip, :bus, :button, :vban, :command, :device, :option
       private attr_writer :strip, :bus, :button, :vban, :command, :device, :option
 
-      def initialize(kind, **)
+      def initialize(...)
         super
         director.each { |step| send("#{step}=", steps(step).call) }
       end

@@ -25,11 +25,11 @@ module Voicemeeter
       @sync = kwargs[:sync] || false
       @ratelimit = kwargs[:ratelimit] || RATELIMIT
       @delay = kwargs[:delay] || DELAY
-      @midi = Midi.new
       @event =
         Events::Tracker.new(
           **(kwargs.select { |k, _| %i[pdirty mdirty ldirty midi].include? k })
         )
+      @midi = Midi.new
       @callback = Events::Callback.new
       @que = Queue.new
       @cache = {strip_mode: 0}
