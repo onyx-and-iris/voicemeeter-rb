@@ -61,13 +61,13 @@ module Voicemeeter
       }
 
       res = send(fn, *args)
-      if exp.nil?
-        unless ok.include?(res)
+      if exp
+        unless exp.call(res) || ok.include?(res)
           logger.error "#{to_cname.call} returned #{res}"
           raise Errors::VMCAPIError.new to_cname.call, res
         end
       else
-        unless exp.call(res) || ok.include?(res)
+        unless ok.include?(res)
           logger.error "#{to_cname.call} returned #{res}"
           raise Errors::VMCAPIError.new to_cname.call, res
         end
