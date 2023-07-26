@@ -12,7 +12,7 @@ module Voicemeeter
   class Base
     include Logging
     include Worker
-    include Util::Cache
+    prepend Util::Cache
 
     attr_reader :kind, :midi, :event, :callback, :running, :delay, :cache
     alias_method :observer, :callback
@@ -105,16 +105,14 @@ module Voicemeeter
     end
 
     def get(name, is_string = false)
-      polling(:get, name:) do
-        if is_string
-          cget = FFI::MemoryPointer.new(:string, 512, true)
-          CBindings.call(:bind_get_parameter_string_a, name, cget)
-          cget.read_string
-        else
-          cget = FFI::MemoryPointer.new(:float, 1)
-          CBindings.call(:bind_get_parameter_float, name, cget)
-          cget.read_float.round(1)
-        end
+      if is_string
+        cget = FFI::MemoryPointer.new(:string, 512, true)
+        CBindings.call(:bind_get_parameter_string_a, name, cget)
+        cget.read_string
+      else
+        cget = FFI::MemoryPointer.new(:float, 1)
+        CBindings.call(:bind_get_parameter_float, name, cget)
+        cget.read_float.round(1)
       end
     end
 
@@ -128,11 +126,9 @@ module Voicemeeter
     end
 
     def get_buttonstatus(id, mode)
-      polling(:get_buttonstatus, id:, mode:) do
-        cget = FFI::MemoryPointer.new(:float, 1)
-        CBindings.call(:bind_macro_button_get_status, id, cget, mode)
-        cget.read_float.to_i
-      end
+      cget = FFI::MemoryPointer.new(:float, 1)
+      CBindings.call(:bind_macro_button_get_status, id, cget, mode)
+      cget.read_float.to_i
     end
 
     def set_buttonstatus(id, mode, state)

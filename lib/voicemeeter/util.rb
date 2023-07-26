@@ -19,16 +19,16 @@ module Voicemeeter
     end
 
     module Cache
-      def polling(func, **kwargs)
-        params = {
-          get: kwargs[:name],
-          get_buttonstatus: "mb_#{kwargs[:id]}_#{kwargs[:mode]}"
-        }
-        return cache.delete(params[func]) if cache.key? params[func]
-
+      def get(name, is_string = false)
+        return cache.delete(name) if cache.key? name
         clear_dirty if @sync
+        super
+      end
 
-        yield
+      def get_buttonstatus(id, mode)
+        return cache.delete("mb_#{id}_#{mode}") if cache.key? "mb_#{id}_#{mode}"
+        clear_dirty if @sync
+        super
       end
     end
   end
