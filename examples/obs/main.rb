@@ -44,7 +44,9 @@ class Main
   def on_current_program_scene_changed(data)
     scene = data.scene_name
     puts "Switched to scene #{scene}"
-    send("on_#{scene.downcase}")
+    if respond_to?("on_#{scene.downcase}")
+      send("on_#{scene.downcase}")
+    end
   end
 
   def on_exit_started
