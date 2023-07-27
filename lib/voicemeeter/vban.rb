@@ -19,7 +19,7 @@ module Voicemeeter
       end
 
       def direction
-        raise "Called abstract mehod: direction"
+        raise "Called abstract method: direction"
       end
     end
 
