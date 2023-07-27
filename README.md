@@ -466,7 +466,7 @@ vm.run { (0...vm.device.ins).each { puts vm.device.input(_1) } }
 
 ### Fx.Reverb | Fx.Delay
 
-The following properties are available:
+The following attributes are available:
 
 - `on`: boolean
 - `ab`: boolean
@@ -480,7 +480,7 @@ vm.fx.delay.ab = true
 
 ### Patch
 
-The following properties are available:
+The following attributes are available:
 
 - `postfadercomposite`: boolean
 - `postfxinsert`: boolean
@@ -544,7 +544,7 @@ i, from 0 up to number of channels depending on version.
 
 ### Option
 
-The following properties are available:
+The following attributes are available:
 
 - `sr`: int
 - `asiosr`: boolean
@@ -559,7 +559,7 @@ vm.option.sr = 48_000
 
 #### Option.buffer
 
-The following properties are available:
+The following attributes are available:
 
 - `mme`: int
 - `wdm`: int
