@@ -9,12 +9,29 @@ class Main
   def initialize(vm, **kwargs)
     @vm = vm
     @obsws = OBSWS::Events::Client.new(**kwargs)
-    @obsws.add_observer(self)
+    @obsws.register([
+      method(:on_current_program_scene_changed),
+      method(:on_exit_started)
+    ])
     @running = true
   end
 
   def run
     sleep(0.1) while running
+  end
+
+  def on_current_program_scene_changed(data)
+    scene = data.scene_name
+    puts "Switched to scene #{scene}"
+    if respond_to?("on_#{scene.downcase}")
+      send("on_#{scene.downcase}")
+    end
+  end
+
+  def on_exit_started
+    puts "OBS closing!"
+    @obsws.close
+    @running = false
   end
 
   def on_start
@@ -40,26 +57,11 @@ class Main
   def on_end
     @vm.apply({"strip-0" => {mute: true}, "vban-instream-0" => {on: false}})
   end
-
-  def on_current_program_scene_changed(data)
-    scene = data.scene_name
-    puts "Switched to scene #{scene}"
-    if respond_to?("on_#{scene.downcase}")
-      send("on_#{scene.downcase}")
-    end
-  end
-
-  def on_exit_started
-    puts "OBS closing!"
-    @obsws.close
-    @running = false
-  end
 end
 
 def conn_from_yml
   YAML.load_file("config.yaml", symbolize_names: true)[:connection]
 end
-
 
 if $PROGRAM_NAME == __FILE__
   Voicemeeter::Remote.new(:potato).run do |vm|
