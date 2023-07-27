@@ -1,7 +1,7 @@
 ## Requirements
 
 - [OBS Studio v28+](https://obsproject.com/)
-- [OBSWS Ruby wrapper for Websocket v5](https://github.com/onyx-and-iris/obsws-ruby)
+- [OBSWS Ruby Clients for Websocket v5](https://github.com/onyx-and-iris/obsws-ruby)
 
 ## About
 
