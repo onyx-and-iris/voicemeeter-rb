@@ -459,8 +459,131 @@ vm.command.showvbanchat = true
 example:
 
 ```ruby
-vm.run { (0...vm.device.ins).each { |i| puts vm.device.input(i) } }
+vm.run { (0...vm.device.ins).each { puts vm.device.input(_1) } }
 ```
+
+### FX
+
+### Fx.Reverb | Fx.Delay
+
+The following properties are available:
+
+- `on`: boolean
+- `ab`: boolean
+
+example:
+
+```ruby
+vm.fx.reverb.on = true
+vm.fx.delay.ab = true
+```
+
+### Patch
+
+The following properties are available:
+
+- `postfadercomposite`: boolean
+- `postfxinsert`: boolean
+
+example:
+
+```ruby
+vm.patch.postfxinsert = false
+```
+
+##### asio[i]
+
+- `get()`: int
+- `set(patch_in)`: int, valid range determined by connected device.
+
+example:
+
+```ruby
+vm.patch.asio[3].set(4)
+```
+
+i, from 0 to 10
+
+##### A2[i] - A5[i]
+
+- `get()`: int
+- `set(patch_out)`: int, valid range determined by connected device.
+
+example:
+
+```ruby
+vm.patch.A3[5].set(3)
+```
+
+i, from 0 to 8.
+
+##### composite[i]
+
+- `get()`: int
+- `set(channel)`: int, from 0 up to number of channels depending on version.
+
+example:
+
+```ruby
+vm.patch.composite[7].set(4)
+```
+
+i, from 0 to 8.
+
+##### insert[i]
+
+- `on`: boolean
+
+example:
+
+```ruby
+vm.patch.insert[18].on = true
+```
+
+i, from 0 up to number of channels depending on version.
+
+### Option
+
+The following properties are available:
+
+- `sr`: int
+- `asiosr`: boolean
+- `monitoronsel`: boolean
+- `slidermode`: boolean
+
+example:
+
+```ruby
+vm.option.sr = 48_000
+```
+
+#### Option.buffer
+
+The following properties are available:
+
+- `mme`: int
+- `wdm`: int
+- `ks`: int
+- `asio`: int
+
+example:
+
+```ruby
+vm.option.buffer.wdm = 512
+```
+
+##### delay[i]
+
+- `get()`: int
+- `set(delay)`: int, from 0 to 500
+
+example:
+
+```ruby
+vm.option.delay[4].set(30)
+```
+
+i, from 0 up to 4.
 
 ### Midi
 
