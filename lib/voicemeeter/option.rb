@@ -34,11 +34,11 @@ module Voicemeeter
       end
 
       def get
-        getter("[#{i}]").to_i
+        getter("[#{@index}]").to_i
       end
 
       def set(val)
-        setter("[#{i}]", val)
+        setter("[#{@index}]", val)
       end
     end
 
