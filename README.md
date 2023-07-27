@@ -23,7 +23,7 @@ For an outline of past/future changes refer to: [CHANGELOG](CHANGELOG.md)
 ### Bundler
 
 ```
-bundle add 'voicemeeter'
+bundle add voicemeeter
 bundle install
 ```
 
@@ -646,7 +646,7 @@ vm.set("Strip[0].Gain", -3.6)
 
 ### Logging
 
-To enable logs set an environmental variable `LOG_LEVEL` to the appropriate level.
+To enable logs set an environmental variable `VM_LOG_LEVEL` to the appropriate level.
 
 example in powershell:
 
