@@ -609,7 +609,7 @@ p vm.event.get
 
 ### Remote class
 
-#### Voicemeeter.remote
+#### Voicemeeter::Remote
 
 You may pass the following optional keyword arguments:
 
