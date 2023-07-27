@@ -1,8 +1,8 @@
 module Voicemeeter
   module Util
     module String
-      def snakecase(string)
-        string.gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+      def snakecase(s)
+        s.gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
           .gsub(/([a-z\d])([A-Z])/, '\1_\2')
           .tr("-", "_")
           .gsub(/\s/, "_")
@@ -10,15 +10,17 @@ module Voicemeeter
           .downcase
       end
 
-      def camelcase(string)
-        string if string !~ /_/ && string =~ /[A-Z]+.*/
-        string.split("_").map { |e| e.capitalize }.join
+      def camelcase(s)
+        s if s !~ /_/ && s =~ /[A-Z]+.*/
+        s.split("_").map { |e| e.capitalize }.join
       end
 
       module_function :snakecase, :camelcase
     end
 
     module Cache
+      # Prepended methods, provides wrap-like functionality
+
       def get(name, is_string = false)
         return cache.delete(name) if cache.key? name
         clear_dirty if @sync

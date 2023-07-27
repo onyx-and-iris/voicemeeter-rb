@@ -3,7 +3,9 @@ require_relative "meta"
 require_relative "logger"
 
 module Voicemeeter
-  class IRemote
+  module IRemote
+    # A commmon interface between the base Remote class and extended classes.
+
     include Logging
     include MetaFunctions
 

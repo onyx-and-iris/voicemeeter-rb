@@ -23,7 +23,9 @@ module Voicemeeter
       end
     end
 
-    class Button < IRemote
+    class Base
+      # Base class for Button types
+      include IRemote
       include ButtonColorMixin
 
       def getter(mode)

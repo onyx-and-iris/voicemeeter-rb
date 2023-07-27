@@ -2,7 +2,8 @@ require_relative "iremote"
 
 module Voicemeeter
   module Option
-    class Option < IRemote
+    class Base
+      include IRemote
       attr_reader :delay, :buffer, :mode
 
       def initialize(remote)
@@ -20,7 +21,9 @@ module Voicemeeter
       end
     end
 
-    class OptionDelay < IRemote
+    class OptionDelay
+      include IRemote
+
       def initialize(remote, i)
         super
         make_accessor_bool :on, :ab
@@ -39,7 +42,9 @@ module Voicemeeter
       end
     end
 
-    class OptionBuffer < IRemote
+    class OptionBuffer
+      include IRemote
+
       def initialize(remote)
         super
         make_accessor_int :mme, :wdm, :ks, :asio
@@ -50,7 +55,9 @@ module Voicemeeter
       end
     end
 
-    class OptionMode < IRemote
+    class OptionMode
+      include IRemote
+
       def initialize(remote)
         super
         make_accessor_bool :exclusif, :swift

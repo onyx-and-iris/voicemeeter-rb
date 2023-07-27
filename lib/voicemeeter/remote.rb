@@ -15,20 +15,24 @@ require_relative "configs"
 
 module Voicemeeter
   module Builder
+    # Builder module for Remote factories.
+    # Defines steps for building a Remote type of a kind.
+    # Defines the base director
+
     private
 
     def steps(step)
       case step
-      when :strip then -> { (0...kind.num_strip).map { Strip::Strip.make(self, _1) } }
-      when :bus then -> { (0...kind.num_bus).map { Bus::Bus.make(self, _1) } }
-      when :button then -> { (0...kind.num_buttons).map { Button::Button.new(self, _1) } }
-      when :vban then -> { Vban::Vban.new(self) }
+      when :strip then -> { (0...kind.num_strip).map { Strip::Base.make(self, _1) } }
+      when :bus then -> { (0...kind.num_bus).map { Bus::Base.make(self, _1) } }
+      when :button then -> { (0...kind.num_buttons).map { Button::Base.new(self, _1) } }
+      when :vban then -> { Vban::Base.new(self) }
       when :command then -> { Command.new(self) }
-      when :recorder then -> { Recorder::Recorder.new(self) }
+      when :recorder then -> { Recorder::Base.new(self) }
       when :device then -> { Device.new(self) }
       when :fx then -> { Fx.new(self) }
-      when :patch then -> { Patch::Patch.new(self) }
-      when :option then -> { Option::Option.new(self) }
+      when :patch then -> { Patch::Base.new(self) }
+      when :option then -> { Option::Base.new(self) }
       end
     end
 
@@ -39,6 +43,7 @@ module Voicemeeter
 
   module Remote
     class Remote < Base
+      # Concrete class for Remote types
       include Builder
 
       public attr_reader :strip, :bus, :button, :vban, :command, :device, :option
@@ -66,9 +71,11 @@ module Voicemeeter
     end
 
     class RemoteBasic < Remote
+      # Concrete class for RemoteBasic types
     end
 
     class RemoteBanana < Remote
+      # Concrete class for RemoteBanana types
       public attr_reader :recorder, :patch
 
       private def director
@@ -77,6 +84,7 @@ module Voicemeeter
     end
 
     class RemotePotato < Remote
+      # Concrete class for RemotePotato types
       public attr_reader :recorder, :patch, :fx
 
       private def director
@@ -85,6 +93,7 @@ module Voicemeeter
     end
 
     class RequestRemote
+      # Factory class for Remote types. Returns a Remote class for a kind.
       def self.for(kind, **)
         case kind.name
         when :basic
@@ -100,6 +109,7 @@ module Voicemeeter
     public
 
     def self.new(kind_id, **)
+      # Interface entry point. Wraps factory class and handles kind errors.
       kind = Kinds.get(kind_id)
     rescue KeyError
       raise Errors::VMError.new "unknown Voicemeeter kind #{kind_id}"

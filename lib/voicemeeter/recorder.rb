@@ -14,7 +14,9 @@ module Voicemeeter
       MP3 = 100
     end
 
-    class Recorder < IRemote
+    class Base
+      # Base class for Recorder types
+      include IRemote
       include Mixins::Outputs
 
       attr_reader :mode, :armstrip, :armbus
@@ -54,7 +56,9 @@ module Voicemeeter
       end
     end
 
-    class RecorderMode < IRemote
+    class RecorderMode
+      include IRemote
+
       def initialize(remote)
         super
         make_accessor_bool :recbus, :playonload, :loop, :multitrack
@@ -65,7 +69,9 @@ module Voicemeeter
       end
     end
 
-    class RecorderArmChannel < IRemote
+    class RecorderArmChannel
+      include IRemote
+
       def initialize(remote, j)
         super(remote)
         @j = j

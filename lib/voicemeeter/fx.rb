@@ -1,7 +1,8 @@
 require_relative "iremote"
 
 module Voicemeeter
-  class Fx < IRemote
+  class Fx
+    include IRemote
     attr_reader :reverb, :delay
 
     def initialize(remote)
@@ -15,7 +16,9 @@ module Voicemeeter
     end
   end
 
-  class FxReverb < IRemote
+  class FxReverb
+    include IRemote
+
     def initialize(remote)
       super
       make_accessor_bool :on, :ab
@@ -26,7 +29,9 @@ module Voicemeeter
     end
   end
 
-  class FxDelay < IRemote
+  class FxDelay
+    include IRemote
+
     def initialize(remote)
       super
       make_accessor_bool :on, :ab

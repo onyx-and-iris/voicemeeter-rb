@@ -4,7 +4,9 @@ require_relative "errors"
 
 module Voicemeeter
   module Vban
-    class VbanStream < IRemote
+    class VbanStream
+      include IRemote
+
       def initialize(remote, i)
         super
         make_accessor_bool :on
@@ -43,7 +45,8 @@ module Voicemeeter
       end
     end
 
-    class Vban
+    class Base
+      # Base class for Vban type
       attr_reader :instream, :outstream
 
       def initialize(remote)
@@ -54,12 +57,10 @@ module Voicemeeter
         @remote = remote
       end
 
-      # stree-ignore
       def enable
         @remote.set("vban.enable", 1)
       end
 
-      # stree-ignore
       def disable
         @remote.set("vban.enable", 0)
       end

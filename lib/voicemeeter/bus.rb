@@ -4,7 +4,9 @@ require_relative "mixins"
 
 module Voicemeeter
   module Bus
-    class Bus < IRemote
+    class Base
+      # Base class for Bus types
+      include IRemote
       include Mixins::Fades
       include Mixins::Return
 
@@ -31,13 +33,17 @@ module Voicemeeter
       end
     end
 
-    class PhysicalBus < Bus
+    class PhysicalBus < Base
+      # Represents a Physical Bus
     end
 
-    class VirtualBus < Bus
+    class VirtualBus < Base
+      # Represents a Virtual Bus
     end
 
-    class BusEq < IRemote
+    class BusEq
+      include IRemote
+
       def initialize(remote, i)
         super
         make_accessor_bool :on, :ab
@@ -48,7 +54,9 @@ module Voicemeeter
       end
     end
 
-    class BusModes < IRemote
+    class BusModes
+      include IRemote
+
       def initialize(remote, i)
         super
         make_accessor_bool :normal,
@@ -81,7 +89,9 @@ module Voicemeeter
     end
   end
 
-  class BusLevels < IRemote
+  class BusLevels
+    include IRemote
+
     def initialize(remote, i)
       super
       @init = i * 8
@@ -110,7 +120,9 @@ module Voicemeeter
     def isdirty? = @remote.cache[:bus_comp][@init, @offset].any?
   end
 
-  class BusDevice < IRemote
+  class BusDevice
+    include IRemote
+
     def initialize(remote, i)
       super
       make_reader_only :name, :sr

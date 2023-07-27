@@ -2,7 +2,9 @@ require_relative "iremote"
 
 module Voicemeeter
   module Patch
-    class Patch < IRemote
+    class Base
+      # Base class for Patch types
+      include IRemote
       attr_reader :asio, :A2, :A3, :A4, :A5, :composite, :insert
 
       def initialize(remote)
@@ -19,7 +21,9 @@ module Voicemeeter
       end
     end
 
-    class PatchAsio < IRemote
+    class PatchAsio
+      include IRemote
+
       def identifier
         :patch
       end
@@ -50,7 +54,9 @@ module Voicemeeter
       end
     end
 
-    class PatchComposite < IRemote
+    class PatchComposite
+      include IRemote
+
       def get
         getter("composite[#{@index}]").to_i
       end
@@ -60,7 +66,9 @@ module Voicemeeter
       end
     end
 
-    class PatchInsert < IRemote
+    class PatchInsert
+      include IRemote
+
       def get
         getter("insert[#{@index}]").to_i == 1
       end

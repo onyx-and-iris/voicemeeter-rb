@@ -4,7 +4,9 @@ require_relative "mixins"
 
 module Voicemeeter
   module Strip
-    class Strip < IRemote
+    class Base
+      # Base class for Strip types
+      include IRemote
       include Mixins::Outputs
       include Mixins::Fades
 
@@ -31,7 +33,8 @@ module Voicemeeter
       end
     end
 
-    class PhysicalStrip < Strip
+    class PhysicalStrip < Base
+      # Represents a Physical Strip
       include Mixins::Xy::Pan
       include Mixins::Xy::Color
       include Mixins::Xy::Fx
@@ -51,7 +54,9 @@ module Voicemeeter
       end
     end
 
-    class StripComp < IRemote
+    class StripComp
+      include IRemote
+
       def initialize(remote, i)
         super
         make_accessor_float :gainin,
@@ -77,7 +82,9 @@ module Voicemeeter
       end
     end
 
-    class StripGate < IRemote
+    class StripGate
+      include IRemote
+
       def initialize(remote, i)
         super
         make_accessor_float :threshold, :damping, :attack, :hold, :release
@@ -97,7 +104,9 @@ module Voicemeeter
       end
     end
 
-    class StripDenoiser < IRemote
+    class StripDenoiser
+      include IRemote
+
       def identifier
         "strip[#{@index}].denoiser"
       end
@@ -111,7 +120,9 @@ module Voicemeeter
       end
     end
 
-    class StripEq < IRemote
+    class StripEq
+      include IRemote
+
       def initialize(remote, i)
         super
         make_accessor_bool :on, :ab
@@ -122,7 +133,9 @@ module Voicemeeter
       end
     end
 
-    class StripDevice < IRemote
+    class StripDevice
+      include IRemote
+
       def initialize(remote, i)
         super
         make_reader_int :sr
@@ -135,7 +148,8 @@ module Voicemeeter
       end
     end
 
-    class VirtualStrip < Strip
+    class VirtualStrip < Base
+      # Represents a Virtual Strip
       include Mixins::Xy::Pan
       include Mixins::Apps
 
@@ -175,7 +189,9 @@ module Voicemeeter
       alias_method :high=, :treble=
     end
 
-    class GainLayer < IRemote
+    class GainLayer
+      include IRemote
+
       def initialize(remote, i, j)
         super(remote, i)
         @j = j
@@ -194,7 +210,9 @@ module Voicemeeter
       end
     end
 
-    class StripLevels < IRemote
+    class StripLevels
+      include IRemote
+
       def initialize(remote, i)
         super
         p_in = remote.kind.phys_in

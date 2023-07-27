@@ -2,7 +2,9 @@ require_relative "iremote"
 require_relative "meta"
 
 module Voicemeeter
-  class Command < IRemote
+  class Command
+    include IRemote
+
     def initialize(remote)
       super
       make_action_method :show, :restart, :shutdown

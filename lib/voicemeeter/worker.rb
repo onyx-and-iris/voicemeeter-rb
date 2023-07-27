@@ -2,6 +2,8 @@ require_relative "logger"
 
 module Voicemeeter
   module Worker
+    # Event threads, provides updates to observers
+
     include Logging
 
     def init_producer(que)

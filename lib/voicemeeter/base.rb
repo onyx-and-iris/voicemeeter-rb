@@ -10,6 +10,7 @@ require_relative "logger"
 
 module Voicemeeter
   class Base
+    # Base class for Remote types
     include Logging
     include Worker
     prepend Util::Cache

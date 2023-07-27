@@ -5,7 +5,6 @@ require "ffi"
 module Voicemeeter
   private
 
-  # stree-ignore
   module Install
     OS_BITS = (FFI::Platform::CPU.downcase == "x64") ? 64 : 32
 

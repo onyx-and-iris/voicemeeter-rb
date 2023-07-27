@@ -5,6 +5,8 @@ require_relative "logger"
 
 module Voicemeeter
   module CBindings
+    # Ruby bindings for the C-API functions
+
     private
 
     extend Logging
