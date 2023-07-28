@@ -683,7 +683,7 @@ example:
 class App():
     def initialize(vm)
         @vm = vm
-        @vm.callback.register(method(:on_pdirty))
+        @vm.register(method(:on_pdirty))
         ...
 
     def on_pdirty

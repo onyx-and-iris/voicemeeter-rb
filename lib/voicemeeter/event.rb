@@ -2,25 +2,25 @@ require_relative "logger"
 
 module Voicemeeter
   module Events
-    class Callback
-      def initialize
-        @callbacks = []
+    module Callback
+      private def callbacks
+        @callbacks ||= []
       end
 
-      def register(*args)
-        args.each { |callback| @callbacks.append callback }
+      def register(*cbs)
+        cbs.each { |cb| callbacks << cb unless callbacks.include? cb }
       end
 
-      def deregister(*args)
-        @callbacks.reject! { |c| args.include? c }
+      def deregister(*cbs)
+        callbacks.reject! { |cb| cbs.include? cb }
       end
 
-      def trigger(event)
-        @callbacks.each do |callback|
-          if callback.respond_to? :on_update
+      private def trigger(event)
+        callbacks.each do |callback|
+          if callback.is_a? Method
+            callback.call if callback.name == event
+          elsif callback.respond_to? :on_update
             callback.on_update event.to_s[3..]
-          elsif callback.name == event
-            callback.call
           end
         end
       end

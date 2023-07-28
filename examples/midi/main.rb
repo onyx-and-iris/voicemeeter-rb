@@ -5,7 +5,7 @@ class Main
 
   def initialize(vm)
     @vm = vm
-    @vm.callback.register(self)
+    @vm.register(self)
   end
 
   def run

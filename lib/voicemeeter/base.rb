@@ -13,10 +13,10 @@ module Voicemeeter
     # Base class for Remote types
     include Logging
     include Worker
+    include Events::Callback
     prepend Util::Cache
 
-    attr_reader :kind, :midi, :event, :callback, :running, :delay, :cache
-    alias_method :observer, :callback
+    attr_reader :kind, :midi, :event, :running, :delay, :cache
 
     RATELIMIT = 0.033
     DELAY = 0.001
@@ -31,7 +31,6 @@ module Voicemeeter
           **(kwargs.select { |k, _| %i[pdirty mdirty ldirty midi].include? k })
         )
       @midi = Midi.new
-      @callback = Events::Callback.new
       @que = Queue.new
       @cache = {strip_mode: 0}
     end
