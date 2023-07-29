@@ -21,8 +21,8 @@ class Main
   end
 
   def midi_handler(i, val)
-    if i.between?(1, 8)
-      @vm.strip[i - 1].gainlayer[GAINLAYER].gain = (val * 72 / 127) - 60
+    if i.between?(0, 7)
+      @vm.strip[i].gainlayer[GAINLAYER].gain = (val * 72 / 127) - 60
     end
   end
 end
