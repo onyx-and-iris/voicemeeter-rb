@@ -1,9 +1,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)][license]
 [![Ruby Code Style](https://img.shields.io/badge/code_style-standard-violet.svg)](https://github.com/standardrb/standard)
 
-# Ruby Wrapper for Voicemeeter API
+# Ruby Wrapper around the Voicemeeter Remote API
 
-This gem offers a Ruby interface for the Voicemeeter Remote C API.
+This gem offers a Ruby interface for the Voicemeeter Remote API.
 
 For an outline of past/future changes refer to: [CHANGELOG](CHANGELOG.md)
 
