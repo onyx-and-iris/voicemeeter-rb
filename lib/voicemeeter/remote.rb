@@ -79,7 +79,7 @@ module Voicemeeter
       public attr_reader :recorder, :patch
 
       private def director
-        super.append(:recorder, :patch)
+        super | [:recorder, :patch]
       end
     end
 
@@ -88,7 +88,7 @@ module Voicemeeter
       public attr_reader :recorder, :patch, :fx
 
       private def director
-        super.append(:recorder, :patch, :fx)
+        super | [:recorder, :patch, :fx]
       end
     end
 
