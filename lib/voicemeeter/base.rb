@@ -199,11 +199,11 @@ module Voicemeeter
           exp: ->(x) { x >= 0 }
         )
       if (got_midi = res > 0)
-        vals = cmsg.read_string.bytes
-        vals.each_slice(3) do |ch, key, velocity|
-          midi.channel = ch.to_i
-          midi.current = key.to_i
-          midi.cache[key.to_i] = velocity.to_i
+        data = cmsg.read_bytes(res).bytes
+        data.each_slice(3) do |ch, key, velocity|
+          midi.channel = ch
+          midi.current = key
+          midi.cache[key] = velocity
         end
       end
       got_midi
