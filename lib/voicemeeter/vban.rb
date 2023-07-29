@@ -5,6 +5,7 @@ require_relative "errors"
 module Voicemeeter
   module Vban
     class VbanStream
+      # Base class for Vban Stream types
       include IRemote
 
       def initialize(remote, i)
@@ -24,6 +25,7 @@ module Voicemeeter
     end
 
     class VbanInstream < VbanStream
+      # Represents a Vban InStream
       def initialize(remote, i)
         super
         make_reader_int :sr, :channel, :bit
@@ -35,6 +37,7 @@ module Voicemeeter
     end
 
     class VbanOutstream < VbanStream
+      # Represents a Vban OutStream
       def initialize(remote, i)
         super
         make_accessor_int :sr, :channel, :bit
