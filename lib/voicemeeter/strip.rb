@@ -13,8 +13,7 @@ module Voicemeeter
       attr_reader :gainlayer, :levels
 
       def self.make(remote, i)
-        p_in = remote.kind.phys_in
-        (i < p_in) ? PhysicalStrip.new(remote, i) : VirtualStrip.new(remote, i)
+        (i < remote.kind.phys_in) ? PhysicalStrip.new(remote, i) : VirtualStrip.new(remote, i)
       end
 
       def initialize(remote, i)

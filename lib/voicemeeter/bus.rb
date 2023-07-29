@@ -13,8 +13,7 @@ module Voicemeeter
       attr_reader :eq, :mode, :levels
 
       def self.make(remote, i)
-        p_out = remote.kind.phys_out
-        (i < p_out) ? PhysicalBus.new(remote, i) : VirtualBus.new(remote, i)
+        (i < remote.kind.phys_out) ? PhysicalBus.new(remote, i) : VirtualBus.new(remote, i)
       end
 
       def initialize(remote, i)
