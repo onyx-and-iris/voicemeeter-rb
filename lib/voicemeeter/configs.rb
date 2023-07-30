@@ -75,6 +75,7 @@ module Voicemeeter
         logger.debug "Running #{self}"
         configs[:reset] = build_reset_profile
         read_from_yml
+        self
       end
     end
 
@@ -124,8 +125,7 @@ module Voicemeeter
 
     def get(kind_id)
       unless defined? @loaders
-        @loaders = Kinds::ALL.to_h { |kind| [kind.name, Loader.new(kind)] }
-        @loaders.each { |name, loader| loader.run }
+        @loaders = Kinds::ALL.to_h { |kind| [kind.name, Loader.new(kind).run] }
       end
       @loaders[kind_id].configs
     end
