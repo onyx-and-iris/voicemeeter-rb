@@ -40,7 +40,7 @@ module Voicemeeter
     end
 
     def login
-      run_voicemeeter(kind.name) if CBindings.call(:bind_login, ok: [0, 1]) == 1
+      CBindings.call(:bind_login, ok: [0, 1]) == 1 and run_voicemeeter(kind.name)
       clear_dirty
       logger.info "Successfully logged into #{self} version #{version}"
     end
@@ -78,6 +78,9 @@ module Voicemeeter
         banana: Kinds::KindEnum::BANANA,
         potato: (Install::OS_BITS == 64) ? Kinds::KindEnum::POTATOX64 : Kinds::KindEnum::POTATO
       }
+      if caller(1..1).first[/`(.*)'/, 1] == "login"
+        logger.debug("Voicemeeter engine running but the GUI appears to be down... launching.")
+      end
       CBindings.call(:bind_run_voicemeeter, kinds[kind_id])
       sleep(1)
     end
