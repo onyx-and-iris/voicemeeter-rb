@@ -45,7 +45,7 @@ module Voicemeeter
 
       def info(msg = nil)
         info_msg = msg ? ["#{msg} events."] : []
-        info_msg += if any?
+        info_msg << if any?
           ["Now listening for #{get.join(", ")} events"]
         else
           ["Not listening for any events"]
@@ -57,7 +57,7 @@ module Voicemeeter
         params.each do |param|
           define_singleton_method("#{param}=") do |value|
             instance_variable_set("@#{param}", value)
-            info("#{param} #{send(param) ? "added to" : "removed from"}")
+            info("#{param} #{value ? "added to" : "removed from"}")
           end
         end
       end
