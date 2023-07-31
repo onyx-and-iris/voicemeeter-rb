@@ -12,9 +12,10 @@ module Voicemeeter
     end
 
     def getter(**kwargs)
-      return @remote.get_num_devices(kwargs[:direction]) if kwargs[:index].nil?
+      kwargs => {direction:}
+      return @remote.get_num_devices(direction) unless kwargs.key? :index
 
-      vals = @remote.get_device_description(kwargs[:index], kwargs[:direction])
+      vals = @remote.get_device_description(kwargs[:index], direction)
       types = {1 => "mme", 3 => "wdm", 4 => "ks", 5 => "asio"}
       {name: vals[0], type: types[vals[1]], id: vals[2]}
     end
