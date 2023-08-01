@@ -42,6 +42,8 @@ module Voicemeeter
   end
 
   module Remote
+    extend Logging
+
     class Remote < Base
       # Concrete class for Remote types
       include Builder
@@ -70,9 +72,8 @@ module Voicemeeter
       end
     end
 
-    class RemoteBasic < Remote
-      # Concrete class for RemoteBasic types
-    end
+    class RemoteBasic < Remote; end
+    # Concrete class for RemoteBasic types
 
     class RemoteBanana < Remote
       # Concrete class for RemoteBanana types
@@ -111,7 +112,8 @@ module Voicemeeter
     def self.new(kind_id, **)
       # Interface entry point. Wraps factory class and handles kind errors.
       kind = Kinds.get(kind_id)
-    rescue KeyError
+    rescue KeyError => e
+      logger.error "#{e.class.name}: #{e.message}"
       raise Errors::VMError.new "unknown Voicemeeter kind #{kind_id}"
     else
       RequestRemote.for(kind, **)
