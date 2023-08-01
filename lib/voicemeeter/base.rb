@@ -79,7 +79,7 @@ module Voicemeeter
         potato: (Install::OS_BITS == 64) ? Kinds::KindEnum::POTATOX64 : Kinds::KindEnum::POTATO
       }
       if caller(1..1).first[/`(.*)'/, 1] == "login"
-        logger.debug("Voicemeeter engine running but the GUI appears to be down... launching.")
+        logger.debug "Voicemeeter engine running but the GUI appears to be down... launching."
       end
       CBindings.call(:bind_run_voicemeeter, kinds[kind_id])
       sleep(1)

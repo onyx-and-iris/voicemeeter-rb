@@ -32,13 +32,11 @@ module Voicemeeter
       end
     end
 
-    class PhysicalBus < Base
-      # Represents a Physical Bus
-    end
+    class PhysicalBus < Base; end
+    # Represents a Physical Bus
 
-    class VirtualBus < Base
-      # Represents a Virtual Bus
-    end
+    class VirtualBus < Base; end
+    # Represents a Virtual Bus
 
     class BusEq
       include IRemote

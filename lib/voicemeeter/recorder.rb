@@ -42,7 +42,7 @@ module Voicemeeter
 
       def goto(timestr)
         unless /^(2[0-3]|[01]?[0-9]):([0-5]?[0-9]):([0-5]?[0-9])$/.match?(timestr)
-          logger.error("goto got: '#{timestr}', but expects a time string in the format 'hh:mm:ss'")
+          logger.error "goto got: '#{timestr}', but expects a time string in the format 'hh:mm:ss'"
           return
         end
         dt = DateTime.parse(timestr)

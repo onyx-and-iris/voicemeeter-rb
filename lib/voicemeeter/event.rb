@@ -50,7 +50,7 @@ module Voicemeeter
         else
           ["Not listening for any events"]
         end
-        logger.info(info_msg.join(" "))
+        logger.info info_msg.join(" ")
       end
 
       private def make_writer_methods(*params)
