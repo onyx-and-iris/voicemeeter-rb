@@ -74,7 +74,11 @@ module Voicemeeter
       end
       res
     rescue Errors::VMCAPIError => e
-      logger.error "#{e.class.name}: #{e.message}"
+      err_msg = [
+        "#{e.class.name}: #{e.message}",
+        *e.backtrace
+      ]
+      logger.error err_msg.join("\n")
       raise
     end
 

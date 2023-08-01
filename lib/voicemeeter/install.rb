@@ -32,7 +32,11 @@ module Voicemeeter
         Pathname.new(value).dirname
       end
     rescue Win32::Registry::Error => e
-      logger.error "#{e.class.name}: #{e.message}"
+      err_msg = [
+        "#{e.class.name}: #{e.message}",
+        *e.backtrace
+      ]
+      logger.error err_msg.join("\n")
       raise Errors::VMInstallError.new "unable to read Voicemeeter path from the registry"
     end
 
