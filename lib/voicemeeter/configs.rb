@@ -118,6 +118,8 @@ module Voicemeeter
           symbolize_names: true
         )
         logger.info "#{@kind.name}/#{filename} loaded into memory"
+      rescue Psych::SyntaxError => e
+        logger.error "#{e.class.name}: #{e.message}"
       end
     end
 
