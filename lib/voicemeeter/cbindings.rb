@@ -65,16 +65,17 @@ module Voicemeeter
       res = send(fn, *args)
       if exp
         unless exp.call(res) || ok.include?(res)
-          logger.error "#{to_cname.call} returned #{res}"
           raise Errors::VMCAPIError.new to_cname.call, res
         end
       else
         unless ok.include?(res)
-          logger.error "#{to_cname.call} returned #{res}"
           raise Errors::VMCAPIError.new to_cname.call, res
         end
       end
       res
+    rescue Errors::VMCAPIError => e
+      logger.error "#{e.class.name}: #{e.message}"
+      raise
     end
 
     module_function :call
