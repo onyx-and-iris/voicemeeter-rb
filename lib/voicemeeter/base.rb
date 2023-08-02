@@ -212,6 +212,11 @@ module Voicemeeter
       got_midi
     end
 
+    def sendtext(script)
+      raise ArgumentError, "script must not exceed 48kB" if script.length > 48000
+      CBindings.call(:bind_set_parameters, script)
+    end
+
     def apply(data)
       data.each do |key, val|
         kls, index, *rem = key.to_s.split("-")
