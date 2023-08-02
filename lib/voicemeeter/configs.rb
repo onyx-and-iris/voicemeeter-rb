@@ -63,7 +63,7 @@ module Voicemeeter
         @configpaths.each do |configpath|
           if configpath.exist?
             logger.debug "checking #{configpath} for configs"
-            filepaths = configpath.glob("*.yml")
+            filepaths = configpath.glob("*.{yaml,yml}")
             filepaths.each do |filepath|
               @filename = (filepath.basename.sub_ext "").to_s.to_sym
 
