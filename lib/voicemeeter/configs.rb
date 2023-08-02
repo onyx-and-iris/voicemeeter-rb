@@ -51,8 +51,7 @@ module Voicemeeter
     class FileReader
       include Logging
 
-      def initialize(loader, kind)
-        @loader = loader
+      def initialize(kind)
         @configpaths = [
           Pathname.getwd.join("configs", kind.name.to_s),
           Pathname.new(Dir.home).join(".config", "voicemeeter-rb", kind.name.to_s),
@@ -90,11 +89,20 @@ module Voicemeeter
         @configs = Hash.new do |hash, key|
           raise Errors::VMError.new "unknown config #{key}. known configs: #{hash.keys}"
         end
-        @filereader = FileReader.new(self, kind)
+        @filereader = FileReader.new(kind)
       end
 
       def to_s
         "Loader #{@kind}"
+      end
+
+      def run
+        logger.debug "Running #{self}"
+        configs[:reset] = TOMLStrBuilder.run(@kind)
+        @filereader.each do |identifier, data|
+          register(identifier, data)
+        end
+        self
       end
 
       private def register(identifier, data)
@@ -105,15 +113,6 @@ module Voicemeeter
 
         configs[identifier] = data
         logger.info "#{@kind.name}/#{identifier} loaded into memory"
-      end
-
-      def run
-        logger.debug "Running #{self}"
-        configs[:reset] = TOMLStrBuilder.run(@kind)
-        @filereader.each do |identifier, data|
-          register(identifier, data)
-        end
-        self
       end
     end
 
