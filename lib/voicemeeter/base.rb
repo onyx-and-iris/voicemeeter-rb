@@ -68,7 +68,8 @@ module Voicemeeter
     end
 
     def clear_dirty
-      while pdirty? || mdirty?
+      catch(:clear) do
+        loop { throw(:clear) unless pdirty? || mdirty? }
       end
     end
 
