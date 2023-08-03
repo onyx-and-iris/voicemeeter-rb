@@ -3,15 +3,17 @@ require_relative "logger"
 module Voicemeeter
   module Events
     module Callback
-      private def callbacks
+      def callbacks
         @callbacks ||= []
       end
 
-      def register(*cbs)
+      def register(cbs)
+        cbs = [cbs] unless cbs.respond_to? :each
         cbs.each { |cb| callbacks << cb unless callbacks.include? cb }
       end
 
-      def deregister(*cbs)
+      def deregister(cbs)
+        cbs = [cbs] unless cbs.respond_to? :each
         callbacks.reject! { |cb| cbs.include? cb }
       end
 

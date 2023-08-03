@@ -3,7 +3,7 @@ require_relative "../../lib/voicemeeter"
 class Main
   def initialize(vm)
     @vm = vm
-    @vm.register(method(:on_pdirty), method(:on_mdirty), method(:on_midi), method(:on_ldirty))
+    @vm.register([method(:on_pdirty), method(:on_mdirty), method(:on_midi), method(:on_ldirty)])
   end
 
   def run
