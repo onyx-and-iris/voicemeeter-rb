@@ -7,7 +7,9 @@ module Voicemeeter
     include Logging
 
     def init_producer(que)
+      @running = true
       Thread.new do
+        Thread.current.name = "producer"
         while @running
           que << :pdirty if event.pdirty
           que << :mdirty if event.mdirty
@@ -15,7 +17,7 @@ module Voicemeeter
           que << :ldirty if event.ldirty
           sleep(@ratelimit)
         end
-        logger.debug "closing producer thread"
+        logger.debug "closing #{Thread.current.name} thread"
         que << :stop
       end
     end
@@ -25,12 +27,12 @@ module Voicemeeter
       @cache[:strip_level], @cache[:bus_level] = _get_levels
       @cache[:strip_comp] = Array.new(kind.num_strip_levels, false)
       @cache[:bus_comp] = Array.new(kind.num_bus_levels, false)
-      @running = true
       Thread.new do
+        Thread.current.name = "worker"
         loop do
           e_from_que = @que.pop
           if e_from_que == :stop
-            logger.debug "closing worker thread"
+            logger.debug "closing #{Thread.current.name} thread"
             break
           end
           trigger :on_pdirty if e_from_que == :pdirty && pdirty?
