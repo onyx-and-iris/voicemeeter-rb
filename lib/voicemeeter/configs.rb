@@ -99,9 +99,7 @@ module Voicemeeter
       def run
         logger.debug "Running #{self}"
         configs[:reset] = TOMLStrBuilder.run(@kind)
-        @filereader.each do |identifier, data|
-          register(identifier, data)
-        end
+        @filereader.each(&method(:register))
         self
       end
 
