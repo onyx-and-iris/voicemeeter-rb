@@ -31,7 +31,6 @@ module Voicemeeter
           **(kwargs.select { |k, _| %i[pdirty mdirty ldirty midi].include? k })
         )
       @midi = Midi.new
-      @que = Queue.new
       @cache = {strip_mode: 0}
     end
 

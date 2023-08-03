@@ -6,6 +6,8 @@ module Voicemeeter
 
     include Logging
 
+    private
+
     def init_producer(que)
       @running = true
       Thread.new do
@@ -18,7 +20,7 @@ module Voicemeeter
           sleep(@ratelimit)
         end
         logger.debug "closing #{Thread.current.name} thread"
-        que << :stop
+        que << @running
       end
     end
 
@@ -29,16 +31,11 @@ module Voicemeeter
       @cache[:bus_comp] = Array.new(kind.num_bus_levels, false)
       Thread.new do
         Thread.current.name = "worker"
-        loop do
-          e_from_que = @que.pop
-          if e_from_que == :stop
-            logger.debug "closing #{Thread.current.name} thread"
-            break
-          end
-          trigger :pdirty if e_from_que == :pdirty && pdirty?
-          trigger :mdirty if e_from_que == :mdirty && mdirty?
-          trigger :midi if e_from_que == :midi && get_midi_message
-          if e_from_que == :ldirty && ldirty?
+        while (event = que.pop)
+          trigger :pdirty if event == :pdirty && pdirty?
+          trigger :mdirty if event == :mdirty && mdirty?
+          trigger :midi if event == :midi && get_midi_message
+          if event == :ldirty && ldirty?
             cache[:strip_comp] = cache[:strip_level].zip(cache[:strip_buf]).map { |a, b| a != b }
             cache[:bus_comp] = cache[:bus_level].zip(cache[:bus_buf]).map { |a, b| a != b }
             cache[:strip_level] = cache[:strip_buf]
@@ -46,18 +43,20 @@ module Voicemeeter
             trigger :ldirty
           end
         end
+        logger.debug "closing #{Thread.current.name} thread"
       end
     end
 
+    public
+
     def init_event_threads
-      init_worker(@que)
-      init_producer(@que)
+      que = Queue.new
+      init_worker(que)
+      init_producer(que)
     end
 
     def end_event_threads
       @running = false
     end
-
-    module_function :init_event_threads, :end_event_threads
   end
 end
