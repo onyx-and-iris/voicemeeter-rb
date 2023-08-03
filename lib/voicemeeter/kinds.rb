@@ -25,11 +25,11 @@ module Voicemeeter
         def to_s = name.to_s.capitalize
       end
 
-    basic = KindMap.new(:basic, [2, 1], [1, 1], [4, 4], [0, 0], 0, 80)
+    basic = KindMap.new(:basic, [2, 1], [1, 1], [4, 4, 1, 1], [0, 0], 0, 80)
 
-    banana = KindMap.new(:banana, [3, 2], [3, 2], [8, 8], [6, 8], 22, 80)
+    banana = KindMap.new(:banana, [3, 2], [3, 2], [8, 8, 1, 1], [6, 8], 22, 80)
 
-    potato = KindMap.new(:potato, [5, 3], [5, 3], [8, 8], [10, 8], 34, 80)
+    potato = KindMap.new(:potato, [5, 3], [5, 3], [8, 8, 1, 1], [10, 8], 34, 80)
 
     KIND_MAPS = [basic, banana, potato].to_h { |kind| [kind.name, kind] }
 

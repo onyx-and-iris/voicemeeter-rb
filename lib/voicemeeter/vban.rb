@@ -36,6 +36,15 @@ module Voicemeeter
       end
     end
 
+    class VbanAudioInstream < VbanInstream; end
+    # Represents a Vban Audio InStream
+
+    class VbanMidiInstream < VbanInstream; end
+    # Represents a Vban Midi InStream
+
+    class VbanTextInstream < VbanInstream; end
+    # Represents a Vban Text InStream
+
     class VbanOutstream < VbanStream
       # Represents a Vban OutStream
       def initialize(remote, i)
@@ -48,14 +57,42 @@ module Voicemeeter
       end
     end
 
+    class VbanAudioOutstream < VbanOutstream; end
+    # Represents a Vban Audio OutStream
+
+    class VbanMidiOutstream < VbanOutstream; end
+    # Represents a Vban Midi OutStream
+
+    class RequestVbanStream
+      def self.for(remote, i, dir)
+        vban_in, vban_out, midi, _ = remote.kind.vban
+        case dir
+        when :in
+          if i < vban_in
+            VbanAudioInstream.new(remote, i)
+          elsif i < vban_in + midi
+            VbanMidiInstream.new(remote, i)
+          else
+            VbanTextInstream.new(remote, i)
+          end
+        when :out
+          if i < vban_out
+            VbanAudioInstream.new(remote, i)
+          elsif i < vban_out + midi
+            VbanMidiInstream.new(remote, i)
+          end
+        end
+      end
+    end
+
     class Base
       # Base class for Vban type
       attr_reader :instream, :outstream
 
       def initialize(remote)
-        vban_in, vban_out = remote.kind.vban
-        @instream = (0...vban_in).map { VbanInstream.new(remote, _1) }
-        @outstream = (0...vban_out).map { VbanOutstream.new(remote, _1) }
+        vban_in, vban_out, midi, text = remote.kind.vban
+        @instream = (0...vban_in + midi + text).map { RequestVbanStream.for(remote, _1, :in) }
+        @outstream = (0...vban_out + midi).map { RequestVbanStream.for(remote, _1, :out) }
 
         @remote = remote
       end
