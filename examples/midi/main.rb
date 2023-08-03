@@ -14,7 +14,7 @@ class Main
   end
 
   def on_update(event)
-    if event == "midi"
+    if event == :midi
       current = @vm.midi.current
       midi_handler(current, @vm.midi.get(current))
     end

@@ -18,9 +18,9 @@ module Voicemeeter
       private def trigger(event)
         callbacks.each do |callback|
           if callback.is_a? Method
-            callback.call if callback.name == event
+            callback.call if callback.name == "on_#{event}".to_sym
           elsif callback.respond_to? :on_update
-            callback.on_update event.to_s[3..]
+            callback.on_update event
           end
         end
       end
