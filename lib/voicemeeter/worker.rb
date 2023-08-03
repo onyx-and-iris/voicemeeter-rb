@@ -51,8 +51,7 @@ module Voicemeeter
 
     def init_event_threads
       que = Queue.new
-      init_worker(que)
-      init_producer(que)
+      init_worker(que) and init_producer(que)
     end
 
     def end_event_threads
