@@ -7,7 +7,7 @@ require_relative "errors"
 
 module Voicemeeter
   module Configs
-    class TOMLStrBuilder
+    class TOMLConfBuilder
       def self.run(kind)
         aouts = (0...kind.phys_out).to_h { |i| ["A#{i + 1}".to_sym, false] }
         bouts = (0...kind.virt_out).to_h { |i| ["B#{i + 1}".to_sym, false] }
@@ -98,7 +98,7 @@ module Voicemeeter
 
       def run
         logger.debug "Running #{self}"
-        configs[:reset] = TOMLStrBuilder.run(@kind)
+        configs[:reset] = TOMLConfBuilder.run(@kind)
         @filereader.each(&method(:register))
         self
       end
