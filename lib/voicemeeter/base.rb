@@ -16,7 +16,7 @@ module Voicemeeter
     include Events::Callback
     prepend Util::Cache
 
-    attr_reader :kind, :midi, :event, :running, :delay, :cache
+    attr_reader :kind, :midi, :event, :delay, :cache
 
     RATELIMIT = 0.033
     DELAY = 0.001
