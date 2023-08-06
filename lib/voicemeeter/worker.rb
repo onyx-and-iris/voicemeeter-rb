@@ -26,9 +26,9 @@ module Voicemeeter
 
     def init_worker(que)
       logger.info "Listening for #{event.get.join(", ")} events"
-      @cache[:strip_level], @cache[:bus_level] = _get_levels
-      @cache[:strip_comp] = Array.new(kind.num_strip_levels, false)
-      @cache[:bus_comp] = Array.new(kind.num_bus_levels, false)
+      cache[:strip_level], cache[:bus_level] = _get_levels
+      cache[:strip_comp] = Array.new(kind.num_strip_levels, false)
+      cache[:bus_comp] = Array.new(kind.num_bus_levels, false)
       Thread.new do
         Thread.current.name = "worker"
         while (event = que.pop)
