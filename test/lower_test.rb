@@ -1,4 +1,4 @@
-require_relative "../minitest_helper"
+require_relative "minitest_helper"
 
 class SetGetParamTest < Minitest::Test
   def test_it_sets_and_gets_float_parameter

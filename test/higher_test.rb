@@ -1,4 +1,4 @@
-require_relative "../minitest_helper"
+require_relative "minitest_helper"
 
 class StripTest < Minitest::Test
   [false, true].each do |val|
