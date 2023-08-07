@@ -1,6 +1,5 @@
 require "minitest/autorun"
-
-require_relative "../lib/voicemeeter"
+require "voicemeeter"
 
 class Test
   class << self

@@ -1,5 +1,5 @@
 require_relative "minitest_helper"
-require_relative "../lib/voicemeeter"
+require "voicemeeter"
 
 class CAPIErrorTest < Minitest::Test
   def test_it_raises_an_unknown_parameter_error
