@@ -4,6 +4,13 @@ module Voicemeeter
 
     private
 
+    module KindEnum
+      BASIC = 1
+      BANANA = 2
+      POTATO = 3
+      POTATOX64 = 6
+    end
+
     KindMap =
       Data.define(:name, :ins, :outs, :vban, :asio, :insert, :num_buttons) do
         def phys_in = ins[0]
@@ -32,13 +39,6 @@ module Voicemeeter
     potato = KindMap.new(:potato, [5, 3], [5, 3], [8, 8, 1, 1], [10, 8], 34, 80)
 
     KIND_MAPS = [basic, banana, potato].to_h { |kind| [kind.name, kind] }
-
-    module KindEnum
-      BASIC = 1
-      BANANA = 2
-      POTATO = 3
-      POTATOX64 = 6
-    end
 
     public
 

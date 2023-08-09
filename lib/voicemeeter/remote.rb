@@ -107,8 +107,6 @@ module Voicemeeter
       end
     end
 
-    public
-
     def self.new(kind_id, **)
       # Interface entry point. Wraps factory class and handles kind errors.
       kind = Kinds.get(kind_id)
