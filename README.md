@@ -40,21 +40,19 @@ require "voicemeeter"
 
 class Main
   def run
-    Voicemeeter::Remote
-      .new(:banana)
-      .run do |vm|
-        vm.strip[0].label = "podmic"
-        vm.strip[0].mute = true
-        puts "strip 0 #{vm.strip[0].label} mute was set to #{vm.strip[0].mute}"
+    Voicemeeter::Remote.new(:banana).run do |vm|
+      vm.strip[0].label = "podmic"
+      vm.strip[0].mute = true
+      puts "strip 0 #{vm.strip[0].label} mute was set to #{vm.strip[0].mute}"
 
-        vm.bus[3].gain = -6.3
-        vm.bus[4].eq.on = true
-        info = [
-          "bus 3 gain has been set to #{vm.bus[3].gain}",
-          "bus 4 eq has been set to #{vm.bus[4].eq.on}"
-        ]
-        puts info
-      end
+      vm.bus[3].gain = -6.3
+      vm.bus[4].eq.on = true
+      info = [
+        "bus 3 gain has been set to #{vm.bus[3].gain}",
+        "bus 4 eq has been set to #{vm.bus[4].eq.on}"
+      ]
+      puts info
+    end
   end
 end
 
@@ -612,24 +610,10 @@ get may return nil if no value for requested key in midi cache
 ```ruby
 vm.apply(
   {
-    "strip-0" => {
-      mute: true,
-      gain: 3.2,
-      A1: true
-    },
-    "bus-3" => {
-      gain: -3.2,
-      eq: {
-        on: true
-      }
-    },
-    "button-39" => {
-      stateonly: true
-    },
-    "vban-outstream-3" => {
-      on: true,
-      bit: 24
-    }
+    "strip-0" => {mute: true, gain: 3.2, A1: true},
+    "bus-3" => {gain: -3.2, eq: {on: true}},
+    "button-39" => {stateonly: true},
+    "vban-outstream-3" => {on: true, bit: 24}
   }
 )
 ```

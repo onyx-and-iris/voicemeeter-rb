@@ -2,9 +2,7 @@ require "voicemeeter"
 
 class Main
   def run
-    Voicemeeter::Remote
-      .new(:banana)
-      .run do |vm|
+    Voicemeeter::Remote.new(:banana).run do |vm|
       vm.strip[0].label = "podmic"
       vm.strip[0].mute = true
       puts "strip 0 #{vm.strip[0].label} mute was set to #{vm.strip[0].mute}"
