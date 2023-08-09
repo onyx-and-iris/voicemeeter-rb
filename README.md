@@ -753,7 +753,7 @@ vm.set("Strip[0].Gain", -3.6)
 
 ### Logging
 
-To enable logs set an environmental variable `VM_LOG_LEVEL` to the appropriate level.
+To enable logging set an environmental variable `VM_LOG_LEVEL` to the appropriate level.
 
 example in powershell:
 
