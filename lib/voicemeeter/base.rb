@@ -220,12 +220,15 @@ module Voicemeeter
     def apply(data)
       data.each do |key, val|
         kls, index, *rem = key.to_s.split("-")
-        if rem.empty?
+        case kls
+        when "strip", "bus", "button"
           target = send(kls)
-        else
+        when "vban"
           dir = "#{index.chomp("stream")}stream"
           index = rem[0]
           target = vban.send(dir)
+        else
+          raise KeyError, "invalid config key '#{kls}'"
         end
         target[index.to_i].apply(val)
       end
