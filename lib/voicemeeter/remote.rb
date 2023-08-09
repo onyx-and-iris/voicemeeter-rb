@@ -112,7 +112,7 @@ module Voicemeeter
       kind = Kinds.get(kind_id)
     rescue KeyError => e
       logger.error "#{e.class.name}: #{e.message}"
-      raise Errors::VMError.new "unknown Voicemeeter kind #{kind_id}"
+      raise Errors::VMError.new "unknown Voicemeeter kind '#{kind_id}'"
     else
       RequestRemote.for(kind, **)
     end

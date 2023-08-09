@@ -87,7 +87,7 @@ module Voicemeeter
       def initialize(kind)
         @kind = kind
         @configs = Hash.new do |hash, key|
-          raise Errors::VMError.new "unknown config #{key}. known configs: #{hash.keys}"
+          raise Errors::VMError.new "unknown config '#{key}'. known configs: #{hash.keys}"
         end
         @filereader = FileReader.new(kind)
       end
