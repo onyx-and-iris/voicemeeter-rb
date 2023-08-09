@@ -77,9 +77,9 @@ module Voicemeeter
           end
         when :out
           if i < vban_out
-            VbanAudioInstream.new(remote, i)
+            VbanAudioOutstream.new(remote, i)
           elsif i < vban_out + midi
-            VbanMidiInstream.new(remote, i)
+            VbanMidiOutstream.new(remote, i)
           end
         end
       end
