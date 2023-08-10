@@ -1,5 +1,6 @@
 require_relative "iremote"
 require_relative "meta"
+require_relative "logger"
 
 module Voicemeeter
   module Button
@@ -7,6 +8,12 @@ module Voicemeeter
       STATE = 1
       STATEONLY = 2
       TRIGGER = 3
+
+      def identifier(val)
+        [nil, :state, :stateonly, :trigger][val]
+      end
+
+      module_function :identifier
     end
 
     module ButtonColorMixin
@@ -25,14 +32,17 @@ module Voicemeeter
 
     class Base
       # Base class for Button types
+      include Logging
       include IRemote
       include ButtonColorMixin
 
       def getter(mode)
+        logger.debug "getter: button[#{@index}].#{ButtonEnum.identifier(mode)}"
         @remote.get_buttonstatus(@index, mode)
       end
 
       def setter(mode, val)
+        logger.debug "setter: button[#{@index}].#{ButtonEnum.identifier(mode)}=#{val}"
         @remote.set_buttonstatus(@index, mode, val)
       end
 
