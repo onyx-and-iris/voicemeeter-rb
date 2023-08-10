@@ -6,7 +6,7 @@ class Test
     attr_reader :vm, :data
   end
 
-  @vm = Voicemeeter::Remote.new([:basic, :banana, :potato].sample)
+  @vm = Voicemeeter::Remote.new(ENV.fetch("KIND", "potato").to_sym)
   vm.login
   puts "Running #{vm.kind.name} tests"
 
