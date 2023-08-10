@@ -218,7 +218,7 @@ module Voicemeeter
         case key.to_s.split("-")
         in [/strip|bus|button/ => kls, /^[0-9]+$/ => index]
           target = send(kls)
-        in ["vban", String => dir, /^[0-9]+$/ => index]
+        in ["vban", /in|instream|out|oustream/ => dir, /^[0-9]+$/ => index]
           target = vban.send("#{dir.chomp("stream")}stream")
         else
           raise KeyError, "invalid config key '#{key}'"
