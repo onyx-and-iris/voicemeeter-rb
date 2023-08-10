@@ -1,7 +1,3 @@
-require_relative "errors"
-require_relative "meta"
-require_relative "logger"
-
 module Voicemeeter
   module IRemote
     # A commmon interface between the base Remote class and extended classes.

@@ -1,6 +1,3 @@
-require_relative "iremote"
-require_relative "meta"
-
 module Voicemeeter
   class Command
     include IRemote

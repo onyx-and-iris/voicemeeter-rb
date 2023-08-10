@@ -1,18 +1,3 @@
-require_relative "base"
-require_relative "kinds"
-require_relative "errors"
-require_relative "strip"
-require_relative "bus"
-require_relative "button"
-require_relative "vban"
-require_relative "command"
-require_relative "recorder"
-require_relative "device"
-require_relative "fx"
-require_relative "patch"
-require_relative "option"
-require_relative "configs"
-
 module Voicemeeter
   module Builder
     # Builder module for Remote factories.

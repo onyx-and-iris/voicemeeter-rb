@@ -1,10 +1,3 @@
-require "yaml"
-require "pathname"
-
-require_relative "kinds"
-require_relative "logger"
-require_relative "errors"
-
 module Voicemeeter
   module Configs
     class TOMLConfBuilder

@@ -1,5 +1,3 @@
-require_relative "logger"
-
 module Voicemeeter
   module Events
     module Callback

@@ -1,7 +1,3 @@
-require_relative "iremote"
-require_relative "kinds"
-require_relative "mixins"
-
 module Voicemeeter
   module Strip
     class Base

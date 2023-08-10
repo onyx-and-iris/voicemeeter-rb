@@ -1,10 +1,3 @@
-require_relative "iremote"
-require_relative "meta"
-require_relative "mixins"
-require_relative "errors"
-
-require "date"
-
 module Voicemeeter
   module Recorder
     module FileTypeEnum

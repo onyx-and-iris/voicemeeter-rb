@@ -1,10 +1,3 @@
-require "win32/registry"
-require "pathname"
-require "ffi"
-
-require_relative "logger"
-require_relative "errors"
-
 module Voicemeeter
   private
 

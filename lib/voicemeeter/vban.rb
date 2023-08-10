@@ -1,7 +1,3 @@
-require_relative "iremote"
-require_relative "meta"
-require_relative "errors"
-
 module Voicemeeter
   module Vban
     class VbanStream

@@ -1,8 +1,3 @@
-require_relative "install"
-require_relative "errors"
-require_relative "util"
-require_relative "logger"
-
 module Voicemeeter
   module CBindings
     # Ruby bindings for the C-API functions

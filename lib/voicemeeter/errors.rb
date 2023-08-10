@@ -1,5 +1,3 @@
-require_relative "util"
-
 module Voicemeeter
   module Errors
     class VMError < StandardError; end

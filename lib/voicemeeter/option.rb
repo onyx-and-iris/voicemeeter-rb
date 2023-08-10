@@ -1,5 +1,3 @@
-require_relative "iremote"
-
 module Voicemeeter
   module Option
     class Base

@@ -1,13 +1,3 @@
-require_relative "install"
-require_relative "cbindings"
-require_relative "kinds"
-require_relative "midi"
-require_relative "event"
-require_relative "worker"
-require_relative "errors"
-require_relative "util"
-require_relative "logger"
-
 module Voicemeeter
   class Base
     # Base class for Remote types

@@ -1,5 +1,3 @@
-require_relative "logger"
-
 module Voicemeeter
   module Worker
     # Event threads, provides updates to observers
