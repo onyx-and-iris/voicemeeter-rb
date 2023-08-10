@@ -232,7 +232,7 @@ module Voicemeeter
         convert = ->(x) { (x > 0) ? (20 * Math.log(x, 10)).round(1) : -200.0 }
 
         @remote.cache[:strip_mode] = mode
-        vals = if @remote.running && @remote.event.ldirty
+        vals = if @remote.running? && @remote.event.ldirty
           @remote.cache[:strip_level][@init, @offset]
         else
           (@init...@init + @offset).map { |i| @remote.get_level(mode, i) }

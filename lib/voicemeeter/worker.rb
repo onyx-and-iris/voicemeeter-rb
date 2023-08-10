@@ -49,13 +49,17 @@ module Voicemeeter
 
     public
 
+    def running?
+      @producer&.alive? # safe navigation
+    end
+
     def init_event_threads
       que = Queue.new
       init_worker(que) and init_producer(que)
     end
 
     def end_event_threads
-      if @producer&.alive?  # safe navigation
+      if running
         @producer[:running] = false
         @producer.join
       end
