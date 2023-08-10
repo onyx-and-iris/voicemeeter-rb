@@ -59,7 +59,7 @@ module Voicemeeter
     end
 
     def end_event_threads
-      if running
+      if running?
         @producer[:running] = false
         @producer.join
       end
