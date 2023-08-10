@@ -2,21 +2,51 @@ require "rake/testtask"
 
 HERE = __dir__
 
-Rake::TestTask.new do |t|
-  t.pattern = "test/test_*.rb"
+desc "Creates the base :test task"
+task :test_task_create do
+  Rake::TestTask.new do |t|
+    t.pattern = "test/test_*.rb"
+  end
 end
 
-task default: :test
-task :events do
-  filepath = File.join(HERE, "examples", "events", "main.rb")
-  ruby filepath
+desc "Runs Voicemeeter basic tests"
+task :test_basic do
+  ENV["KIND"] = "basic"
+  Rake::Task[:test_task_create].invoke and Rake::Task[:test].invoke
 end
-task :midi do
-  filepath = File.join(HERE, "examples", "midi", "main.rb")
-  ruby filepath
+desc "Runs Voicemeeter banana tests"
+task :test_banana do
+  ENV["KIND"] = "banana"
+  Rake::Task[:test_task_create].invoke and Rake::Task[:test].invoke
 end
-task :obs do
-  targetdir = File.join(HERE, "examples", "obs")
-  Dir.chdir(targetdir)
-  ruby File.join(targetdir, "main.rb")
+desc "Runs Voicemeeter potato tests"
+task :test_potato do
+  ENV["KIND"] = "potato"
+  Rake::Task[:test_task_create].invoke and Rake::Task[:test].invoke
+end
+
+task default: :test_potato
+task basic: :test_basic
+task banana: :test_banana
+task potato: :test_potato
+
+namespace :e do
+  desc "Runs the events example"
+  task :events do
+    filepath = File.join(HERE, "examples", "events", "main.rb")
+    ruby filepath
+  end
+
+  desc "Runs the midi example"
+  task :midi do
+    filepath = File.join(HERE, "examples", "midi", "main.rb")
+    ruby filepath
+  end
+
+  desc "Runs the obs example"
+  task :obs do
+    targetdir = File.join(HERE, "examples", "obs")
+    Dir.chdir(targetdir)
+    ruby File.join(targetdir, "main.rb")
+  end
 end
