@@ -88,11 +88,7 @@ module Voicemeeter
     def type
       ckind = FFI::MemoryPointer.new(:long, 1)
       CBindings.call(:bind_get_voicemeeter_type, ckind)
-      kinds = {
-        Kinds::KindEnum::BASIC => :basic,
-        Kinds::KindEnum::BANANA => :banana,
-        Kinds::KindEnum::POTATO => :potato
-      }
+      kinds = [nil, :basic, :banana, :potato]
       kinds[ckind.read_long]
     end
 
@@ -218,19 +214,16 @@ module Voicemeeter
     end
 
     def apply(data)
-      data.each do |key, val|
-        kls, index, *rem = key.to_s.split("-")
-        case kls
-        when "strip", "bus", "button"
+      data.each do |key, hash|
+        case key.to_s.split("-")
+        in [/strip|bus|button/ => kls, /^[0-9]+$/ => index]
           target = send(kls)
-        when "vban"
-          dir = "#{index.chomp("stream")}stream"
-          index = rem[0]
-          target = vban.send(dir)
+        in ["vban", String => dir, /^[0-9]+$/ => index]
+          target = vban.send("#{dir.chomp("stream")}stream")
         else
-          raise KeyError, "invalid config key '#{kls}'"
+          raise KeyError, "invalid config key '#{key}'"
         end
-        target[index.to_i].apply(val)
+        target[index.to_i].apply(hash)
       end
     end
 
