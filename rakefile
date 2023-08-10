@@ -45,8 +45,7 @@ namespace :e do
 
   desc "Runs the obs example"
   task :obs do
-    targetdir = File.join(HERE, "examples", "obs")
-    Dir.chdir(targetdir)
-    ruby File.join(targetdir, "main.rb")
+    filepath = File.join(HERE, "examples", "obs", "main.rb")
+    ruby filepath
   end
 end
