@@ -31,6 +31,6 @@ class UnknownConfigKey < MiniTest::Test
       "vban-out-3" => {on: true, bit: 24}
     }
     e = assert_raises(KeyError) { Test.vm.apply(config) }
-    assert_equal(e.message, "invalid config key 'unknown'")
+    assert_equal(e.message, "invalid config key 'unknown-0'")
   end
 end
