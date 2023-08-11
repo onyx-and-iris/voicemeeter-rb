@@ -21,7 +21,6 @@ require_relative "voicemeeter/cbindings"
 require_relative "voicemeeter/command"
 require_relative "voicemeeter/configs"
 require_relative "voicemeeter/device"
-require_relative "voicemeeter/errors"
 require_relative "voicemeeter/fx"
 require_relative "voicemeeter/kinds"
 require_relative "voicemeeter/midi"
@@ -32,5 +31,29 @@ require_relative "voicemeeter/remote"
 require_relative "voicemeeter/strip"
 require_relative "voicemeeter/vban"
 
+require_relative "voicemeeter/version"
+
 module Voicemeeter
+  module Errors
+    class VMError < StandardError; end
+    # Base Voicemeeter error class
+
+    class VMInstallError < VMError; end
+    # Errors raised during installation.
+
+    class VMCAPIError < VMError
+      # Errors raised when the C-API returns error codes
+      attr_reader :fn_name, :code
+
+      def initialize(fn_name, code)
+        @fn_name = fn_name
+        @code = code
+        super(message)
+      end
+
+      def message
+        "#{fn_name} returned #{code}"
+      end
+    end
+  end
 end
