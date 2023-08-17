@@ -30,15 +30,15 @@ module Voicemeeter
       Thread.new do
         Thread.current.name = "worker"
         while (event = que.pop)
-          trigger :pdirty if event == :pdirty && pdirty?
-          trigger :mdirty if event == :mdirty && mdirty?
-          trigger :midi if event == :midi && get_midi_message
+          fire :pdirty if event == :pdirty && pdirty?
+          fire :mdirty if event == :mdirty && mdirty?
+          fire :midi if event == :midi && get_midi_message
           if event == :ldirty && ldirty?
             cache[:strip_comp] = cache[:strip_level].zip(cache[:strip_buf]).map { |a, b| a != b }
             cache[:bus_comp] = cache[:bus_level].zip(cache[:bus_buf]).map { |a, b| a != b }
             cache[:strip_level] = cache[:strip_buf]
             cache[:bus_level] = cache[:bus_buf]
-            trigger :ldirty
+            fire :ldirty
           end
         end
         logger.debug "closing #{Thread.current.name} thread"

@@ -5,7 +5,10 @@ class Main
 
   def initialize(vm)
     @vm = vm
-    @vm.register(self)
+    @vm.on :midi do
+      current = @vm.midi.current
+      handler(current, @vm.midi.get(current))
+    end
   end
 
   def run
@@ -13,14 +16,7 @@ class Main
     loop { break if gets.chomp.empty? }
   end
 
-  def on_update(event)
-    if event == :midi
-      current = @vm.midi.current
-      midi_handler(current, @vm.midi.get(current))
-    end
-  end
-
-  def midi_handler(i, val)
+  def handler(i, val)
     if i.between?(0, 7)
       @vm.strip[i].gainlayer[GAINLAYER].gain = (val * 72 / 127) - 60
     end

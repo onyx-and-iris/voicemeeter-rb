@@ -656,22 +656,20 @@ Voicemeeter::Remote.new(:banana, ratelimit: 0.05, ldirty: true).run do
   ...
 ```
 
-#### `vm.register`|`vm.deregister`
+#### `vm.on`
 
-Use the register/deregister methods to register/deregister callbacks and event observers.
+Use the `on` method to register blocks on the vm object to be called back later.
 
 example:
 
 ```ruby
-# register a callback to receive updates
+# register a block with the on method
 class App():
     def initialize(vm)
         @vm = vm
-        @vm.register(method(:on_pdirty))
-        ...
-
-    def on_pdirty
-        ...
+        @vm.on :pdirty do
+          ...
+        end
 ```
 
 #### `vm.event`

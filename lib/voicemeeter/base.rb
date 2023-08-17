@@ -3,7 +3,7 @@ module Voicemeeter
     # Base class for Remote types
     include Logging
     include Worker
-    include Events::Callback
+    include Events::Director
     prepend Util::Cache
 
     attr_reader :kind, :midi, :event, :delay, :cache

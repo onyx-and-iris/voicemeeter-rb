@@ -1,28 +1,26 @@
 module Voicemeeter
   module Events
-    module Callback
-      def callbacks
-        @callbacks ||= []
+    module Director
+      def observers
+        @observers ||= {}
+      end
+
+      def on(event, method = nil, &block)
+        (observers[event] ||= []) << (block || method)
       end
 
       def register(cbs)
         cbs = [cbs] unless cbs.respond_to? :each
-        cbs.each { |cb| callbacks << cb unless callbacks.include? cb }
+        cbs.each { |cb| on(cb.name[3..].to_sym, cb) }
       end
 
       def deregister(cbs)
         cbs = [cbs] unless cbs.respond_to? :each
-        callbacks.reject! { |cb| cbs.include? cb }
+        cbs.each { |cb| observers[cb.name[3..].to_sym]&.reject! { |o| cbs.include? o } }
       end
 
-      private def trigger(event)
-        callbacks.each do |callback|
-          if callback.is_a? Method
-            callback.call if callback.name == "on_#{event}".to_sym
-          elsif callback.respond_to? :on_update
-            callback.on_update event
-          end
-        end
+      def fire(event)
+        observers[event]&.each { |block| block.call }
       end
     end
 
