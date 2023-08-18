@@ -4,22 +4,22 @@ require "voicemeeter"
 class CAPIErrorTest < Minitest::Test
   def test_it_raises_a_capierror_on_unknown_parameter
     e = assert_raises(Voicemeeter::Errors::VMCAPIError) { Test.vm.set("Unknown.Parameter", 1) }
-    assert_equal(e.fn_name, "VBVMR_SetParameterFloat")
-    assert_equal(e.code, -3)
+    assert_equal("VBVMR_SetParameterFloat", e.fn_name)
+    assert_equal(-3, e.code)
   end
 end
 
 class InvalidKindTest < MiniTest::Test
   def test_it_raises_a_vmerror_on_invalid_kind
     e = assert_raises(Voicemeeter::Errors::VMError) { Voicemeeter::Remote.new("unknown_kind") }
-    assert_equal(e.message, "unknown Voicemeeter kind 'unknown_kind'")
+    assert_equal("unknown Voicemeeter kind 'unknown_kind'", e.message)
   end
 end
 
 class UnknownConfigTest < MiniTest::Test
   def test_it_raises_a_vmerror_on_unknown_config_name
     e = assert_raises(Voicemeeter::Errors::VMError) { Test.vm.apply_config(:unknown) }
-    assert_equal(e.message, "unknown config 'unknown'. known configs: #{Test.vm.configs.keys}")
+    assert_equal("unknown config 'unknown'. known configs: #{Test.vm.configs.keys}", e.message)
   end
 end
 
@@ -31,6 +31,6 @@ class UnknownConfigKey < MiniTest::Test
       "vban-out-3" => {on: true, bit: 24}
     }
     e = assert_raises(KeyError) { Test.vm.apply(config) }
-    assert_equal(e.message, "invalid config key 'unknown-0'")
+    assert_equal("invalid config key 'unknown-0'", e.message)
   end
 end

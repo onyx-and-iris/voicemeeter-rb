@@ -48,11 +48,7 @@ module Voicemeeter
       def initialize(fn_name, code)
         @fn_name = fn_name
         @code = code
-        super(message)
-      end
-
-      def message
-        "#{fn_name} returned #{code}"
+        super("#{fn_name} returned #{code}")
       end
     end
   end
