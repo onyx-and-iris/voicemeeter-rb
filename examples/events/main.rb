@@ -3,16 +3,20 @@ require_relative "../../lib/voicemeeter"
 class Main
   def initialize(vm)
     @vm = vm
+
     @vm.on :pdirty do
       puts "pdirty"
     end
+
     @vm.on :mdirty do
       puts "mdirty"
     end
+
     @vm.on :midi do
       current = @vm.midi.current
       puts "Value of midi input #{current}: #{@vm.midi.get(current)}"
     end
+
     @vm.on :ldirty do
       @vm.bus.each do |bus|
         puts "#{bus} #{bus.levels.all.join(" ")}" if bus.levels.isdirty?

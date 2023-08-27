@@ -5,6 +5,7 @@ class Main
 
   def initialize(vm)
     @vm = vm
+
     @vm.on :midi do
       current = @vm.midi.current
       handler(current, @vm.midi.get(current))
