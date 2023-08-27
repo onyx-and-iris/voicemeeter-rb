@@ -3,32 +3,37 @@ require "rake/testtask"
 HERE = __dir__
 
 desc "Creates the base :test task"
-task :test_task_create do
-  Rake::TestTask.new do |t|
-    t.pattern = "test/test_*.rb"
+Rake::TestTask.new do |t|
+  t.pattern = "test/test_*.rb"
+end
+
+namespace :t do
+  desc "Runs Voicemeeter basic tests"
+  task :basic do
+    ENV["KIND"] = "basic"
+    Rake::Task[:test].invoke
+  end
+
+  desc "Runs Voicemeeter banana tests"
+  task :banana do
+    ENV["KIND"] = "banana"
+    Rake::Task[:test].invoke
+  end
+
+  desc "Runs Voicemeeter potato tests"
+  task :potato do
+    ENV["KIND"] = "potato"
+    Rake::Task[:test].invoke
   end
 end
 
-desc "Runs Voicemeeter basic tests"
-task :test_basic do
-  ENV["KIND"] = "basic"
-  Rake::Task[:test_task_create].invoke and Rake::Task[:test].invoke
+task default: ["t:potato"]
+task basic: ["t:basic"]
+task banana: ["t:banana"]
+task potato: ["t:potato"]
+task :all do
+  Rake.application.in_namespace(:t) { |namespace| namespace.tasks.each { |t| t.invoke and Rake::Task[:test].reenable } }
 end
-desc "Runs Voicemeeter banana tests"
-task :test_banana do
-  ENV["KIND"] = "banana"
-  Rake::Task[:test_task_create].invoke and Rake::Task[:test].invoke
-end
-desc "Runs Voicemeeter potato tests"
-task :test_potato do
-  ENV["KIND"] = "potato"
-  Rake::Task[:test_task_create].invoke and Rake::Task[:test].invoke
-end
-
-task default: :test_potato
-task basic: :test_basic
-task banana: :test_banana
-task potato: :test_potato
 
 namespace :e do
   desc "Runs the events example"
