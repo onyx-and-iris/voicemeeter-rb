@@ -13,13 +13,13 @@ module Voicemeeter
 
     KindMap =
       Data.define(:name, :ins, :outs, :vban, :asio, :insert, :num_buttons) do
-        def phys_in = ins[0]
+        def phys_in = ins.first
 
-        def virt_in = ins[1]
+        def virt_in = ins.last
 
-        def phys_out = outs[0]
+        def phys_out = outs.first
 
-        def virt_out = outs[1]
+        def virt_out = outs.last
 
         def num_strip = ins.sum
 
