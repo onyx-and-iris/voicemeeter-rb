@@ -4,34 +4,28 @@ require "yaml"
 require "pathname"
 
 class Main
-  attr_reader :running
-
   def initialize(vm, **kwargs)
     @vm = vm
     @obsws = OBSWS::Events::Client.new(**kwargs)
-    @obsws.register([
-      method(:on_current_program_scene_changed),
-      method(:on_exit_started)
-    ])
-    @running = true
-  end
 
-  def run
-    sleep(0.1) while running
-  end
+    @obsws.on :on_current_program_scene_changed do |data|
+      scene = data.scene_name
+      puts "Switched to scene #{scene}"
+      if respond_to?("on_#{scene.downcase}")
+        send("on_#{scene.downcase}")
+      end
+    end
 
-  def on_current_program_scene_changed(data)
-    scene = data.scene_name
-    puts "Switched to scene #{scene}"
-    if respond_to?("on_#{scene.downcase}")
-      send("on_#{scene.downcase}")
+    @obsws.on :on_exit_started do |data|
+      puts "OBS closing!"
+      @obsws.close
+      @running = false
     end
   end
 
-  def on_exit_started
-    puts "OBS closing!"
-    @obsws.close
-    @running = false
+  def run
+    @running = true
+    sleep(0.1) while @running
   end
 
   def on_start
