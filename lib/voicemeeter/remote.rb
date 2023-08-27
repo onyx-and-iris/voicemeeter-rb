@@ -58,10 +58,10 @@ module Voicemeeter
     end
 
     class RemoteBasic < Remote; end
-    # Concrete class for RemoteBasic types
+    # Represents a RemoteBasic type
 
     class RemoteBanana < Remote
-      # Concrete class for RemoteBanana types
+      # Represents a RemoteBanana type
       public attr_reader :recorder, :patch
 
       private def director
@@ -70,7 +70,7 @@ module Voicemeeter
     end
 
     class RemotePotato < Remote
-      # Concrete class for RemotePotato types
+      # Represents a RemotePotato type
       public attr_reader :recorder, :patch, :fx
 
       private def director
@@ -79,7 +79,7 @@ module Voicemeeter
     end
 
     class RequestRemote
-      # Factory class for Remote types. Returns a Remote class for a kind.
+      # Factory class for Remote types. Returns a Remote class of a kind.
       def self.for(kind, **)
         case kind.name
         when :basic
