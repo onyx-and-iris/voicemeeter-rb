@@ -1,0 +1,797 @@
+# TypeProf 0.21.7
+
+# Classes
+class Object
+  @logger: Logger
+  @name: bot
+  @remote: Voicemeeter::Builder | Voicemeeter::Remote::Remote
+  @index: (Voicemeeter::Builder | Voicemeeter::Remote::Remote)?
+  @j: bot
+  @init: bot
+  @offset: bot
+end
+
+module Voicemeeter
+  module Logging
+    def logger: -> Logger
+  end
+
+  module Worker
+    include Logging
+    @ratelimit: bot
+    @logger: Logger
+    @producer: Thread
+
+    private
+    def init_producer: (Thread::Queue que) -> Thread
+    def init_worker: (Thread::Queue que) -> Thread
+
+    public
+    def running?: -> bool?
+    def init_event_threads: -> Thread
+    def end_event_threads: -> Thread?
+  end
+
+  module Events
+    module Director
+      @observers: Hash[untyped, untyped]
+
+      def observers: -> Hash[untyped, untyped]
+      def on: (untyped event, ?nil method) -> Array[untyped]
+      def register: (untyped cbs) -> [untyped]
+      def deregister: (untyped cbs) -> [untyped]
+      def fire: (:ldirty | :mdirty | :midi | :pdirty event) -> nil
+    end
+
+    class Tracker
+      include Logging
+
+      attr_reader pdirty: bot
+      attr_reader mdirty: bot
+      attr_reader midi: bot
+      attr_reader ldirty: bot
+      def initialize: (**untyped) -> void
+      def to_s: -> String
+      def info: (?String? msg) -> true
+
+      private
+      def make_writer_methods: (*:ldirty | :mdirty | :midi | :pdirty params) -> [:pdirty, :mdirty, :midi, :ldirty]
+
+      public
+      def get: -> [:pdirty, :mdirty, :midi, :ldirty]
+      def any?: -> bool
+      def add: (untyped events) -> [untyped]
+      def remove: (untyped events) -> [untyped]
+    end
+  end
+
+  module Util
+    module String
+      def snakecase: (String s) -> String
+      def camelcase: (String s) -> String
+      def self.snakecase: (String s) -> String
+      def self.camelcase: (String s) -> String
+    end
+
+    module Cache
+      @sync: bot
+
+      def get: (:command | :fx | :option | :patch | :recorder | String name, ?bool is_string) -> Integer?
+      def get_buttonstatus: ((Builder | Remote::Remote)? id, :ab | :amix | :asio | :asiosr | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :composite | :exclusif | :karaoke | :kbps | :ks | :lfeonly | :limit | :mme | :monitor | :monitoronsel | :mono | :mute | :normal | :on | :postfadercomposite | :postfxinsert | :quality | :rearonly | :repeat | :route | :sel | :slidermode | :sr | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | Integer mode) -> Integer?
+    end
+  end
+
+  module MetaFunctions
+    private
+    def make_accessor_bool: (*:ab | :amix | :asiosr | :bmix | :centeronly | :composite | :exclusif | :lfeonly | :loop | :makeup | :mc | :monitor | :monitoronsel | :mono | :multitrack | :mute | :normal | :on | :playonload | :postdelay | :postfadercomposite | :postfx1 | :postfx2 | :postfxinsert | :postreverb | :rearonly | :recbus | :repeat | :sel | :slidermode | :solo | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | String params) -> (Array[:ab | :amix | :asiosr | :bmix | :centeronly | :composite | :exclusif | :lfeonly | :loop | :makeup | :mc | :monitor | :monitoronsel | :mono | :multitrack | :mute | :normal | :on | :playonload | :postdelay | :postfadercomposite | :postfx1 | :postfx2 | :postfxinsert | :postreverb | :rearonly | :recbus | :repeat | :sel | :slidermode | :solo | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | String])
+    def make_accessor_string: (*:ip | :label | :name params) -> (Array[:ip | :label | :name])
+    def make_accessor_int: (*:asio | :bit | :bitresolution | :bpsidechain | :channel | :karaoke | :kbps | :ks | :limit | :mme | :quality | :route | :sr | :wdm params) -> (Array[:asio | :bit | :bitresolution | :bpsidechain | :channel | :karaoke | :kbps | :ks | :limit | :mme | :quality | :route | :sr | :wdm])
+    def make_accessor_float: (*:attack | :audibility | :color_x | :color_y | :damping | :delay | :fx1 | :fx2 | :fx_x | :fx_y | :gain | :gainin | :gainout | :hold | :knee | :pan_x | :pan_y | :ratio | :release | :returndelay | :returnfx1 | :returnfx2 | :returnreverb | :reverb | :threshold params) -> (Array[:attack | :audibility | :color_x | :color_y | :damping | :delay | :fx1 | :fx2 | :fx_x | :fx_y | :gain | :gainin | :gainout | :hold | :knee | :pan_x | :pan_y | :ratio | :release | :returndelay | :returnfx1 | :returnfx2 | :returnreverb | :reverb | :threshold])
+    def make_reader_string: (*:name params) -> [:name]
+    def make_reader_int: (*:bit | :channel | :sr params) -> (Array[:bit | :channel | :sr])
+    def make_writer_bool: (*:lock | :showvbanchat params) -> [:showvbanchat, :lock]
+    def make_writer_string: (*:asio | :ks | :mme | :wdm params) -> [:wdm, :ks, :mme, :asio]
+    def make_action_method: (*:ff | :pause | :play | :record | :replay | :restart | :rew | :show | :shutdown | :stop params) -> (Array[:ff | :pause | :play | :record | :replay | :restart | :rew | :show | :shutdown | :stop])
+  end
+
+  module IRemote
+    include MetaFunctions
+    include Logging
+    @remote: Builder | Remote::Remote
+    @index: (Builder | Remote::Remote)?
+    @logger: Logger
+
+    def initialize: (Builder | Remote::Remote remote, ?(Builder | Remote::Remote)? i) -> void
+    def to_s: -> String
+
+    private
+    def getter: (:ab | :amix | :asio | :asiosr | :attack | :audibility | :bit | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :color_x | :color_y | :composite | :damping | :delay | :exclusif | :fx1 | :fx2 | :fx_x | :fx_y | :gain | :gainin | :gainout | :hold | :ip | :karaoke | :kbps | :knee | :ks | :label | :lfeonly | :limit | :mme | :monitor | :monitoronsel | :mono | :mute | :name | :normal | :on | :postfadercomposite | :postfxinsert | :quality | :ratio | :rearonly | :release | :repeat | :returndelay | :returnfx1 | :returnfx2 | :returnreverb | :reverb | :route | :sel | :slidermode | :sr | :swift | :threshold | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | String param, ?bool is_string) -> Integer?
+    def setter: (:ab | :amix | :asio | :asiosr | :attack | :audibility | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :color_x | :color_y | :composite | :damping | :delay | :exclusif | :ff | :fx1 | :fx2 | :fx_x | :fx_y | :gain | :gainin | :gainout | :hold | :ip | :karaoke | :kbps | :knee | :ks | :label | :lfeonly | :limit | :lock | :mme | :monitor | :monitoronsel | :mono | :mute | :name | :normal | :on | :pause | :play | :postfadercomposite | :postfxinsert | :quality | :ratio | :rearonly | :record | :release | :repeat | :replay | :restart | :returndelay | :returnfx1 | :returnfx2 | :returnreverb | :reverb | :rew | :route | :sel | :show | :showvbanchat | :shutdown | :slidermode | :sr | :stop | :swift | :threshold | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | String param, Integer? value) -> Integer?
+    def _cmd: (:ab | :amix | :asio | :asiosr | :attack | :audibility | :bit | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :color_x | :color_y | :composite | :damping | :delay | :exclusif | :ff | :fx1 | :fx2 | :fx_x | :fx_y | :gain | :gainin | :gainout | :hold | :ip | :karaoke | :kbps | :knee | :ks | :label | :lfeonly | :limit | :lock | :mme | :monitor | :monitoronsel | :mono | :mute | :name | :normal | :on | :pause | :play | :postfadercomposite | :postfxinsert | :quality | :ratio | :rearonly | :record | :release | :repeat | :replay | :restart | :returndelay | :returnfx1 | :returnfx2 | :returnreverb | :reverb | :rew | :route | :sel | :show | :showvbanchat | :shutdown | :slidermode | :sr | :stop | :swift | :threshold | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | String param) -> (:command | :fx | :option | :patch | :recorder | String)
+    def identifier: -> untyped
+
+    public
+    def apply: (untyped params) -> untyped
+  end
+
+  module Mixins
+    module Fades
+      @remote: bot
+
+      def fadeto: (untyped target, untyped time) -> untyped
+      def fadeby: (untyped change, untyped time) -> untyped
+    end
+
+    module Return
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+    end
+
+    module Apps
+      def appgain: (untyped name, untyped gain) -> untyped
+      def appmute: (untyped name, untyped mute) -> untyped
+    end
+
+    module Outputs
+      def initialize: (*Builder | Remote::Remote args) -> void
+    end
+
+    module Xy
+      module Pan
+        def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      end
+
+      module Color
+        def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      end
+
+      module Fx
+        def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      end
+    end
+
+    module Fx
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+    end
+
+    module LevelEnum
+      PREFADER: Integer
+      POSTFADER: Integer
+      POSTMUTE: Integer
+      BUS: Integer
+    end
+  end
+
+  module Install
+    OS_BITS: Integer
+    extend Logging
+    self.@logger: Logger
+
+    def get_vmpath: -> untyped
+    def self.get_vmpath: -> untyped
+  end
+
+  class Base
+    RATELIMIT: Float
+    DELAY: Float
+    prepend Util::Cache
+    include Events::Director
+    include Worker
+    include Logging
+    @sync: false
+    @ratelimit: Float
+
+    attr_reader kind: untyped
+    attr_reader midi: Midi
+    attr_reader event: Events::Tracker
+    attr_reader delay: Float
+    attr_reader cache: {strip_mode: Integer}
+    def initialize: (untyped kind, **untyped) -> void
+    def to_s: -> String
+    def login: -> true
+    def logout: -> true
+    def pdirty?: -> untyped
+    def mdirty?: -> untyped
+    def ldirty?: -> bool
+    def clear_dirty: -> untyped
+    def run_voicemeeter: (untyped kind_id) -> Integer
+    def type: -> ((:banana | :basic | :potato)?)
+    def version: -> String
+    def get: (:command | :fx | :option | :patch | :recorder | String name, ?bool is_string) -> untyped
+    def set: (:command | :fx | :option | :patch | :recorder | String name, Integer? value) -> Integer?
+    def get_buttonstatus: ((Builder | Remote::Remote)? id, :ab | :amix | :asio | :asiosr | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :composite | :exclusif | :karaoke | :kbps | :ks | :lfeonly | :limit | :mme | :monitor | :monitoronsel | :mono | :mute | :normal | :on | :postfadercomposite | :postfxinsert | :quality | :rearonly | :repeat | :route | :sel | :slidermode | :sr | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | Integer mode) -> untyped
+    def set_buttonstatus: ((Builder | Remote::Remote)? id, :ab | :amix | :asio | :asiosr | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :composite | :exclusif | :karaoke | :kbps | :ks | :lfeonly | :limit | :mme | :monitor | :monitoronsel | :mono | :mute | :normal | :on | :postfadercomposite | :postfxinsert | :quality | :rearonly | :repeat | :route | :sel | :slidermode | :sr | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | Integer mode, Integer? state) -> Integer?
+    def get_level: (:ab | :amix | :asiosr | :bmix | :centeronly | :composite | :exclusif | :lfeonly | :monitor | :monitoronsel | :mono | :mute | :normal | :on | :postfadercomposite | :postfxinsert | :rearonly | :repeat | :sel | :slidermode | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | Integer mode, untyped index) -> untyped
+
+    private
+    def _get_levels: -> [Array[untyped], Array[untyped]]
+
+    public
+    def get_num_devices: (:in | :out dir) -> untyped
+    def get_device_description: (nil index, :in | :out dir) -> [untyped, untyped, untyped]
+    def get_midi_message: -> untyped
+    def sendtext: (untyped script) -> untyped
+    def apply: (untyped data) -> untyped
+    def apply_config: (untyped name) -> true
+  end
+
+  module Bus
+    class Base
+      include Mixins::Return
+      include Mixins::Fades
+      include IRemote
+
+      attr_reader eq: BusEq
+      attr_reader mode: BusModes
+      attr_reader levels: BusLevels
+      def self.make: (Builder | Remote::Remote remote, untyped i) -> (PhysicalBus | VirtualBus)
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def identifier: -> String
+    end
+
+    class PhysicalBus < Base
+    end
+
+    class VirtualBus < Base
+    end
+
+    class BusEq
+      include IRemote
+
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def identifier: -> String
+    end
+
+    class BusModes
+      include IRemote
+
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def identifier: -> String
+      def get: -> (:amix | :bmix | :centeronly | :composite | :lfeonly | :normal | :rearonly | :repeat | :tvmix | :upmix21 | :upmix41 | :upmix61)
+    end
+  end
+
+  class BusLevels
+    include IRemote
+    @init: untyped
+    @offset: Integer
+
+    def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+    def identifier: -> String
+    def getter: (:ab | :amix | :asio | :asiosr | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :composite | :exclusif | :karaoke | :kbps | :ks | :lfeonly | :limit | :mme | :monitor | :monitoronsel | :mono | :mute | :normal | :on | :postfadercomposite | :postfxinsert | :quality | :rearonly | :repeat | :route | :sel | :slidermode | :sr | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | Integer mode) -> (Array[Float | Integer])
+    def all: -> (Array[Float | Integer])
+    def isdirty?: -> untyped
+  end
+
+  class BusDevice
+    include IRemote
+
+    def initialize: (untyped remote, untyped i) -> void
+    def identifier: -> String
+  end
+
+  module Button
+    module ButtonEnum
+      STATE: Integer
+      STATEONLY: Integer
+      TRIGGER: Integer
+
+      def identifier: (:ab | :amix | :asio | :asiosr | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :composite | :exclusif | :karaoke | :kbps | :ks | :lfeonly | :limit | :mme | :monitor | :monitoronsel | :mono | :mute | :normal | :on | :postfadercomposite | :postfxinsert | :quality | :rearonly | :repeat | :route | :sel | :slidermode | :sr | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | Integer val) -> ((:state | :stateonly | :trigger)?)
+      def self.identifier: (:ab | :amix | :asio | :asiosr | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :composite | :exclusif | :karaoke | :kbps | :ks | :lfeonly | :limit | :mme | :monitor | :monitoronsel | :mono | :mute | :normal | :on | :postfadercomposite | :postfxinsert | :quality | :rearonly | :repeat | :route | :sel | :slidermode | :sr | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | Integer val) -> ((:state | :stateonly | :trigger)?)
+    end
+
+    module ButtonColorMixin
+      @index: bot
+
+      def identifier: -> String
+      def color: -> untyped
+      def color=: (untyped val) -> untyped
+    end
+
+    class Base
+      include ButtonColorMixin
+      include IRemote
+      include Logging
+
+      def getter: (:ab | :amix | :asio | :asiosr | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :composite | :exclusif | :karaoke | :kbps | :ks | :lfeonly | :limit | :mme | :monitor | :monitoronsel | :mono | :mute | :normal | :on | :postfadercomposite | :postfxinsert | :quality | :rearonly | :repeat | :route | :sel | :slidermode | :sr | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | Integer mode) -> Integer?
+      def setter: (:ab | :amix | :asio | :asiosr | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :composite | :exclusif | :karaoke | :kbps | :ks | :lfeonly | :limit | :mme | :monitor | :monitoronsel | :mono | :mute | :normal | :on | :postfadercomposite | :postfxinsert | :quality | :rearonly | :repeat | :route | :sel | :slidermode | :sr | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | Integer mode, Integer? val) -> Integer?
+      def state: -> bool
+      def state=: (untyped value) -> Integer?
+      def stateonly: -> bool
+      def stateonly=: (untyped value) -> Integer?
+      def trigger: -> bool
+      def trigger=: (untyped value) -> Integer?
+    end
+  end
+
+  module CBindings
+    VM_PATH: untyped
+    extend FFI::Library
+    extend Logging
+    self.@logger: Logger
+
+    private
+    def self.attach_function: (:VBVMR_GetLevel | :VBVMR_GetMidiMessage | :VBVMR_GetParameterFloat | :VBVMR_GetParameterStringA | :VBVMR_GetVoicemeeterType | :VBVMR_GetVoicemeeterVersion | :VBVMR_Input_GetDeviceDescA | :VBVMR_Input_GetDeviceNumber | :VBVMR_IsParametersDirty | :VBVMR_Login | :VBVMR_Logout | :VBVMR_MacroButton_GetStatus | :VBVMR_MacroButton_IsDirty | :VBVMR_MacroButton_SetStatus | :VBVMR_Output_GetDeviceDescA | :VBVMR_Output_GetDeviceNumber | :VBVMR_RunVoicemeeter | :VBVMR_SetParameterFloat | :VBVMR_SetParameterStringA | :VBVMR_SetParameters c_name, Array[:float | :long | :pointer | :string] args, :long returns) -> nil
+    def call: (:bind_get_level | :bind_get_midi_message | :bind_get_parameter_float | :bind_get_parameter_string_a | :bind_get_voicemeeter_type | :bind_get_voicemeeter_version | :bind_input_get_device_desc_a | :bind_input_get_device_number | :bind_is_parameters_dirty | :bind_login | :bind_logout | :bind_macro_button_get_status | :bind_macro_button_is_dirty | :bind_macro_button_set_status | :bind_output_get_device_desc_a | :bind_output_get_device_number | :bind_run_voicemeeter | :bind_set_parameter_float | :bind_set_parameter_string_a | :bind_set_parameters fn, *(:ab | :amix | :asio | :asiosr | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :command | :composite | :exclusif | :fx | :karaoke | :kbps | :ks | :lfeonly | :limit | :mme | :monitor | :monitoronsel | :mono | :mute | :normal | :on | :option | :patch | :postfadercomposite | :postfxinsert | :quality | :rearonly | :recorder | :repeat | :route | :sel | :slidermode | :sr | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | Builder | Float | Integer | Remote::Remote | String)? args, ?ok: Array[Integer], ?exp: ^(untyped) -> untyped?) -> untyped
+    def self.call: (:bind_get_level | :bind_get_midi_message | :bind_get_parameter_float | :bind_get_parameter_string_a | :bind_get_voicemeeter_type | :bind_get_voicemeeter_version | :bind_input_get_device_desc_a | :bind_input_get_device_number | :bind_is_parameters_dirty | :bind_login | :bind_logout | :bind_macro_button_get_status | :bind_macro_button_is_dirty | :bind_macro_button_set_status | :bind_output_get_device_desc_a | :bind_output_get_device_number | :bind_run_voicemeeter | :bind_set_parameter_float | :bind_set_parameter_string_a | :bind_set_parameters fn, *(:ab | :amix | :asio | :asiosr | :bitresolution | :bmix | :bpsidechain | :centeronly | :channel | :command | :composite | :exclusif | :fx | :karaoke | :kbps | :ks | :lfeonly | :limit | :mme | :monitor | :monitoronsel | :mono | :mute | :normal | :on | :option | :patch | :postfadercomposite | :postfxinsert | :quality | :rearonly | :recorder | :repeat | :route | :sel | :slidermode | :sr | :swift | :tvmix | :upmix21 | :upmix41 | :upmix61 | :wdm | Builder | Float | Integer | Remote::Remote | String)? args, ?ok: Array[Integer], ?exp: ^(untyped) -> untyped?) -> untyped
+  end
+
+  class Command
+    include IRemote
+
+    def initialize: (Builder | Remote::Remote remote) -> void
+    def identifier: -> :command
+    def hide: -> Integer?
+    def load: (untyped value) -> Integer
+    def save: (untyped value) -> Integer
+    def reset: -> untyped
+  end
+
+  module Configs
+    @loaders: untyped
+    self.@loaders: untyped
+
+    def get: (untyped kind_id) -> untyped
+    def self.get: (untyped kind_id) -> untyped
+
+    class TOMLConfBuilder
+      def self.run: (untyped kind) -> untyped
+    end
+
+    class FileReader
+      include Logging
+      @configpaths: Array[Pathname]
+      @filename: Symbol
+
+      def initialize: (untyped kind) -> void
+      def each: -> (Array[Pathname] | true)
+    end
+
+    class Loader
+      include Logging
+      @kind: untyped
+      @filereader: FileReader
+
+      attr_reader configs: Hash[untyped, untyped]
+      def initialize: (untyped kind) -> void
+      def to_s: -> String
+      def run: -> Loader
+
+      private
+      def register: (untyped identifier, untyped data) -> true?
+    end
+  end
+
+  class Device
+    def initialize: (Builder | Remote::Remote remote) -> void
+    def to_s: -> String
+    def getter: (**:in | :out) -> {name: untyped, type: String, id: untyped}
+    def ins: -> {name: untyped, type: String, id: untyped}
+    def outs: -> {name: untyped, type: String, id: untyped}
+    def input: (untyped i) -> {name: untyped, type: String, id: untyped}
+    def output: (untyped i) -> {name: untyped, type: String, id: untyped}
+  end
+
+  class Fx
+    include IRemote
+
+    attr_reader reverb: FxReverb
+    attr_reader delay: FxDelay
+    def initialize: (Builder | Remote::Remote remote) -> void
+    def identifier: -> :fx
+  end
+
+  class FxReverb
+    include IRemote
+
+    def initialize: (Builder | Remote::Remote remote) -> void
+    def identifier: -> String
+  end
+
+  class FxDelay
+    include IRemote
+
+    def initialize: (Builder | Remote::Remote remote) -> void
+    def identifier: -> String
+  end
+
+  module Kinds
+    KindMap: untyped
+    KIND_MAPS: untyped
+    ALL: untyped
+
+    private
+    def phys_in: -> untyped
+    def virt_in: -> untyped
+    def phys_out: -> untyped
+    def virt_out: -> untyped
+    def num_strip: -> untyped
+    def num_bus: -> untyped
+    def num_strip_levels: -> (Complex | Float | Integer | Rational)
+    def num_bus_levels: -> (Complex | Float | Integer | Rational)
+    def to_s: -> untyped
+
+    public
+    def get: (untyped kind_id) -> untyped
+    def self.get: (untyped kind_id) -> untyped
+
+    module KindEnum
+      BASIC: Integer
+      BANANA: Integer
+      POTATO: Integer
+      POTATOX64: Integer
+    end
+  end
+
+  class Midi
+    attr_accessor current: untyped
+    attr_accessor channel: untyped
+    attr_reader cache: Hash[untyped, untyped]
+    def initialize: -> void
+    def get: (untyped key) -> nil
+  end
+
+  module Option
+    class Base
+      include IRemote
+
+      attr_reader delay: Array[OptionDelay]
+      attr_reader buffer: OptionBuffer
+      attr_reader mode: OptionMode
+      def initialize: (Builder | Remote::Remote remote) -> void
+      def identifier: -> :option
+    end
+
+    class OptionDelay
+      include IRemote
+
+      def initialize: (untyped remote, untyped i) -> void
+      def identifier: -> String
+      def get: -> Integer
+      def set: (untyped val) -> Integer?
+    end
+
+    class OptionBuffer
+      include IRemote
+
+      def initialize: (Builder | Remote::Remote remote) -> void
+      def identifier: -> String
+    end
+
+    class OptionMode
+      include IRemote
+
+      def initialize: (Builder | Remote::Remote remote) -> void
+      def identifier: -> String
+    end
+  end
+
+  module Patch
+    class Base
+      include IRemote
+
+      attr_reader asio: Array[PatchAsioIn]
+      attr_reader A2: untyped
+      attr_reader A3: untyped
+      attr_reader A4: untyped
+      attr_reader A5: untyped
+      attr_reader composite: Array[PatchComposite]
+      attr_reader insert: Array[PatchInsert]
+      def initialize: (Builder | Remote::Remote remote) -> void
+    end
+
+    class PatchAsio
+      include IRemote
+
+      def identifier: -> :patch
+    end
+
+    class PatchAsioIn < PatchAsio
+      def get: -> Integer
+      def set: (untyped val) -> Integer?
+    end
+
+    class PatchAsioOut < PatchAsio
+      @param: :A2 | :A3 | :A4 | :A5
+
+      def initialize: (untyped remote, untyped i, :A2 | :A3 | :A4 | :A5 param) -> void
+      def get: -> Integer
+      def set: (untyped val) -> Integer?
+    end
+
+    class PatchComposite
+      include IRemote
+
+      def get: -> Integer
+      def set: (untyped val) -> Integer?
+    end
+
+    class PatchInsert
+      include IRemote
+
+      def get: -> bool
+      def set: (untyped val) -> Integer?
+    end
+  end
+
+  module Recorder
+    module FileTypeEnum
+      WAV: Integer
+      AIFF: Integer
+      BWF: Integer
+      MP3: Integer
+    end
+
+    class Base
+      include Mixins::Outputs
+      include IRemote
+
+      attr_reader mode: RecorderMode
+      attr_reader armstrip: Array[RecorderArmStrip]
+      attr_reader armbus: Array[RecorderArmBus]
+      def initialize: (Builder | Remote::Remote remote) -> void
+      def identifier: -> :recorder
+      def load: (untyped filepath) -> Integer?
+      def goto: (untyped timestr) -> Integer?
+      def filetype: (untyped val) -> Integer?
+    end
+
+    class RecorderMode
+      include IRemote
+
+      def initialize: (Builder | Remote::Remote remote) -> void
+      def identifier: -> String
+    end
+
+    class RecorderArmChannel
+      include IRemote
+
+      def initialize: (untyped remote, untyped j) -> void
+      def set: -> Integer?
+    end
+
+    class RecorderArmStrip < RecorderArmChannel
+      @j: untyped
+
+      def identifier: -> String
+    end
+
+    class RecorderArmBus < RecorderArmChannel
+      @j: untyped
+
+      def identifier: -> String
+    end
+  end
+
+  module Builder
+    private
+    def steps: (:bus | :button | :command | :device | :option | :strip | :vban step) -> (^-> (Array[Bus::PhysicalBus | Bus::VirtualBus | Button::Base | Strip::PhysicalStrip] | Command | Device | Fx | Option::Base | Patch::Base | Recorder::Base | Vban::Base)?)
+    def director: -> [:strip, :bus, :button, :vban, :command, :device, :option]
+  end
+
+  module Remote
+    extend Logging
+    self.@logger: Logger
+
+    def self.new: (untyped kind_id, **untyped) -> ((RemoteBanana | RemoteBasic | RemotePotato)?)
+
+    class Remote < Base
+      include Builder
+      @producer: Thread
+      @observers: Hash[untyped, untyped]
+
+      attr_reader strip: untyped
+      attr_reader bus: untyped
+      attr_reader button: untyped
+      attr_reader vban: untyped
+      attr_reader command: untyped
+      attr_reader device: untyped
+      attr_reader option: untyped
+      def initialize: (*untyped noname) -> void
+      def configs: -> untyped
+      def run: -> nil
+    end
+
+    class RemoteBasic < Remote
+    end
+
+    class RemoteBanana < Remote
+      attr_reader recorder: untyped
+      attr_reader patch: untyped
+
+      private
+      def director: -> (Array[:bus | :button | :command | :device | :option | :patch | :recorder | :strip | :vban])
+    end
+
+    class RemotePotato < Remote
+      attr_reader recorder: untyped
+      attr_reader patch: untyped
+      attr_reader fx: untyped
+
+      private
+      def director: -> (Array[:bus | :button | :command | :device | :fx | :option | :patch | :recorder | :strip | :vban])
+    end
+
+    class RequestRemote
+      def self.for: (untyped kind, **untyped) -> ((RemoteBanana | RemoteBasic | RemotePotato)?)
+    end
+  end
+
+  module Strip
+    class Base
+      include Mixins::Fades
+      include Mixins::Outputs
+      include IRemote
+
+      attr_reader gainlayer: Array[GainLayer]
+      attr_reader levels: StripLevels
+      def self.make: (Builder | Remote::Remote remote, untyped i) -> (PhysicalStrip | VirtualStrip)
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def identifier: -> String
+    end
+
+    class PhysicalStrip < Base
+      include Mixins::Fx
+      include Mixins::Xy::Fx
+      include Mixins::Xy::Color
+      include Mixins::Xy::Pan
+
+      attr_reader comp: StripComp
+      attr_reader gate: StripGate
+      attr_reader denoiser: StripDenoiser
+      attr_reader eq: StripEq
+      attr_reader device: StripDevice
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+    end
+
+    class StripComp
+      include IRemote
+
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def identifier: -> String
+      def knob: -> Integer?
+      def knob=: (untyped val) -> Integer?
+    end
+
+    class StripGate
+      include IRemote
+
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def identifier: -> String
+      def knob: -> Integer?
+      def knob=: (untyped val) -> Integer?
+    end
+
+    class StripDenoiser
+      include IRemote
+
+      def identifier: -> String
+      def knob: -> Integer?
+      def knob=: (untyped val) -> Integer?
+    end
+
+    class StripEq
+      include IRemote
+
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def identifier: -> String
+    end
+
+    class StripDevice
+      include IRemote
+
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def identifier: -> String
+    end
+
+    class VirtualStrip < Base
+      include Mixins::Apps
+      include Mixins::Xy::Pan
+
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def bass: -> untyped
+      def bass=: (untyped val) -> Integer?
+      def mid: -> untyped
+      def mid=: (untyped val) -> Integer?
+      def treble: -> untyped
+      def treble=: (untyped val) -> Integer?
+    end
+
+    class GainLayer
+      include IRemote
+      @j: untyped
+
+      def initialize: (Builder | Remote::Remote remote, untyped i, untyped j) -> void
+      def identifier: -> String
+      def gain: -> Integer?
+      def gain=: (untyped value) -> Integer?
+    end
+
+    class StripLevels
+      include IRemote
+      @init: untyped
+      @offset: Integer
+
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def identifier: -> String
+      def get_level: (Integer mode) -> (Array[Float | Integer])
+      def prefader: -> (Array[Float | Integer])
+      def postfader: -> (Array[Float | Integer])
+      def postmute: -> (Array[Float | Integer])
+      def isdirty?: -> untyped
+    end
+  end
+
+  module Vban
+    class VbanStream
+      include IRemote
+
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def identifier: -> String
+      def direction: -> bot
+    end
+
+    class VbanInstream < VbanStream
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def direction: -> :in
+    end
+
+    class VbanAudioInstream < VbanInstream
+    end
+
+    class VbanMidiInstream < VbanInstream
+    end
+
+    class VbanTextInstream < VbanInstream
+    end
+
+    class VbanOutstream < VbanStream
+      def initialize: (Builder | Remote::Remote remote, untyped i) -> void
+      def direction: -> :out
+    end
+
+    class VbanAudioOutstream < VbanOutstream
+    end
+
+    class VbanMidiOutstream < VbanOutstream
+    end
+
+    class RequestVbanStream
+      def self.for: (Builder | Remote::Remote remote, untyped i, :in | :out dir) -> ((VbanAudioInstream | VbanAudioOutstream | VbanMidiInstream | VbanMidiOutstream | VbanTextInstream)?)
+    end
+
+    class Base
+      attr_reader instream: Array[(VbanAudioInstream | VbanAudioOutstream | VbanMidiInstream | VbanMidiOutstream | VbanTextInstream)?]
+      attr_reader outstream: Array[(VbanAudioInstream | VbanAudioOutstream | VbanMidiInstream | VbanMidiOutstream | VbanTextInstream)?]
+      def initialize: (Builder | Remote::Remote remote) -> void
+      def enable: -> Integer?
+      def disable: -> Integer?
+    end
+  end
+
+  module VERSION
+    def major: -> Integer
+    def self.major: -> Integer
+    def minor: -> Integer
+    def self.minor: -> Integer
+    def patch: -> Integer
+    def self.patch: -> Integer
+    def to_a: -> [Integer, Integer, Integer]
+    def self.to_a: -> [Integer, Integer, Integer]
+    def to_s: -> String
+    def self.to_s: -> String
+  end
+
+  module Errors
+    class VMError < StandardError
+    end
+
+    class VMInstallError < VMError
+    end
+
+    class VMCAPIError < VMError
+      attr_reader fn_name: String
+      attr_reader code: untyped
+      def initialize: (String fn_name, untyped code) -> void
+    end
+  end
+end
