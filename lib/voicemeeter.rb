@@ -35,16 +35,17 @@ require_relative "voicemeeter/version"
 
 module Voicemeeter
   module Errors
-    class VMError < StandardError; end
     # Base Voicemeeter error class
+    class VMError < StandardError; end
 
+    # Raised when errors occur during installation.
     class VMInstallError < VMError; end
-    # Errors raised during installation.
 
+    # Raised when the C-API returns error codes
     class VMCAPIError < VMError
-      # Errors raised when the C-API returns error codes
       attr_reader :fn_name, :code
 
+      # create a new VMCAPIError with given C-API function name and error code
       def initialize(fn_name, code)
         @fn_name = fn_name
         @code = code

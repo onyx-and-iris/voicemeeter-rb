@@ -26,8 +26,8 @@ module Voicemeeter
       end
     end
 
+    # Base class for Button types
     class Base
-      # Base class for Button types
       include Logging
       include IRemote
       include ButtonColorMixin

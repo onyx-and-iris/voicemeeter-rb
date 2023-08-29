@@ -1,6 +1,6 @@
 module Voicemeeter
+  # Base class for Remote types
   class Base
-    # Base class for Remote types
     include Logging
     include Worker
     include Events::Director

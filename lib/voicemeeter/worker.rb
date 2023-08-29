@@ -1,7 +1,5 @@
 module Voicemeeter
   module Worker
-    # Event threads, provides updates to observers
-
     include Logging
 
     private
@@ -48,7 +46,7 @@ module Voicemeeter
     public
 
     def running?
-      @producer&.alive? # safe navigation
+      @producer&.alive?
     end
 
     def init_event_threads

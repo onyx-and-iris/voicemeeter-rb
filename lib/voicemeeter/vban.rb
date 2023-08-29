@@ -1,7 +1,7 @@
 module Voicemeeter
   module Vban
+    # Base class for Vban Stream types
     class VbanStream
-      # Base class for Vban Stream types
       include IRemote
 
       def initialize(remote, i)
@@ -20,8 +20,8 @@ module Voicemeeter
       end
     end
 
+    # Represents a Vban InStream
     class VbanInstream < VbanStream
-      # Represents a Vban InStream
       def initialize(remote, i)
         super
         make_reader_int :sr, :channel, :bit
@@ -32,17 +32,17 @@ module Voicemeeter
       end
     end
 
-    class VbanAudioInstream < VbanInstream; end
     # Represents a Vban Audio InStream
+    class VbanAudioInstream < VbanInstream; end
 
-    class VbanMidiInstream < VbanInstream; end
     # Represents a Vban Midi InStream
+    class VbanMidiInstream < VbanInstream; end
 
-    class VbanTextInstream < VbanInstream; end
     # Represents a Vban Text InStream
+    class VbanTextInstream < VbanInstream; end
 
+    # Represents a Vban OutStream
     class VbanOutstream < VbanStream
-      # Represents a Vban OutStream
       def initialize(remote, i)
         super
         make_accessor_int :sr, :channel, :bit
@@ -53,11 +53,11 @@ module Voicemeeter
       end
     end
 
-    class VbanAudioOutstream < VbanOutstream; end
     # Represents a Vban Audio OutStream
+    class VbanAudioOutstream < VbanOutstream; end
 
-    class VbanMidiOutstream < VbanOutstream; end
     # Represents a Vban Midi OutStream
+    class VbanMidiOutstream < VbanOutstream; end
 
     class RequestVbanStream
       def self.for(remote, i, dir)
@@ -81,8 +81,8 @@ module Voicemeeter
       end
     end
 
+    # Base class for Vban type
     class Base
-      # Base class for Vban type
       attr_reader :instream, :outstream
 
       def initialize(remote)

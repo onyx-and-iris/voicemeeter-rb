@@ -12,7 +12,6 @@ module Voicemeeter
         eq = [:eq].to_h { |param| [param, {on: false}] }
 
         overrides = {B1: true}
-        # physical strip params
         phys_strip =
           (0...kind.phys_in).to_h do |i|
             [
@@ -22,7 +21,6 @@ module Voicemeeter
           end
 
         overrides = {A1: true}
-        # virtual strip params
         virt_strip =
           (kind.phys_in...kind.phys_in + kind.virt_in).to_h do |i|
             [

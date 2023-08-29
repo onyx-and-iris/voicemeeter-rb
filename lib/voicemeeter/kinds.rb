@@ -1,7 +1,5 @@
 module Voicemeeter
   module Kinds
-    # KindMaps that describe the layout for each kind
-
     private
 
     module KindEnum

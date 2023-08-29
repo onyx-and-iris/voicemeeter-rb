@@ -1,7 +1,6 @@
 module Voicemeeter
+  # Ruby bindings for the C-API functions
   module CBindings
-    # Ruby bindings for the C-API functions
-
     private
 
     extend Logging

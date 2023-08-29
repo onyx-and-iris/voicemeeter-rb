@@ -1,7 +1,7 @@
 module Voicemeeter
   module Strip
+    # Base class for Strip types
     class Base
-      # Base class for Strip types
       include IRemote
       include Mixins::Outputs
       include Mixins::Fades
@@ -28,8 +28,8 @@ module Voicemeeter
       end
     end
 
+    # Represents a Physical Strip
     class PhysicalStrip < Base
-      # Represents a Physical Strip
       include Mixins::Xy::Pan
       include Mixins::Xy::Color
       include Mixins::Xy::Fx
@@ -143,8 +143,8 @@ module Voicemeeter
       end
     end
 
+    # Represents a Virtual Strip
     class VirtualStrip < Base
-      # Represents a Virtual Strip
       include Mixins::Xy::Pan
       include Mixins::Apps
 

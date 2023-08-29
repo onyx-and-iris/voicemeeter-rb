@@ -1,7 +1,7 @@
 module Voicemeeter
   module Bus
+    # Base class for Bus types
     class Base
-      # Base class for Bus types
       include IRemote
       include Mixins::Fades
       include Mixins::Return
@@ -28,11 +28,11 @@ module Voicemeeter
       end
     end
 
-    class PhysicalBus < Base; end
     # Represents a Physical Bus
+    class PhysicalBus < Base; end
 
-    class VirtualBus < Base; end
     # Represents a Virtual Bus
+    class VirtualBus < Base; end
 
     class BusEq
       include IRemote

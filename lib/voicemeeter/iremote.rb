@@ -1,7 +1,6 @@
 module Voicemeeter
+  # Common interface with the base Remote class.
   module IRemote
-    # A commmon interface between the base Remote class and extended classes.
-
     include Logging
     include MetaFunctions
 

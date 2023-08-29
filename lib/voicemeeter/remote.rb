@@ -1,9 +1,6 @@
 module Voicemeeter
+  # Builder module for Remote factories.
   module Builder
-    # Builder module for Remote factories.
-    # Defines steps for building a Remote type of a kind.
-    # Defines the base director
-
     private
 
     def steps(step)
@@ -29,8 +26,8 @@ module Voicemeeter
   module Remote
     extend Logging
 
+    # Concrete class for Remote types
     class Remote < Base
-      # Concrete class for Remote types
       include Builder
 
       public attr_reader :strip, :bus, :button, :vban, :command, :device, :option
@@ -57,11 +54,11 @@ module Voicemeeter
       end
     end
 
-    class RemoteBasic < Remote; end
     # Represents a RemoteBasic type
+    class RemoteBasic < Remote; end
 
+    # Represents a RemoteBanana type
     class RemoteBanana < Remote
-      # Represents a RemoteBanana type
       public attr_reader :recorder, :patch
 
       private def director
@@ -69,8 +66,8 @@ module Voicemeeter
       end
     end
 
+    # Represents a RemotePotato type
     class RemotePotato < Remote
-      # Represents a RemotePotato type
       public attr_reader :recorder, :patch, :fx
 
       private def director
@@ -78,8 +75,8 @@ module Voicemeeter
       end
     end
 
+    # Factory class for Remote types. Returns a Remote class of a kind.
     class RequestRemote
-      # Factory class for Remote types. Returns a Remote class of a kind.
       def self.for(kind, **)
         case kind.name
         when :basic
@@ -92,8 +89,8 @@ module Voicemeeter
       end
     end
 
+    # Interface entry point. Wraps factory class and handles kind errors.
     def self.new(kind_id, **)
-      # Interface entry point. Wraps factory class and handles kind errors.
       kind = Kinds.get(kind_id)
     rescue KeyError => e
       logger.error "#{e.class.name}: #{e.message}"

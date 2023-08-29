@@ -56,6 +56,9 @@ Gemfile.lock
 # Used by RuboCop. Remote config files pulled in from inherit_from directive.
 # .rubocop-https?--*
 
+# documentation
+doc/
+
 # test
 quick.rb
 config.yaml
