@@ -19,8 +19,6 @@ module Voicemeeter
     end
 
     module Cache
-      # Prepended methods, provides wrap-like functionality
-
       def get(name, is_string = false)
         return cache.delete(name) if cache.key? name
         clear_dirty if @sync
