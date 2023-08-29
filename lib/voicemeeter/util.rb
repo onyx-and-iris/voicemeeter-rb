@@ -1,21 +1,21 @@
 module Voicemeeter
   module Util
-    module String
-      def snakecase(s)
-        s.gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
-          .gsub(/([a-z\d])([A-Z])/, '\1_\2')
-          .tr("-", "_")
-          .gsub(/\s/, "_")
-          .gsub(/__+/, "_")
-          .downcase
-      end
+    module CoreExtensions
+      refine String do
+        def snakecase
+          gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+            .gsub(/([a-z\d])([A-Z])/, '\1_\2')
+            .tr("-", "_")
+            .gsub(/\s/, "_")
+            .gsub(/__+/, "_")
+            .downcase
+        end
 
-      def camelcase(s)
-        s if s !~ /_/ && s =~ /[A-Z]+.*/
-        s.split("_").map { |e| e.capitalize }.join
+        def camelcase
+          self if self !~ /_/ && self =~ /[A-Z]+.*/
+          split("_").map(&:capitalize).join
+        end
       end
-
-      module_function :snakecase, :camelcase
     end
 
     module Cache

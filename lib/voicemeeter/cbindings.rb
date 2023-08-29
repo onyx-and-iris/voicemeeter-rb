@@ -1,10 +1,11 @@
 module Voicemeeter
   # Ruby bindings for the C-API functions
   module CBindings
-    private
-
     extend Logging
     extend FFI::Library
+    using Util::CoreExtensions
+
+    private
 
     VM_PATH = Install.get_vmpath
 
@@ -14,7 +15,7 @@ module Voicemeeter
     ffi_convention :stdcall
 
     private_class_method def self.attach_function(c_name, args, returns)
-      ruby_name = :"bind_#{Util::String.snakecase(c_name.to_s.delete_prefix("VBVMR_"))}"
+      ruby_name = :"bind_#{c_name.to_s.delete_prefix("VBVMR_").snakecase}"
       super(ruby_name, c_name, args, returns)
     end
 
@@ -52,8 +53,7 @@ module Voicemeeter
 
     def call(fn, *args, ok: [0], exp: nil)
       to_cname = -> {
-        "VBVMR_#{Util::String.camelcase(fn.to_s.delete_prefix("bind_"))
-        .gsub(/(Button|Input|Output)/, '\1_')}"
+        "VBVMR_#{fn.to_s.delete_prefix("bind_").camelcase.gsub(/(Button|Input|Output)/, '\1_')}"
       }
 
       res = send(fn, *args)
