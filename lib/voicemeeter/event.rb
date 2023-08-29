@@ -10,12 +10,12 @@ module Voicemeeter
       end
 
       def register(cbs)
-        cbs = [cbs] unless cbs.respond_to? :each
+        cbs = Array(cbs) unless cbs.respond_to? :each
         cbs.each { |cb| on(cb.name[3..].to_sym, cb) }
       end
 
       def deregister(cbs)
-        cbs = [cbs] unless cbs.respond_to? :each
+        cbs = Array(cbs) unless cbs.respond_to? :each
         cbs.each { |cb| observers[cb.name[3..].to_sym]&.reject! { |o| cbs.include? o } }
       end
 
