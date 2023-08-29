@@ -7,7 +7,7 @@ module Voicemeeter
       MP3 = 100
     end
 
-    # Base class for Recorder types
+    # Base class for Recorder
     class Base
       include IRemote
       include Mixins::Outputs

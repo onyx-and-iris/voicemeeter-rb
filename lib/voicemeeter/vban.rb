@@ -1,6 +1,6 @@
 module Voicemeeter
   module Vban
-    # Base class for Vban Stream types
+    # Base class for Vban In/Out Streams
     class VbanStream
       include IRemote
 
@@ -81,7 +81,7 @@ module Voicemeeter
       end
     end
 
-    # Base class for Vban type
+    # Base class for Vban
     class Base
       attr_reader :instream, :outstream
 

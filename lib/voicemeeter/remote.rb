@@ -26,7 +26,7 @@ module Voicemeeter
   module Remote
     extend Logging
 
-    # Concrete class for Remote types
+    # Concrete class for Remote
     class Remote < Base
       include Builder
 
@@ -75,7 +75,7 @@ module Voicemeeter
       end
     end
 
-    # Factory class for Remote types. Returns a Remote class of a kind.
+    # Factory class for Remote. Returns a Remote class of a kind.
     class RequestRemote
       def self.for(kind, **)
         case kind.name

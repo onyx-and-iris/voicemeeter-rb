@@ -1,5 +1,5 @@
 module Voicemeeter
-  # Base class for Remote types
+  # Base class for Remote
   class Base
     include Logging
     include Worker

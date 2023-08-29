@@ -1,6 +1,6 @@
 module Voicemeeter
   module Bus
-    # Base class for Bus types
+    # Base class for Bus
     class Base
       include IRemote
       include Mixins::Fades

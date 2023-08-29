@@ -1,6 +1,6 @@
 module Voicemeeter
   module Strip
-    # Base class for Strip types
+    # Base class for Strip
     class Base
       include IRemote
       include Mixins::Outputs

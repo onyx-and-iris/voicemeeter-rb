@@ -1,6 +1,6 @@
 module Voicemeeter
   module Patch
-    # Base class for Patch types
+    # Base class for Patch
     class Base
       include IRemote
       attr_reader :asio, :A2, :A3, :A4, :A5, :composite, :insert
