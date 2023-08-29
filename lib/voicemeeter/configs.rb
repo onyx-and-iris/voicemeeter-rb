@@ -2,8 +2,8 @@ module Voicemeeter
   module Configs
     class TOMLConfBuilder
       def self.run(kind)
-        aouts = (0...kind.phys_out).to_h { |i| ["A#{i + 1}".to_sym, false] }
-        bouts = (0...kind.virt_out).to_h { |i| ["B#{i + 1}".to_sym, false] }
+        aouts = (0...kind.phys_out).to_h { |i| [:"A#{i + 1}", false] }
+        bouts = (0...kind.virt_out).to_h { |i| [:"B#{i + 1}", false] }
         strip_bools = %i[mute mono solo].to_h { |param| [param, false] }
         gain = [:gain].to_h { |param| [param, 0.0] }
 
@@ -24,7 +24,7 @@ module Voicemeeter
         virt_strip =
           (kind.phys_in...kind.phys_in + kind.virt_in).to_h do |i|
             [
-              "strip-#{i}".to_sym,
+              :"strip-#{i}",
               {**aouts, **bouts, **strip_bools, **gain, **overrides}
             ]
           end
@@ -32,7 +32,7 @@ module Voicemeeter
         bus_bools = %i[mute mono].to_h { |param| [param, false] }
         bus =
           (0...kind.num_bus).to_h do |i|
-            ["bus-#{i}".to_sym, {**bus_bools, **gain, **eq}]
+            [:"bus-#{i}", {**bus_bools, **gain, **eq}]
           end
 
         {**phys_strip, **virt_strip, **bus}
