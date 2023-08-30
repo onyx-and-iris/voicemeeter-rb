@@ -491,7 +491,7 @@ vm.patch.postfxinsert = false
 
 ##### asio[i]
 
-- `get()`: int
+- `get`: int
 - `set(patch_in)`: int, valid range determined by connected device.
 
 example:
@@ -504,7 +504,7 @@ i, from 0 to 10
 
 ##### A2[i] - A5[i]
 
-- `get()`: int
+- `get`: int
 - `set(patch_out)`: int, valid range determined by connected device.
 
 example:
@@ -517,7 +517,7 @@ i, from 0 to 8.
 
 ##### composite[i]
 
-- `get()`: int
+- `get`: int
 - `set(channel)`: int, from 0 up to number of channels depending on version.
 
 example:
@@ -572,7 +572,7 @@ vm.option.buffer.wdm = 512
 
 ##### delay[i]
 
-- `get()`: int
+- `get`: int
 - `set(delay)`: int, from 0 to 500
 
 example:
@@ -702,17 +702,15 @@ The following methods are available:
 example:
 
 ```ruby
-vm.event.add(%w[pdirty mdirty midi ldirty])
+vm.event.add(%i[pdirty mdirty midi ldirty])
 
-vm.event.remove(%w[pdirty mdirty midi ldirty])
+vm.event.remove(%i[pdirty mdirty midi ldirty])
 
 # get a list of currently subscribed
 p vm.event.get
 ```
 
 ## `Voicemeeter Module`
-
-### Remote class
 
 #### Voicemeeter::Remote
 
@@ -745,9 +743,13 @@ vm.set("Strip[0].Gain", -3.6)
 
 ### Errors
 
-- `Errors::VMError`: Error raised when general errors occur.
-- `Errors::VMCAPIError`: Error raised when the C-API returns error values.
-  - Error codes are stored in {Error Class}.code. For a full list of error codes [check the VoicemeeterRemote header file][voicemeeter remote header].
+- `Errors::VMError`: Base Voicemeeter error class.
+- `Errors::VMInstallError`: Raised when errors occur during installation.
+- `Errors::VMCAPIError`: Raised when the C-API returns error codes.
+  - The following attributes are available:
+    - `fn_name`: name of the C-API function that failed.
+    - `code`: error code.
+  - For a full list of error codes [check the VoicemeeterRemote header file][voicemeeter remote header].
 
 ### Logging
 
