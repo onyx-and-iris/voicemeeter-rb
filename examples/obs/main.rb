@@ -8,7 +8,7 @@ class Main
     @vm = vm
     @obsws = OBSWS::Events::Client.new(**kwargs)
 
-    @obsws.on :on_current_program_scene_changed do |data|
+    @obsws.on :current_program_scene_changed do |data|
       scene = data.scene_name
       puts "Switched to scene #{scene}"
       if respond_to?("on_#{scene.downcase}")
@@ -16,7 +16,7 @@ class Main
       end
     end
 
-    @obsws.on :on_exit_started do |data|
+    @obsws.on :exit_started do |data|
       puts "OBS closing!"
       @obsws.close
       @running = false
@@ -54,7 +54,8 @@ class Main
 end
 
 def conn_from_yml
-  YAML.load_file("config.yaml", symbolize_names: true)[:connection]
+  pn = Pathname.new(__dir__).join("config.yaml")
+  YAML.load_file(pn, symbolize_names: true)[:connection]
 end
 
 if $PROGRAM_NAME == __FILE__
