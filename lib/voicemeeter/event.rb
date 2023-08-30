@@ -28,8 +28,10 @@ module Voicemeeter
       include Logging
 
       class << self
-        private def attr_events(*params)
+        private def attr_accessor_events(*params)
           params.each do |param|
+            attr_reader param
+
             define_method("#{param}=") do |value|
               instance_variable_set("@#{param}", value)
               info("#{param} #{value ? "added to" : "removed from"}")
@@ -38,8 +40,7 @@ module Voicemeeter
         end
       end
 
-      attr_reader :pdirty, :mdirty, :midi, :ldirty
-      attr_events :pdirty, :mdirty, :midi, :ldirty
+      attr_accessor_events :pdirty, :mdirty, :midi, :ldirty
 
       def initialize(**kwargs)
         kwargs.each do |key, value|
