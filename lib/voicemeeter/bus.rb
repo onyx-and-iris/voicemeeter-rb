@@ -112,12 +112,11 @@ module Voicemeeter
 
   class BusDevice
     include IRemote
+    extend MetaFunctions
 
-    def initialize(remote, i)
-      super
-      make_reader_only :name, :sr
-      make_writer_only :wdm, :ks, :mme, :asio
-    end
+    attr_reader_int :sr
+    attr_reader_string :name
+    attr_writer_string :wdm, :ks, :mme, :asio
 
     def identifier
       "bus[#{@index}].device"
