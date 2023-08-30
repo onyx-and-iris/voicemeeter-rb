@@ -13,10 +13,8 @@ module Voicemeeter
     end
 
     module Return
-      def initialize(remote, i)
-        super
-        make_accessor_float :returnreverb, :returndelay, :returnfx1, :returnfx2
-      end
+      extend MetaFunctions
+      attr_accessor_float :returnreverb, :returndelay, :returnfx1, :returnfx2
     end
 
     module Apps
@@ -30,47 +28,40 @@ module Voicemeeter
     end
 
     module Outputs
-      def initialize(*args)
-        super
-        remote, *_ = args
-        num_a, num_b = remote.kind.outs
-        channels =
-          (1..(num_a + num_b)).map do |i|
-            (i <= num_a) ? "A#{i}" : "B#{i - num_a}"
+      def make_attr_outputs(num_a, num_b)
+        (1..(num_a + num_b)).each do |i|
+          param = (i <= num_a) ? :"A#{i}" : :"B#{i - num_a}"
+          define_singleton_method(param) do
+            getter(param).to_i == 1
           end
-        make_accessor_bool(*channels)
+          define_singleton_method("#{param}=") do |value|
+            setter(param, value && 1 || 0)
+          end
+        end
       end
     end
 
     module Xy
       module Pan
-        def initialize(remote, i)
-          super
-          make_accessor_float :pan_x, :pan_y
-        end
+        extend MetaFunctions
+        attr_accessor_float :pan_x, :pan_y
       end
 
       module Color
-        def initialize(remote, i)
-          super
-          make_accessor_float :color_x, :color_y
-        end
+        extend MetaFunctions
+        attr_accessor_float :color_x, :color_y
       end
 
       module Fx
-        def initialize(remote, i)
-          super
-          make_accessor_float :fx_x, :fx_y
-        end
+        extend MetaFunctions
+        attr_accessor_float :fx_x, :fx_y
       end
     end
 
     module Fx
-      def initialize(remote, i)
-        super
-        make_accessor_float :reverb, :delay, :fx1, :fx2
-        make_accessor_bool :postreverb, :postdelay, :postfx1, :postfx2
-      end
+      extend MetaFunctions
+      attr_accessor_float :reverb, :delay, :fx1, :fx2
+      attr_accessor_bool :postreverb, :postdelay, :postfx1, :postfx2
     end
 
     module LevelEnum

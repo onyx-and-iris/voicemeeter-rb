@@ -2,12 +2,14 @@ module Voicemeeter
   module Option
     class Base
       include IRemote
+      extend MetaFunctions
+
       attr_reader :delay, :buffer, :mode
+      attr_accessor_int :sr
+      attr_accessor_bool :asiosr, :monitoronsel, :slidermode
 
       def initialize(remote)
         super
-        make_accessor_int :sr
-        make_accessor_bool :asiosr, :monitoronsel, :slidermode
 
         @delay = (0...remote.kind.phys_out).map { OptionDelay.new(remote, _1) }
         @buffer = OptionBuffer.new(remote)
@@ -21,11 +23,9 @@ module Voicemeeter
 
     class OptionDelay
       include IRemote
+      extend MetaFunctions
 
-      def initialize(remote, i)
-        super
-        make_accessor_bool :on, :ab
-      end
+      attr_accessor_bool :on, :ab
 
       def identifier
         "option.delay"
@@ -42,11 +42,9 @@ module Voicemeeter
 
     class OptionBuffer
       include IRemote
+      extend MetaFunctions
 
-      def initialize(remote)
-        super
-        make_accessor_int :mme, :wdm, :ks, :asio
-      end
+      attr_accessor_int :mme, :wdm, :ks, :asio
 
       def identifier
         "option.buffer"
@@ -55,11 +53,9 @@ module Voicemeeter
 
     class OptionMode
       include IRemote
+      extend MetaFunctions
 
-      def initialize(remote)
-        super
-        make_accessor_bool :exclusif, :swift
-      end
+      attr_accessor_bool :exclusif, :swift
 
       def identifier
         "option.mode"

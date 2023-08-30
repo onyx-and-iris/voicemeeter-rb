@@ -1,6 +1,8 @@
 module Voicemeeter
   class Fx
     include IRemote
+    extend MetaFunctions
+
     attr_reader :reverb, :delay
 
     def initialize(remote)
@@ -16,11 +18,9 @@ module Voicemeeter
 
   class FxReverb
     include IRemote
+    extend MetaFunctions
 
-    def initialize(remote)
-      super
-      make_accessor_bool :on, :ab
-    end
+    attr_accessor_bool :on, :ab
 
     def identifier
       "fx.reverb"
@@ -29,11 +29,9 @@ module Voicemeeter
 
   class FxDelay
     include IRemote
+    extend MetaFunctions
 
-    def initialize(remote)
-      super
-      make_accessor_bool :on, :ab
-    end
+    attr_accessor_bool :on, :ab
 
     def identifier
       "fx.delay"

@@ -2,7 +2,6 @@ module Voicemeeter
   # Common interface with the base Remote class.
   module IRemote
     include Logging
-    include MetaFunctions
 
     def initialize(remote, i = nil)
       @remote = remote

@@ -5,8 +5,12 @@ module Voicemeeter
       include IRemote
       include Mixins::Fades
       include Mixins::Return
+      extend MetaFunctions
 
       attr_reader :eq, :mode, :levels
+      attr_accessor_bool :mute, :mono, :sel, :monitor
+      attr_accessor_float :gain
+      attr_accessor_string :label
 
       def self.make(remote, i)
         (i < remote.kind.phys_out) ? PhysicalBus.new(remote, i) : VirtualBus.new(remote, i)
@@ -14,9 +18,6 @@ module Voicemeeter
 
       def initialize(remote, i)
         super
-        make_accessor_bool :mute, :mono, :sel, :monitor
-        make_accessor_float :gain
-        make_accessor_string :label
 
         @eq = BusEq.new(remote, i)
         @mode = BusModes.new(remote, i)
@@ -36,11 +37,9 @@ module Voicemeeter
 
     class BusEq
       include IRemote
+      extend MetaFunctions
 
-      def initialize(remote, i)
-        super
-        make_accessor_bool :on, :ab
-      end
+      attr_accessor_bool :on, :ab
 
       def identifier
         "bus[#{@index}].eq"
@@ -49,22 +48,20 @@ module Voicemeeter
 
     class BusModes
       include IRemote
+      extend MetaFunctions
 
-      def initialize(remote, i)
-        super
-        make_accessor_bool :normal,
-          :amix,
-          :bmix,
-          :repeat,
-          :composite,
-          :tvmix,
-          :upmix21,
-          :upmix41,
-          :upmix61,
-          :centeronly,
-          :lfeonly,
-          :rearonly
-      end
+      attr_accessor_bool :normal,
+        :amix,
+        :bmix,
+        :repeat,
+        :composite,
+        :tvmix,
+        :upmix21,
+        :upmix41,
+        :upmix61,
+        :centeronly,
+        :lfeonly,
+        :rearonly
 
       def identifier
         "bus[#{@index}].mode"

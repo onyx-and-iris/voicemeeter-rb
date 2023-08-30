@@ -1,12 +1,10 @@
 module Voicemeeter
   class Command
     include IRemote
+    extend MetaFunctions
 
-    def initialize(remote)
-      super
-      make_action_method :show, :restart, :shutdown
-      make_writer_bool :showvbanchat, :lock
-    end
+    attr_action_method :show, :restart, :shutdown
+    attr_writer_bool :showvbanchat, :lock
 
     def identifier
       :command

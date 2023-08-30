@@ -5,8 +5,13 @@ module Voicemeeter
       include IRemote
       include Mixins::Outputs
       include Mixins::Fades
+      extend MetaFunctions
 
       attr_reader :gainlayer, :levels
+      attr_accessor_bool :solo, :mute, :mono
+      attr_accessor_float :gain
+      attr_accessor_int :limit
+      attr_accessor_string :label
 
       def self.make(remote, i)
         (i < remote.kind.phys_in) ? PhysicalStrip.new(remote, i) : VirtualStrip.new(remote, i)
@@ -14,10 +19,7 @@ module Voicemeeter
 
       def initialize(remote, i)
         super
-        make_accessor_bool :solo, :mute, :mono
-        make_accessor_float :gain
-        make_accessor_int :limit
-        make_accessor_string :label
+        make_attr_outputs(*remote.kind.outs)
 
         @gainlayer = (0...8).map { GainLayer.new(remote, i, _1) }
         @levels = StripLevels.new(remote, i)
@@ -34,13 +36,13 @@ module Voicemeeter
       include Mixins::Xy::Color
       include Mixins::Xy::Fx
       include Mixins::Fx
+      extend MetaFunctions
 
       attr_reader :comp, :gate, :denoiser, :eq, :device
+      attr_accessor_float :audibility
 
       def initialize(remote, i)
         super
-        make_accessor_float :audibility
-
         @comp = StripComp.new(remote, i)
         @gate = StripGate.new(remote, i)
         @denoiser = StripDenoiser.new(remote, i)
@@ -51,18 +53,16 @@ module Voicemeeter
 
     class StripComp
       include IRemote
+      extend MetaFunctions
 
-      def initialize(remote, i)
-        super
-        make_accessor_float :gainin,
-          :ratio,
-          :threshold,
-          :attack,
-          :release,
-          :knee,
-          :gainout
-        make_accessor_bool :makeup
-      end
+      attr_accessor_float :gainin,
+        :ratio,
+        :threshold,
+        :attack,
+        :release,
+        :knee,
+        :gainout
+      attr_accessor_bool :makeup
 
       def identifier
         "strip[#{@index}].comp"
@@ -79,12 +79,10 @@ module Voicemeeter
 
     class StripGate
       include IRemote
+      extend MetaFunctions
 
-      def initialize(remote, i)
-        super
-        make_accessor_float :threshold, :damping, :attack, :hold, :release
-        make_accessor_int :bpsidechain
-      end
+      attr_accessor_float :threshold, :damping, :attack, :hold, :release
+      attr_accessor_int :bpsidechain
 
       def identifier
         "strip[#{@index}].gate"
@@ -117,11 +115,9 @@ module Voicemeeter
 
     class StripEq
       include IRemote
+      extend MetaFunctions
 
-      def initialize(remote, i)
-        super
-        make_accessor_bool :on, :ab
-      end
+      attr_accessor_bool :on, :ab
 
       def identifier
         "strip[#{@index}].eq"
@@ -130,13 +126,11 @@ module Voicemeeter
 
     class StripDevice
       include IRemote
+      extend MetaFunctions
 
-      def initialize(remote, i)
-        super
-        make_reader_int :sr
-        make_reader_string :name
-        make_writer_string :wdm, :ks, :mme, :asio
-      end
+      attr_reader_int :sr
+      attr_reader_string :name
+      attr_writer_string :wdm, :ks, :mme, :asio
 
       def identifier
         "strip[#{@index}].device"
@@ -147,12 +141,10 @@ module Voicemeeter
     class VirtualStrip < Base
       include Mixins::Xy::Pan
       include Mixins::Apps
+      extend MetaFunctions
 
-      def initialize(remote, i)
-        super
-        make_accessor_bool :mc
-        make_accessor_int :karaoke
-      end
+      attr_accessor_bool :mc
+      attr_accessor_int :karaoke
 
       def bass
         round(getter("EQGain1"), 1)

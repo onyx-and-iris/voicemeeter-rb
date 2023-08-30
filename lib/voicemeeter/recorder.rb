@@ -11,14 +11,16 @@ module Voicemeeter
     class Base
       include IRemote
       include Mixins::Outputs
+      extend MetaFunctions
 
       attr_reader :mode, :armstrip, :armbus
+      attr_action_method :play, :stop, :pause, :replay, :record, :ff, :rew
+      attr_accessor_int :bitresolution, :channel, :kbps
+      attr_accessor_float :gain
 
       def initialize(remote)
         super
-        make_action_method :play, :stop, :pause, :replay, :record, :ff, :rew
-        make_accessor_int :bitresolution, :channel, :kbps
-        make_accessor_float :gain
+        make_attr_outputs(*remote.kind.outs)
 
         @mode = RecorderMode.new(remote)
         @armstrip = (0...remote.kind.num_strip).map { RecorderArmStrip.new(remote, _1) }
@@ -51,11 +53,9 @@ module Voicemeeter
 
     class RecorderMode
       include IRemote
+      extend MetaFunctions
 
-      def initialize(remote)
-        super
-        make_accessor_bool :recbus, :playonload, :loop, :multitrack
-      end
+      attr_accessor_bool :recbus, :playonload, :loop, :multitrack
 
       def identifier
         "recorder.mode"

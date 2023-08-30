@@ -3,11 +3,13 @@ module Voicemeeter
     # Base class for Patch
     class Base
       include IRemote
+      extend MetaFunctions
+
       attr_reader :asio, :A2, :A3, :A4, :A5, :composite, :insert
+      attr_accessor_bool :postfadercomposite, :postfxinsert
 
       def initialize(remote)
         super
-        make_accessor_bool :postfadercomposite, :postfxinsert
 
         asio_in, asio_out = remote.kind.asio
         @asio = (0...asio_in).map { PatchAsioIn.new(remote, _1) }

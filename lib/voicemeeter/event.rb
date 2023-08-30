@@ -27,11 +27,21 @@ module Voicemeeter
     class Tracker
       include Logging
 
+      class << self
+        private def attr_events(*params)
+          params.each do |param|
+            define_method("#{param}=") do |value|
+              instance_variable_set("@#{param}", value)
+              info("#{param} #{value ? "added to" : "removed from"}")
+            end
+          end
+        end
+      end
+
       attr_reader :pdirty, :mdirty, :midi, :ldirty
+      attr_events :pdirty, :mdirty, :midi, :ldirty
 
       def initialize(**kwargs)
-        make_writer_methods :pdirty, :mdirty, :midi, :ldirty
-
         kwargs.each do |key, value|
           instance_variable_set("@#{key}", value || false)
         end
@@ -49,15 +59,6 @@ module Voicemeeter
           ["Not listening for any events"]
         end
         logger.info info_msg.join(" ")
-      end
-
-      private def make_writer_methods(*params)
-        params.each do |param|
-          define_singleton_method("#{param}=") do |value|
-            instance_variable_set("@#{param}", value)
-            info("#{param} #{value ? "added to" : "removed from"}")
-          end
-        end
       end
 
       def get

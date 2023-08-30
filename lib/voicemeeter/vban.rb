@@ -3,13 +3,11 @@ module Voicemeeter
     # Base class for Vban In/Out Streams
     class VbanStream
       include IRemote
+      extend MetaFunctions
 
-      def initialize(remote, i)
-        super
-        make_accessor_bool :on
-        make_accessor_string :name, :ip
-        make_accessor_int :quality, :route
-      end
+      attr_accessor_bool :on
+      attr_accessor_string :name, :ip
+      attr_accessor_int :quality, :route
 
       def identifier
         "vban.#{direction}stream[#{@index}]"
@@ -22,10 +20,7 @@ module Voicemeeter
 
     # Represents a Vban InStream
     class VbanInstream < VbanStream
-      def initialize(remote, i)
-        super
-        make_reader_int :sr, :channel, :bit
-      end
+      attr_reader_int :sr, :channel, :bit
 
       def direction
         :in
@@ -43,10 +38,7 @@ module Voicemeeter
 
     # Represents a Vban OutStream
     class VbanOutstream < VbanStream
-      def initialize(remote, i)
-        super
-        make_accessor_int :sr, :channel, :bit
-      end
+      attr_accessor_int :sr, :channel, :bit
 
       def direction
         :out
