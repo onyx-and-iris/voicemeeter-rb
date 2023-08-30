@@ -18,7 +18,6 @@ module Voicemeeter
 
       def initialize(remote, i)
         super
-
         @eq = BusEq.new(remote, i)
         @mode = BusModes.new(remote, i)
         @levels = BusLevels.new(remote, i)

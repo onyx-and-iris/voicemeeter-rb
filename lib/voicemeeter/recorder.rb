@@ -21,7 +21,6 @@ module Voicemeeter
       def initialize(remote)
         super
         make_attr_outputs(*remote.kind.outs)
-
         @mode = RecorderMode.new(remote)
         @armstrip = (0...remote.kind.num_strip).map { RecorderArmStrip.new(remote, _1) }
         @armbus = (0...remote.kind.num_bus).map { RecorderArmBus.new(remote, _1) }

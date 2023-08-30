@@ -10,7 +10,6 @@ module Voicemeeter
 
       def initialize(remote)
         super
-
         @delay = (0...remote.kind.phys_out).map { OptionDelay.new(remote, _1) }
         @buffer = OptionBuffer.new(remote)
         @mode = OptionMode.new(remote)

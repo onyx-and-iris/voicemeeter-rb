@@ -20,7 +20,6 @@ module Voicemeeter
       def initialize(remote, i)
         super
         make_attr_outputs(*remote.kind.outs)
-
         @gainlayer = (0...8).map { GainLayer.new(remote, i, _1) }
         @levels = StripLevels.new(remote, i)
       end

@@ -10,7 +10,6 @@ module Voicemeeter
 
       def initialize(remote)
         super
-
         asio_in, asio_out = remote.kind.asio
         @asio = (0...asio_in).map { PatchAsioIn.new(remote, _1) }
         %i[A2 A3 A4 A5].each do |param|
