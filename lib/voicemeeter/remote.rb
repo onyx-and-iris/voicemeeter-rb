@@ -54,10 +54,10 @@ module Voicemeeter
       end
     end
 
-    # Represents a RemoteBasic type
+    # Represents a Basic Remote
     class RemoteBasic < Remote; end
 
-    # Represents a RemoteBanana type
+    # Represents a Banana Remote
     class RemoteBanana < Remote
       public attr_reader :recorder, :patch
 
@@ -66,7 +66,7 @@ module Voicemeeter
       end
     end
 
-    # Represents a RemotePotato type
+    # Represents a Potato Remote
     class RemotePotato < Remote
       public attr_reader :recorder, :patch, :fx
 
