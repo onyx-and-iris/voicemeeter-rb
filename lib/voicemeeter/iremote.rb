@@ -37,12 +37,12 @@ module Voicemeeter
     def apply(params)
       params.each do |key, val|
         if val.is_a? Hash
-          target = pulic_send(key)
+          target = public_send(key)
           target.apply(val)
         elsif key == :mode
-          mode.pulic_send("#{val}=", true)
+          mode.public_send("#{val}=", true)
         else
-          pulic_send("#{key}=", val)
+          public_send("#{key}=", val)
         end
       end
     end
