@@ -7,8 +7,7 @@ module Voicemeeter
     def init_producer(que)
       @producer = Thread.new do
         Thread.current.name = "producer"
-        Thread.current[:running] = true
-        while Thread.current[:running]
+        while @running
           que << :pdirty if event.pdirty
           que << :mdirty if event.mdirty
           que << :midi if event.midi
@@ -16,7 +15,7 @@ module Voicemeeter
           sleep(@ratelimit)
         end
         logger.debug "closing #{Thread.current.name} thread"
-        que << Thread.current[:running]
+        que << @running
       end
     end
 
@@ -51,12 +50,13 @@ module Voicemeeter
 
     def init_event_threads
       que = Queue.new
+      @running = true
       init_worker(que) and init_producer(que)
     end
 
     def end_event_threads
       if running?
-        @producer[:running] = false
+        @running = false
         @producer.join
       end
     end
