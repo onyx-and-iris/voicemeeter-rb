@@ -3,7 +3,7 @@ module Voicemeeter
     module_function
 
     def major
-      0
+      1
     end
 
     def minor
@@ -11,7 +11,7 @@ module Voicemeeter
     end
 
     def patch
-      1
+      0
     end
 
     def to_a
