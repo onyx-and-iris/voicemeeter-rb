@@ -23,6 +23,6 @@ Before any major/minor/patch is released all unit tests will be run to verify th
   - `ldirty`: channel level updates
 - An entry point for fetching a Remote class for each kind of Voicemeeter (basic, banana, potato)
 - Logging system for reading messages sent by getters and setters.
-- Strip class refinement in util.rb. It's scope should be limited to the CBindings module.
+- String class refinement in util.rb. It's scope should be limited to the CBindings module.
 - rbs type signatures but some of them need updating.
 - example user profile configs included with repo.
