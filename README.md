@@ -198,7 +198,7 @@ The following attributes are available.
 example:
 
 ```ruby
-vm.strip[0].eq.ab = True
+vm.strip[0].eq.ab = true
 ```
 
 Strip EQ parameters are defined for PhysicalStrips, potato version only.
@@ -458,7 +458,7 @@ vm.command.showvbanchat = true
 example:
 
 ```ruby
-vm.run { (0...vm.device.ins).each { puts vm.device.input(_1) } }
+vm.run { |vm| (0...vm.device.ins).each { puts vm.device.input(_1) } }
 ```
 
 ### FX
