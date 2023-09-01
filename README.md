@@ -1,5 +1,6 @@
+[![Gem Version][gem version]](https://badge.fury.io/rb/voicemeeter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)][license]
-[![Ruby Code Style](https://img.shields.io/badge/code_style-standard-violet.svg)](https://github.com/standardrb/standard)
+[![Ruby Code Style][code style]](https://github.com/standardrb/standard)
 
 # Ruby Wrapper Around the Voicemeeter Remote API
 
@@ -775,3 +776,5 @@ Bundle exec rake
 
 [license]: https://github.com/onyx-and-iris/voicemeeter-rb/blob/dev/LICENSE
 [voicemeeter remote header]: https://github.com/onyx-and-iris/Voicemeeter-SDK/blob/update-docs/VoicemeeterRemote.h
+[code style]: https://img.shields.io/badge/code_style-standard-violet.svg
+[gem version]: https://badge.fury.io/rb/voicemeeter.svg
