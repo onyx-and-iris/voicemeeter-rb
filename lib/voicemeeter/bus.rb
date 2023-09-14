@@ -7,7 +7,7 @@ module Voicemeeter
       include Mixins::Return
       extend MetaFunctions
 
-      attr_reader :eq, :mode, :levels
+      attr_reader :eq, :mode, :levels, :device
       attr_accessor_bool :mute, :mono, :sel, :monitor
       attr_accessor_float :gain
       attr_accessor_string :label
@@ -21,6 +21,7 @@ module Voicemeeter
         @eq = BusEq.new(remote, i)
         @mode = BusModes.new(remote, i)
         @levels = BusLevels.new(remote, i)
+        @device = BusDevice.new(remote, i)
       end
 
       def identifier

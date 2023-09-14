@@ -11,7 +11,7 @@ module Voicemeeter
     end
 
     def patch
-      0
+      1
     end
 
     def to_a

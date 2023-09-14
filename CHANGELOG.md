@@ -11,6 +11,12 @@ Before any major/minor/patch is released all unit tests will be run to verify th
 
 - [ ]
 
+## [1.0.1] - 2023-09-14
+
+### Added
+
+- BusDevice added to Bus class.
+
 ## [1.0.0] - 2023-09-01
 
 ### Added
