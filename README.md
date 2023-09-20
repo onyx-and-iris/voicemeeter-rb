@@ -630,7 +630,7 @@ vm.vban.outstream[0].apply(on: true, name: "streamname", bit: 24)
 
 `vm.apply_config(<configname>)`
 
-You may load config files in TOML format.
+You may load config files in YAML format.
 Three example configs have been included with the package. Remember to save
 current settings before loading a config. To set one you may do:
 
@@ -639,7 +639,7 @@ require "voicemeeter"
 Voicemeeter::Remote.new(:banana).run { |vm| vm.apply_config(:example) }
 ```
 
-will load a config file at mydir/configs/banana/example.toml for Voicemeeter Banana.
+will load a config file at mydir/configs/banana/example.yml for Voicemeeter Banana.
 
 ## Events
 
