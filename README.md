@@ -772,9 +772,9 @@ Bundle exec rake
 
 ### Official Documentation
 
-- [Voicemeeter Remote C API](https://github.com/onyx-and-iris/Voicemeeter-SDK/blob/update-docs/VoicemeeterRemoteAPI.pdf)
+- [Voicemeeter Remote C API](https://github.com/onyx-and-iris/Voicemeeter-SDK/blob/main/VoicemeeterRemoteAPI.pdf)
 
 [license]: https://github.com/onyx-and-iris/voicemeeter-rb/blob/dev/LICENSE
-[voicemeeter remote header]: https://github.com/onyx-and-iris/Voicemeeter-SDK/blob/update-docs/VoicemeeterRemote.h
+[voicemeeter remote header]: https://github.com/onyx-and-iris/Voicemeeter-SDK/blob/main/VoicemeeterRemote.h
 [code style]: https://img.shields.io/badge/code_style-standard-violet.svg
 [gem version]: https://badge.fury.io/rb/voicemeeter.svg
