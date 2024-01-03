@@ -750,7 +750,7 @@ vm.set("Strip[0].Gain", -3.6)
   - The following attributes are available:
     - `fn_name`: name of the C-API function that failed.
     - `code`: error code.
-  - For a full list of error codes [check the VoicemeeterRemote header file][voicemeeter remote header].
+  - For a full list of error codes check the [VoicemeeterRemote header file][voicemeeter remote header].
 
 ### Logging
 
