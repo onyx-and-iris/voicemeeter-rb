@@ -11,6 +11,12 @@ Before any major/minor/patch is released all unit tests will be run to verify th
 
 - [ ]
 
+## [1.1.0] - 2023-06-28
+
+### Added
+
+- Configurable kwarg `login_timeout`, defaults to 2s.
+
 ## [1.0.1] - 2023-09-14
 
 ### Added
