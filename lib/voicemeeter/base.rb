@@ -4,18 +4,21 @@ module Voicemeeter
     include Logging
     include Worker
     include Events::Director
+    prepend Util::Timeout
     prepend Util::Cache
 
     attr_reader :kind, :midi, :event, :delay, :cache
 
     RATELIMIT = 0.033
     DELAY = 0.001
+    LOGIN_TIMEOUT = 2
 
     def initialize(kind, **kwargs)
       @kind = kind
       @sync = kwargs[:sync] || false
       @ratelimit = kwargs[:ratelimit] || RATELIMIT
       @delay = kwargs[:delay] || DELAY
+      @login_timeout = kwargs[:login_timeout] || LOGIN_TIMEOUT
       @event =
         Events::Tracker.new(
           **(kwargs.select { |k, _| %i[pdirty mdirty ldirty midi].include? k })
@@ -30,8 +33,6 @@ module Voicemeeter
 
     def login
       CBindings.call(:bind_login, ok: [0, 1]) == 1 and run_voicemeeter(kind.name)
-      clear_dirty
-      logger.info "Successfully logged into #{self} version #{version}"
     end
 
     def logout
@@ -72,7 +73,6 @@ module Voicemeeter
         logger.debug "Voicemeeter engine running but the GUI appears to be down... launching."
       end
       CBindings.call(:bind_run_voicemeeter, kinds[kind_id])
-      sleep(1)
     end
 
     def type
