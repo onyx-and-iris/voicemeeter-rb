@@ -19,6 +19,11 @@ module Voicemeeter
       @ratelimit = kwargs[:ratelimit] || RATELIMIT
       @delay = kwargs[:delay] || DELAY
       @login_timeout = kwargs[:login_timeout] || LOGIN_TIMEOUT
+      @bits = kwargs[:bits] || 64
+      if ![32, 64].include? @bits
+        logger.warn "kwarg bits got #{@bits}, expected either 32 or 64, defaulting to 64"
+        @bits = 64
+      end
       @event =
         Events::Tracker.new(
           **(kwargs.select { |k, _| %i[pdirty mdirty ldirty midi].include? k })
@@ -65,9 +70,12 @@ module Voicemeeter
 
     def run_voicemeeter(kind_id)
       kinds = {
-        basic: (Install::OS_BITS == 64) ? Kinds::KindEnum::BASICX64 : Kinds::KindEnum::BASIC,
-        banana: (Install::OS_BITS == 64) ? Kinds::KindEnum::BANANAX64 : Kinds::KindEnum::BANANA,
-        potato: (Install::OS_BITS == 64) ? Kinds::KindEnum::POTATOX64 : Kinds::KindEnum::POTATO
+        basic: ([Install::OS_BITS, @bits].all? { |v| v == 64 }) ?
+          Kinds::KindEnum::BASICX64 : Kinds::KindEnum::BASIC,
+        banana: ([Install::OS_BITS, @bits].all? { |v| v == 64 }) ?
+          Kinds::KindEnum::BANANAX64 : Kinds::KindEnum::BANANA,
+        potato: ([Install::OS_BITS, @bits].all? { |v| v == 64 }) ?
+          Kinds::KindEnum::POTATOX64 : Kinds::KindEnum::POTATO
       }
       if caller(1..1).first[/`(.*)'/, 1] == "login"
         logger.debug "Voicemeeter engine running but the GUI appears to be down... launching."
