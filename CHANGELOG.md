@@ -11,6 +11,17 @@ Before any major/minor/patch is released all unit tests will be run to verify th
 
 - [ ]
 
+## [1.1.2] - 2024-06-29
+
+### Added
+
+- kwarg `bits` for overriding the type of GUI that is launched on startup.
+  - Defaults to 64, set it to either 32 or 64
+
+### Fixed
+
+- {Remote}.run_voicemeeter now launches x64 bit GUI's for all kinds if Ruby detects a 64 bit system.
+
 ## [1.1.0] - 2023-06-28
 
 ### Added
