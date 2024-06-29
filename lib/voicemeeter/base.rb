@@ -65,8 +65,8 @@ module Voicemeeter
 
     def run_voicemeeter(kind_id)
       kinds = {
-        basic: Kinds::KindEnum::BASIC,
-        banana: Kinds::KindEnum::BANANA,
+        basic: (Install::OS_BITS == 64) ? Kinds::KindEnum::BASICX64 : Kinds::KindEnum::BASIC,
+        banana: (Install::OS_BITS == 64) ? Kinds::KindEnum::BANANAX64 : Kinds::KindEnum::BANANA,
         potato: (Install::OS_BITS == 64) ? Kinds::KindEnum::POTATOX64 : Kinds::KindEnum::POTATO
       }
       if caller(1..1).first[/`(.*)'/, 1] == "login"

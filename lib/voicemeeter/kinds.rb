@@ -6,6 +6,8 @@ module Voicemeeter
       BASIC = 1
       BANANA = 2
       POTATO = 3
+      BASICX64 = 4
+      BANANAX64 = 5
       POTATOX64 = 6
     end
 
