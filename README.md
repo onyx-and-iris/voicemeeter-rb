@@ -723,6 +723,7 @@ You may pass the following optional keyword arguments:
 - `mdirty`: boolean=true, macrobutton updates
 - `midi`: boolean=true, midi updates
 - `ldirty`: boolean=false, level updates
+- `bits`: int=64, (may be one of 32 or 64), overrides the type of Voicemeeter GUI {Remote}.run_voicemeeter will launch.
 
 Access to lower level Getters and Setters are provided with these functions:
 
