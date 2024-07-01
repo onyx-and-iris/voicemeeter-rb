@@ -20,7 +20,7 @@ module Voicemeeter
       @delay = kwargs[:delay] || DELAY
       @login_timeout = kwargs[:login_timeout] || LOGIN_TIMEOUT
       @bits = kwargs[:bits] || 64
-      if ![32, 64].include? @bits
+      unless [32, 64].include? @bits
         logger.warn "kwarg bits got #{@bits}, expected either 32 or 64, defaulting to 64"
         @bits = 64
       end
